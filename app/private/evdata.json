@@ -1,0 +1,83 @@
+[
+  {
+    "car": "2020 Tesla Model Y",
+    "brandLogo": "https://cdn.mos.cms.futurecdn.net/BQwukuZwwwXrg27B9Le2Q6.png",
+    "image": "https://cdn.jdpower.com/ChromeImageGallery/Expanded/Transparent/640/2020TSS02_640/2020TSS020001_640_01.png",
+    "cashPrice": "48,990",
+    "range": "326",
+    "batteryCapacity": "75",
+    "website": "https://www.tesla.com/modely"
+  },
+  {
+    "car": "2021 Hyundai Kona EV",
+    "brandLogo": "https://www.carlogos.org/logo/Hyundai-logo-silver-2560x1440.png",
+    "image": "https://img.sm360.ca/ir/w540h360c/images/newcar/ca/2021/hyundai/kona-electrique/preferred-2-tone/suv/exteriorColors/14119_cc0640_032_p61.png",
+    "cashPrice": "37,390",
+    "range": "258",
+    "batteryCapacity": "64",
+    "website": "https://www.hyundaiusa.com/us/en/vehicles/kona-electric"
+  },
+  {
+    "car": "2020 Chevrolet Bolt EV",
+    "brandLogo": "https://1000logos.net/wp-content/uploads/2019/12/Chevrolet-logo.png",
+    "image": "https://inventory-dmg.assets-cdk.com/ChromeColorMatch/us/TRANSPARENT_cc_2020CHC400017_01_1280_GPJ.png",
+    "cashPrice": "43,000",
+    "range": "259",
+    "batteryCapacity": "66",
+    "website": "https://www.chevrolet.com/electric/previous-year/bolt-ev"
+  },
+  {
+    "car": "2021 Volkswagen ID.4 Pro",
+    "brandLogo": "https://www.pngarts.com/files/3/Volkswagen-Logo-PNG-Download-Image.png",
+    "image": "https://s3.us-east-2.amazonaws.com/dealer-inspire-vps-vehicle-images/stock-images/chrome/54d27fed95811de082e54125d5e3e4e1.png",
+    "cashPrice": "39,995",
+    "range": "250",
+    "batteryCapacity": "82",
+    "website": "https://www.vw.com/en/models/id-4.html"
+  },
+  {
+    "car": "2021 Audi e-tron",
+    "brandLogo": "https://www.freepnglogos.com/uploads/audi-logo-0.gif",
+    "image": "https://inventory-dmg.assets-cdk.com/ChromeColorMatch/us/TRANSPARENT_cc_2021AUS070035_01_1280_7M7M.png",
+    "cashPrice": "65,900",
+    "range": "222",
+    "batteryCapacity": "95",
+    "website": "https://www.audiusa.com/us/web/en/models/e-tron/e-tron/2021/overview.html"
+  },
+  {
+    "car": "2021 BMW i3",
+    "brandLogo": "https://pngimg.com/uploads/bmw_logo/bmw_logo_PNG19707.png",
+    "image": "https://www.motortrend.com/uploads/sites/10/2021/01/2021-bmw-i3-s-5door-hatchback-angular-front.png",
+    "cashPrice": "44,450",
+    "range": "153",
+    "batteryCapacity": "42.2",
+    "website": "https://www.bmwusa.com/vehicles/bmwi/i3/sedan/all-electric.html"
+  },
+  {
+    "car": "2021 Ford Mustang Mach-E",
+    "brandLogo": "http://assets.stickpng.com/thumbs/580b585b2edbce24c47b2c67.png",
+    "image": "https://www.ford.com/ntzlibs/content/dam/bev/us/mache/adplanners/767x325-trans/FRD_MachE_Prem.png.renditions.original.png",
+    "cashPrice": "42,895",
+    "range": "305",
+    "batteryCapacity": "75.7",
+    "website": "https://www.ford.com/suvs/mach-e/"
+  },
+  {
+    "car": "2020 Kia Niro EV ",
+    "brandLogo": "http://assets.stickpng.com/images/580b57fcd9996e24bc43c485.png",
+    "image": "https://dealerimages.dealereprocess.com/image/upload/c_limit,f_auto,fl_lossy,w_auto/v1/svp/dep/21kianiroevexprem2/kia_20niroevexprem2_angularfront_snowwhitepearl",
+    "cashPrice": "39,090",
+    "range": "239",
+    "batteryCapacity": "64",
+    "website": "https://www.kia.com/us/en/niro-ev"
+  },
+  {
+    "car": "2021 Nissan LEAF S",
+    "brandLogo": "http://pngimg.com/uploads/nissan/nissan_PNG64.png",
+    "image": "https://images.autofusion.com/pricebooks_data/usa/colorized/2021/Nissan/View2/Leaf/S_Plus/17211_K23.png",
+    "cashPrice": "31,670",
+    "range": "150",
+    "batteryCapacity": "40",
+    "website": "https://www.nissanusa.com/vehicles/electric-cars/leaf.html"
+  }
+]
