@@ -10,6 +10,11 @@
   border-radius: 0;
 }
 
+.background-body {
+  background-color: #0c4d85;
+  /*background-color: #4abdac;*/
+}
+
 /* LANDING PAGE */
 .background-landing {
   background-image: url('images/landing-page/oahu.jpeg');
@@ -17,8 +22,20 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  height: 500px;
+  /*height: 700px;*/
 }
+.inverted-text {
+  color: #f9f8fa;
+}
+
+#landing-info1-left {
+  padding: 45px;
+  background: url("/images/e-impact/low_emission_vehicle_.jpg") center center;
+  background-repeat: no-repeat;
+  /*height: 520px;*/
+  max-width: 720px;
+}
+
 #cloud-carbon {
   padding-top: 40px;
   color: aliceblue;

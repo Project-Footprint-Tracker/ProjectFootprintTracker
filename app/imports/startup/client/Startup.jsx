@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Meteor } from 'meteor/meteor';
+import $ from 'jquery';
 import App from '../../ui/layouts/App.jsx';
 
 /* global document */
@@ -9,3 +10,4 @@ import App from '../../ui/layouts/App.jsx';
 Meteor.startup(() => {
   render(<App />, document.getElementById('root'));
 });
+Meteor.startup(() => $('body').addClass('background-body'));
