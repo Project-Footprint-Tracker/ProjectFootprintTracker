@@ -7,7 +7,7 @@ import DashboardMilesCard from './DashboardMilesCard';
 import DashboardFuelCard from './DashboardFuelCard';
 import DashboardGhgCard from './DashboardGhgCard';
 import DashboardTreeCard from './DashboardTreeCard';
-import { ghgPerGallonFuel, poundsOfGhgPerTree } from '../../api/trip/TripCollection';
+import { ghgPerGallonFuel, poundsOfGhgPerTree } from '../../../api/trip/TripCollection';
 
 /* global document */
 

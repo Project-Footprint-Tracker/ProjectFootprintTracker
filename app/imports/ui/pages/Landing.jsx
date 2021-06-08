@@ -28,9 +28,10 @@ const Landing = () => {
             </div>
           </Grid.Column>
           <Grid.Column className='inverted-text' verticalAlign='middle'>
-            <h1 id='community-engagement-header' align='center'>Join the Community!</h1>
-            <h2>Create an account to keep track of the emissions of your daily transit and
-              see the changes you are making within your community!</h2>
+            <Header as='h1' id='community-engagement-header' align='center'><u>Malama I Ka `Aina</u></Header>
+            <Header as='h2'>Do your part to save Hawai&apos;i and track your carbon footprint
+              today. Create an account to keep track of the emissions of your daily transit and
+              see the changes you are making within your community!</Header>
             <br/>
             <Image as={NavLink} to='/signup' src="images/e-impact/community_info2.png" size="medium" centered/>
             <br/>

@@ -20,6 +20,7 @@ ddp-client@2.4.1
 ddp-common@1.4.0
 ddp-rate-limiter@1.0.9
 ddp-server@2.3.3
+didericis:callpromise-mixin@0.0.1
 diff-sequence@1.1.1
 dynamic-import@0.6.0
 ecmascript@0.15.1
@@ -42,6 +43,7 @@ launch-screen@1.2.1
 livedata@1.0.18
 localstorage@1.2.0
 logging@1.2.0
+mdg:validated-method@1.2.0
 meteor@1.9.3
 meteor-base@1.4.0
 minifier-css@1.5.4

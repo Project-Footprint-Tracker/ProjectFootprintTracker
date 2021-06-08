@@ -2,9 +2,9 @@ import { withTracker } from 'meteor/react-meteor-data';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Dimmer, Loader } from 'semantic-ui-react';
-import { Trips } from '../../../api/trip/TripCollection';
-import { Users } from '../../../api/user/UserCollection';
-import DashboardContent from '../../components/e-impact/DashboardContent';
+import { Trips } from '../../api/trip/TripCollection';
+import { Users2 } from '../../api/user/UserCollection2';
+import DashboardContent from '../components/e-impact/DashboardContent';
 
 /* global document */
 
@@ -88,7 +88,7 @@ Dashboard.propTypes = {
 
 export default withTracker(({ match }) => {
   const tripSubscribe = Trips.subscribeTrip();
-  const userSubscribe = Users.subscribeUser();
+  const userSubscribe = Users2.subscribeUser();
 
   const username = match.params._id;
 
@@ -99,7 +99,7 @@ export default withTracker(({ match }) => {
   const modesOfTransport = Trips.getModesOfTransport(username);
   const milesPerMode = Trips.getMilesPerMode(username);
 
-  const userProfile = Users.getUserProfile(username);
+  const userProfile = Users2.getUserProfile(username);
 
   const ghgProducedTotal = Trips.getGHGProducedTotal(username, (userSubscribe.ready()) ? userProfile.autoMPG : 1);
   const ghgReducedPerDay = Trips.getGHGReducedPerDay(username, (userSubscribe.ready()) ? userProfile.autoMPG : 1);

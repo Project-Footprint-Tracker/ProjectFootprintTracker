@@ -1,6 +1,7 @@
 /* NAVBAR */
-.ui.attached.menu {
-  background: #fc4a1a;
+.ui.attached.inverted.menu {
+  /*background: #fc4a1a;*/
+  background: #0c4d85;
   margin-bottom: 0px;
   padding: 0px;
 }
@@ -11,8 +12,8 @@
 }
 
 .background-body {
-  background-color: #0c4d85;
-  /*background-color: #4abdac;*/
+  /*background-color: #0c4d85;*/
+  background-color: #4abdac;
 }
 
 /* LANDING PAGE */
@@ -180,9 +181,9 @@ h6 {
   font-size: 400%;
 }
 
-.footer {
+footer {
   margin-top: 14px;
-  background-color: #4abdac;
+  background-color: #0c4d85;
   bottom: 0;
   left: 0;
   right: 0;

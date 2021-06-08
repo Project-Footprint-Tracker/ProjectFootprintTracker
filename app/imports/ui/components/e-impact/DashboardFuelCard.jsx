@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Header, Statistic, Popup, Table, Icon } from 'semantic-ui-react';
 import DashboardStatisticsCard from './DashboardStatisticsCard';
-import { fuelCost, eGallon } from '../../api/trip/TripCollection';
+import { fuelCost, eGallon } from '../../../api/trip/TripCollection';
 
 function DashboardFuelCard(
   {
