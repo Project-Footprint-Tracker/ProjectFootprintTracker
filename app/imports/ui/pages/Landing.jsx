@@ -4,9 +4,7 @@ import { NavLink } from 'react-router-dom';
 
 /* A simple static component to render some text for the landing page. */
 const Landing = () => {
-  const menuStyle = { height: '500px' };
   const padding = { paddingTop: 100 };
-
   return (
     <div>
       <Grid verticalAlign='middle' textAlign='center' container>

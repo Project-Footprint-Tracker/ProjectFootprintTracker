@@ -2,6 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { _ } from 'meteor/underscore';
 import { check } from 'meteor/check';
+import { Roles } from 'meteor/alanning:roles';
+import { ROLE } from '../role/Role';
 
 class BaseCollection {
   /**
@@ -46,7 +48,7 @@ class BaseCollection {
 
   /**
    * A stricter form of remove that throws an error if the document or docID could not be found in this collection.
-   * @param { String | Object } name A document or docID in this collection.
+   * @param { String | Object } id A document or docID in this collection.
    */
   removeIt(id) {
     const doc = this.findDoc(id);
@@ -79,8 +81,8 @@ class BaseCollection {
     }
     const doc = (
       this._collection.findOne(name)
-        || this._collection.findOne({ name })
-        || this._collection.findOne({ _id: name }));
+      || this._collection.findOne({ name })
+      || this._collection.findOne({ _id: name }));
     if (!doc) {
       if (typeof name !== 'string') {
         throw new Meteor.Error(`${JSON.stringify(name)} is not a defined ${this._type}`, '', Error().stack);
@@ -146,8 +148,8 @@ class BaseCollection {
     }
     return (
       !!this._collection.findOne(name)
-        || !!this._collection.findOne({ name })
-        || !!this._collection.findOne({ _id: name }));
+      || !!this._collection.findOne({ name })
+      || !!this._collection.findOne({ _id: name }));
   }
 
   /**
@@ -169,6 +171,87 @@ class BaseCollection {
       Meteor.subscribe(this._collectionName);
     }
   }
+
+  assertRole(userId, roles) {
+    // console.log(userId, roles, Roles.userIsInRole(userId, roles));
+    if (!userId) {
+      throw new Meteor.Error('unauthorized', 'You must be logged in.');
+    } else if (!Roles.userIsInRole(userId, roles)) {
+      throw new Meteor.Error('unauthorized', `You must be one of the following roles: ${roles}`);
+    }
+    return true;
+  }
+
+  /**
+   * Default implementation of assertValidRoleForMethod. Asserts that userId is logged in as an Admin or Advisor.
+   * This is used in the define, update, and removeIt Meteor methods associated with each class.
+   * @param userId The userId of the logged in user. Can be null or undefined
+   * @throws { Meteor.Error } If there is no logged in user, or the user is not an Admin or Advisor.
+   */
+  assertValidRoleForMethod(userId) {
+    this.assertRole(userId, [ROLE.ADMIN]);
+  }
+
+  /**
+   * Define the default integrity checker for all applications.
+   * Returns an array with a string indicating that this method is not overridden.
+   * @returns { array } An array containing a string indicating the use of the default integrity checker.
+   */
+  checkIntegrity() {
+    return ['There is no integrity checker defined for this collection.'];
+  }
+
+  /**
+   * Returns an object with two fields: name and contents.
+   * Name is the name of this collection.
+   * Contents is an array of objects suitable for passing to the restore() method.
+   * @returns {Object} An object representing the contents of this collection.
+   */
+  dumpAll() {
+    const dumpObject = {
+      name: this.collectionName,
+      contents: this.find().map((docID) => this.dumpOne(docID)),
+    };
+    // If a collection doesn't want to be dumped, it can just return null from dumpOne.
+    dumpObject.contents = _.without(dumpObject.contents, null);
+    // sort the contents array by slug (if present)
+    if (dumpObject.contents[0] && dumpObject.contents[0].slug) {
+      dumpObject.contents = _.sortBy(dumpObject.contents, (obj) => obj.slug);
+    }
+    return dumpObject;
+  }
+
+  /**
+   * Returns an object representing the definition of docID in a format appropriate to the restoreOne function.
+   * Must be overridden by each collection.
+   * @param docID A docID from this collection.
+   * @returns { Object } An object representing this document.
+   */
+  dumpOne(docID) {
+    throw new Meteor.Error(`Default dumpOne method invoked by collection ${this.collectionName} on ${docID}`);
+  }
+
+  /**
+   * Defines the entity represented by dumpObject.
+   * Defaults to calling the define() method if it exists.
+   * @param dumpObject An object representing one document in this collection.
+   * @returns { String } The docID of the newly created document.
+   */
+  restoreOne(dumpObject) {
+    if (typeof this.define === 'function') {
+      return this.define(dumpObject);
+    }
+    return null;
+  }
+
+  /**
+   * Defines all the entities in the passed array of objects.
+   * @param dumpObjects The array of objects representing the definition of a document in this collection.
+   */
+  restoreAll(dumpObjects) {
+    dumpObjects.forEach((dumpObject) => this.restoreOne(dumpObject));
+  }
+
 }
 
 export default BaseCollection;
