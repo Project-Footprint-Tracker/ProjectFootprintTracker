@@ -58,6 +58,8 @@
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
+    "chai": "^4.3.4",
+    "cross-env": "^7.0.3",
     "eslint": "^7.27.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-plugin-import": "^2.23.4",
@@ -68,12 +70,14 @@
     "eslint-utils": "^2.1.0",
     "faker": "^5.5.3",
     "fast-check": "^2.16.0",
+    "puppeteer": "^10.0.0",
     "replace-in-file": "^6.2.0",
     "testcafe": "^1.14.2"
   },
   "scripts": {
     "start": "meteor --no-release-check --exclude-archs web.browser.legacy,web.cordova --settings ../config/settings.development.json",
     "lint": "eslint --quiet --fix --ext .jsx --ext .js ./imports",
+    "test-unit": "cross-env TEST_BROWSER_DRIVER=puppeteer MOCHA_TIMEOUT=150000 meteor test --exclude-archs web.browser.legacy,web.cordova --no-release-check --once --driver-package meteortesting:mocha --port 3100",
     "testcafe-development": "testcafe chrome tests/*.testcafe.js",
     "testcafe": "testcafe chrome:headless tests/*.testcafe.js -q --app \"meteor npm run start\"",
     "unimported": "npx unimported",
