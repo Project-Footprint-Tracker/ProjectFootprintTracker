@@ -21,6 +21,10 @@ class GroupCollection extends BaseCollection {
    * @return {String} the id of the new group.
    */
   define({ name, description, retired = false }) {
+    const doc = this._collection.findOne({ name, description });
+    if (doc) {
+      return doc._id;
+    }
     const groupID = this._collection.insert({ name, description, retired });
     return groupID;
   }

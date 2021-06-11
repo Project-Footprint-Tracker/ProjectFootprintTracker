@@ -5,7 +5,7 @@ export const removeAllEntities = () => {
   if (Meteor.isTest || Meteor.isAppTest) {
     CeTracker.collections.forEach((collection) => {
       if (collection.type !== 'AdminProfile') {
-        collection.collection.remove({});
+        collection._collection.remove({});
       }
     });
   } else {

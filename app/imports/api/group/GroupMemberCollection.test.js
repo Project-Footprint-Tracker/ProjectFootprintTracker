@@ -48,7 +48,7 @@ if (Meteor.isServer) {
         }),
       );
     });
-    it('Can dumpOne, removeIt, and restoreOne', function test5() {
+    it('Can dumpOne, removeIt, and restoreOne', function test4() {
       const doc = GroupMembers.findOne({});
       let docID = doc._id;
       const dumpObject = GroupMembers.dumpOne(docID);
