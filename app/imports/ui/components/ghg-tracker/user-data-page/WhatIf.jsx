@@ -16,11 +16,11 @@ import { UserSavedDistances } from '../../../../api/user/UserSavedDistanceCollec
 import {
   getMilesTraveled,
   getKilometersTraveled,
-  getDailyGHG,
+  getDailyCE,
   getModeType,
-} from '../../../utilities/DailyGHGData';
+} from '../../../utilities/DailyCeData';
 import { altSelectFieldOptions } from '../../../utilities/GlobalVariables';
-import { getCumulativeGHG } from '../../../utilities/CumulativeGHGData';
+import { getCumulativeCE } from '../../../utilities/CumulativeCeData';
 import { UserDailyData } from '../../../../api/user/UserDailyDataCollection';
 import { UserVehicles } from '../../../../api/user/UserVehicleCollection';
 
@@ -29,7 +29,7 @@ import { UserVehicles } from '../../../../api/user/UserVehicleCollection';
 // Renders modal for inputting daily data
 const WhatIf = (props) => {
 
-  const cumulativeData = getCumulativeGHG(props.userData, props.vehicles);
+  const cumulativeData = getCumulativeCE(props.userData, props.vehicles);
   const [firstOpen, setFirstOpen] = useState(false);
   const [secondOpen, setSecondOpen] = useState(false);
   const [fakeData, setFakeData] = useState(() => props.userData);
@@ -127,19 +127,19 @@ const WhatIf = (props) => {
     }
     inputData.modeType = getModeType(inputData.modeOfTransportation, props.vehicles);
     inputData.owner = props.owner;
-    const dailyGHG = getDailyGHG(inputData.milesTraveled, data.modeOfTransportation, props.vehicles);
+    const dailyCE = getDailyCE(inputData.milesTraveled, data.modeOfTransportation, props.vehicles);
     setFakeData([...fakeData, {
       _id: fakeData.length,
       owner: Meteor.user().username,
       inputDate: inputData.inputDate,
       modeOfTransportation: data.modeOfTransportation,
       distanceTraveled: inputData.milesTraveled,
-      cO2Reduced: dailyGHG.cO2Reduced,
-      fuelSaved: dailyGHG.fuelSaved,
+      cO2Reduced: dailyCE.cO2Reduced,
+      fuelSaved: dailyCE.fuelSaved,
     }]);
-    setCO2(dailyGHG.cO2Reduced);
+    setCO2(dailyCE.cO2Reduced);
     setDistance(inputData.milesTraveled);
-    setFuel(dailyGHG.fuelSaved);
+    setFuel(dailyCE.fuelSaved);
     setMode(data.modeOfTransportation);
     formRef.reset();
   };

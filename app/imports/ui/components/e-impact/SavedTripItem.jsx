@@ -5,6 +5,7 @@ import { Table, Button, Confirm } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { savedTripPublications, SavedTrips } from '../../api/trip/SavedTripCollection';
 import { Users } from '../../api/user/UserCollection';
+import { cePerGallonFuel } from '../../../api/utilities/constants';
 
 /** Renders a single row in the List Trip table. See pages/ListTrip.jsx. */
 const SavedTripItem = (props) => {
@@ -16,7 +17,7 @@ const SavedTripItem = (props) => {
   } else {
     gallons = -(props.trip.distance !== 0 ? ((props.trip.distance / tripMpg)) : 0);
   }
-  const ghg = gallons === 0 ? 0 : gallons * 19.6;
+  const ce = gallons === 0 ? 0 : gallons * cePerGallonFuel;
 
   const [confirmState, setConfirmState] = useState(false);
 
@@ -50,7 +51,7 @@ const SavedTripItem = (props) => {
       <Table.Cell className='daily-table-data'>{props.trip.distance} mi</Table.Cell>
       <Table.Cell className='daily-table-data'>{props.trip.mpg}</Table.Cell>
       <Table.Cell className='daily-table-data'>{gallons === 0 ? 0 : `${abs(gallons).toFixed(2)} gal`}</Table.Cell>
-      <Table.Cell className='daily-table-data'>{ghg === 0 ? 0 : `${abs(ghg).toFixed(2)} lbs`}</Table.Cell>
+      <Table.Cell className='daily-table-data'>{ce === 0 ? 0 : `${abs(ce).toFixed(2)} lbs`}</Table.Cell>
       <Table.Cell><Button negative circular icon='x' onClick={openConfirm}/><Confirm
         open={confirmState}
         header='Delete Trip?'

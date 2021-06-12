@@ -63,7 +63,7 @@ const Daily = (props) => {
     if (monthlySum === 0) {
       return '';
     }
-    return monthlySum > 0 ? 'lbs ghg Produced' : 'lbs ghg Reduced';
+    return monthlySum > 0 ? 'lbs CE Produced' : 'lbs CE Reduced';
   }
 
   useEffect(() => {
@@ -165,7 +165,7 @@ const Daily = (props) => {
               <Table.HeaderCell className='daily-table-header'>Distance</Table.HeaderCell>
               <Table.HeaderCell className='daily-table-header'>mpg</Table.HeaderCell>
               <Table.HeaderCell className='daily-table-header'>Net Gallons</Table.HeaderCell>
-              <Table.HeaderCell className='daily-table-header'>Net GHG</Table.HeaderCell>
+              <Table.HeaderCell className='daily-table-header'>Net CE</Table.HeaderCell>
               <Table.HeaderCell className='daily-table-header'>Delete</Table.HeaderCell>
               <Table.HeaderCell className='daily-table-header'>Save</Table.HeaderCell>
             </Table.Row>

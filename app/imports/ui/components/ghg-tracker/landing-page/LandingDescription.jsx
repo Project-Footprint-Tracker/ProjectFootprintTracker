@@ -12,13 +12,13 @@ const LandingDescription = () => (
           <Header textAlign='center' > <u>WHO ARE WE?</u> </Header>
         </div>
         <Header as='h2' textAlign='center' className='landing-description'>
-          <p>Our focus is on Greenhouse Gas Emissions (GHG) and how it is everyone’s responsibility.
+          <p>Our focus is on Carbon Emissions (CE) and how it is everyone’s responsibility.
           </p>
-          <p> This Project Focuses on Tackling GHG from Transportation</p>
+          <p> This Project Focuses on Tackling CE from Transportation</p>
           <p> Climate change has the potential to increase the severity and frequency of hurricanes, flooding, and droughts, and is expected to
             lead to increasing sea level rise.
           </p>
-              GHG is the most significant factor in climate change.
+              CE is a significant factor in climate change.
         </Header>
       </Grid.Column>
       <Grid.Column>

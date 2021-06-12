@@ -19,16 +19,16 @@ function Dashboard(
     modesOfTransport,
     milesPerMode,
     userProfile,
-    ghgProducedTotal,
-    ghgReducedPerDay,
+    ceProducedTotal,
+    ceReducedPerDay,
     fuelSavedPerDay,
     milesSavedAvg,
     milesTraveledAvg,
     fuelSavedAvg,
     fuelSpentAvg,
-    ghgReducedAvg,
-    ghgProducedAvg,
-    evGhgProducedAvg,
+    ceReducedAvg,
+    ceProducedAvg,
+    evCeProducedAvg,
   },
 ) {
 
@@ -46,16 +46,16 @@ function Dashboard(
         milesPerMode={milesPerMode}
         userProfile={userProfile}
         userReady={userReady}
-        ghgProducedTotal={ghgProducedTotal}
-        ghgReducedPerDay={ghgReducedPerDay}
+        ceProducedTotal={ceProducedTotal}
+        ceReducedPerDay={ceReducedPerDay}
         fuelSavedPerDay={fuelSavedPerDay}
         milesSavedAvg={milesSavedAvg}
         milesTraveledAvg={milesTraveledAvg}
         fuelSavedAvg={fuelSavedAvg}
         fuelSpentAvg={fuelSpentAvg}
-        ghgReducedAvg={ghgReducedAvg}
-        ghgProducedAvg={ghgProducedAvg}
-        evGhgProducedAvg={evGhgProducedAvg}
+        ceReducedAvg={ceReducedAvg}
+        ceProducedAvg={ceProducedAvg}
+        evCeProducedAvg={evCeProducedAvg}
       />
     </div> :
     <Dimmer inverted={this.theme} active>
@@ -72,16 +72,16 @@ Dashboard.propTypes = {
   modesOfTransport: PropTypes.object,
   milesPerMode: PropTypes.array,
   userProfile: PropTypes.any,
-  ghgProducedTotal: PropTypes.string,
-  ghgReducedPerDay: PropTypes.object,
-  evGhgProducedAvg: PropTypes.object,
+  ceProducedTotal: PropTypes.string,
+  ceReducedPerDay: PropTypes.object,
+  evCeProducedAvg: PropTypes.object,
   fuelSavedPerDay: PropTypes.object,
   milesSavedAvg: PropTypes.object,
   milesTraveledAvg: PropTypes.object,
   fuelSavedAvg: PropTypes.object,
   fuelSpentAvg: PropTypes.object,
-  ghgReducedAvg: PropTypes.object,
-  ghgProducedAvg: PropTypes.object,
+  ceReducedAvg: PropTypes.object,
+  ceProducedAvg: PropTypes.object,
   tripReady: PropTypes.bool.isRequired,
   userReady: PropTypes.bool.isRequired,
 };
@@ -101,14 +101,14 @@ export default withTracker(({ match }) => {
 
   const userProfile = Users2.getUserProfile(username);
 
-  const ghgProducedTotal = Trips.getGHGProducedTotal(username, (userSubscribe.ready()) ? userProfile.autoMPG : 1);
-  const ghgReducedPerDay = Trips.getGHGReducedPerDay(username, (userSubscribe.ready()) ? userProfile.autoMPG : 1);
+  const ceProducedTotal = Trips.getCEProducedTotal(username, (userSubscribe.ready()) ? userProfile.autoMPG : 1);
+  const ceReducedPerDay = Trips.getCEReducedPerDay(username, (userSubscribe.ready()) ? userProfile.autoMPG : 1);
 
   const fuelSavedPerDay = Trips.getFuelSavedPerDay(username, (userSubscribe.ready()) ? userProfile.autoMPG : 1);
 
   const milesAvg = Trips.getMilesAvg(username);
   const fuelAvg = Trips.getFuelAvg(username);
-  const ghgAvg = Trips.getGhgAvg(username);
+  const ceAvg = Trips.getCEAvg(username);
   return {
     tripReady: tripSubscribe.ready(),
     userReady: userSubscribe.ready(),
@@ -119,15 +119,15 @@ export default withTracker(({ match }) => {
     modesOfTransport,
     milesPerMode,
     userProfile,
-    ghgProducedTotal,
-    ghgReducedPerDay,
+    ceProducedTotal,
+    ceReducedPerDay,
     fuelSavedPerDay,
     milesSavedAvg: milesAvg.milesSavedAvg,
     milesTraveledAvg: milesAvg.milesTraveledAvg,
     fuelSavedAvg: fuelAvg.fuelSavedAvg,
     fuelSpentAvg: fuelAvg.fuelSpentAvg,
-    ghgReducedAvg: ghgAvg.ghgReducedAvg,
-    ghgProducedAvg: ghgAvg.ghgProducedAvg,
-    evGhgProducedAvg: ghgAvg.evGhgProducedAvg,
+    ceReducedAvg: ceAvg.ceReducedAvg,
+    ceProducedAvg: ceAvg.ceProducedAvg,
+    evCeProducedAvg: ceAvg.evCeProducedAvg,
   };
 })(Dashboard);

@@ -17,14 +17,14 @@ function WhatIf(
     milesSavedPerDay,
     modesOfTransport,
     userProfile,
-    ghgProducedTotal,
-    ghgReducedPerDay,
+    ceProducedTotal,
+    ceReducedPerDay,
     fuelSavedPerDay,
   },
 ) {
   const [milesSavedPerDayWI, setMSPDWI] = useState();
   const [modesOfTransportWI, setMOTDWI] = useState();
-  const [ghgReducedPerDayWI, setGRPDWI] = useState();
+  const [ceReducedPerDayWI, setGRPDWI] = useState();
   const [fuelSavedPerDayWI, setFSPDWI] = useState();
   const trueMilesTotal = (x) => {
     let gasMiles = 0;
@@ -39,13 +39,13 @@ function WhatIf(
   useEffect(() => {
     setMSPDWI(milesSavedPerDay);
     setMOTDWI(modesOfTransport);
-    setGRPDWI(ghgReducedPerDay);
+    setGRPDWI(ceReducedPerDay);
     setFSPDWI(fuelSavedPerDay);
   }, [fuelSavedPerDay]);
-  const testFP = (miles, mode, ghg, fuel) => {
+  const testFP = (miles, mode, ce, fuel) => {
     setMSPDWI(miles);
     setMOTDWI(mode);
-    setGRPDWI(ghg);
+    setGRPDWI(ce);
     setFSPDWI(fuel);
   };
   return ((tripReady && userReady) ?
@@ -55,8 +55,8 @@ function WhatIf(
         milesSavedPerDay={milesSavedPerDay}
         modesOfTransport={modesOfTransport}
         userProfile={userProfile}
-        ghgProducedTotal={ghgProducedTotal}
-        ghgReducedPerDay={ghgReducedPerDay}
+        ceProducedTotal={ceProducedTotal}
+        ceReducedPerDay={ceReducedPerDay}
         fuelSavedPerDay={fuelSavedPerDay}
         test={testFP}
       />
@@ -67,12 +67,12 @@ function WhatIf(
         modesOfTransport={modesOfTransport}
         userProfile={userProfile}
         userReady={userReady}
-        ghgProducedTotal={ghgProducedTotal}
-        ghgReducedPerDay={ghgReducedPerDay}
+        ceProducedTotal={ceProducedTotal}
+        ceReducedPerDay={ceReducedPerDay}
         fuelSavedPerDay={fuelSavedPerDay}
         milesSavedPerDayWI={milesSavedPerDayWI}
         modesOfTransportWI={modesOfTransportWI}
-        ghgReducedPerDayWI={ghgReducedPerDayWI}
+        ceReducedPerDayWI={ceReducedPerDayWI}
         fuelSavedPerDayWI={fuelSavedPerDayWI}
         newMilesTotal={trueMilesTotal}
       />
@@ -88,8 +88,8 @@ WhatIf.propTypes = {
   milesSavedPerDay: PropTypes.object,
   modesOfTransport: PropTypes.object,
   userProfile: PropTypes.any,
-  ghgProducedTotal: PropTypes.string,
-  ghgReducedPerDay: PropTypes.object,
+  ceProducedTotal: PropTypes.string,
+  ceReducedPerDay: PropTypes.object,
   fuelSavedPerDay: PropTypes.object,
   tripReady: PropTypes.bool.isRequired,
   userReady: PropTypes.bool.isRequired,
@@ -105,8 +105,8 @@ export default withTracker(({ match }) => {
   const milesSavedPerDay = Trips.getMilesSavedPerDay(username);
   const modesOfTransport = Trips.getModesOfTransport(username);
   const userProfile = Users.getUserProfile(username);
-  const ghgProducedTotal = Trips.getGHGProducedTotal(username, (userSubscribe.ready()) ? userProfile.autoMPG : 1);
-  const ghgReducedPerDay = Trips.getGHGReducedPerDay(username, (userSubscribe.ready()) ? userProfile.autoMPG : 1);
+  const ceProducedTotal = Trips.getCEProducedTotal(username, (userSubscribe.ready()) ? userProfile.autoMPG : 1);
+  const ceReducedPerDay = Trips.getCEReducedPerDay(username, (userSubscribe.ready()) ? userProfile.autoMPG : 1);
   const fuelSavedPerDay = Trips.getFuelSavedPerDay(username, (userSubscribe.ready()) ? userProfile.autoMPG : 1);
   return {
     tripReady: tripSubscribe.ready(),
@@ -117,8 +117,8 @@ export default withTracker(({ match }) => {
     milesSavedPerDay,
     modesOfTransport,
     userProfile,
-    ghgProducedTotal,
-    ghgReducedPerDay,
+    ceProducedTotal,
+    ceReducedPerDay,
     fuelSavedPerDay,
   };
 })(WhatIf);

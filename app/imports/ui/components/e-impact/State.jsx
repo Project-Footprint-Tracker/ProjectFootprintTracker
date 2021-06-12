@@ -17,18 +17,18 @@ function State(props) {
     totalMilesSaved,
     totalFuelUsed,
     totalFuelSaved,
-    totalGhgProduced,
-    totalGhgReduced,
+    totalCeProduced,
+    totalCeReduced,
     modeDistribution,
     vmtData,
     fuelData,
-    ghgData,
+    ceData,
     vmtReducedCounties,
     vmtProducedCounties,
     fuelSavedCounties,
     fuelUsedCounties,
-    ghgSavedCounties,
-    ghgProducedCounties,
+    ceSavedCounties,
+    ceProducedCounties,
     dataReduced,
     dataProduced,
   } = getStateData();
@@ -111,7 +111,7 @@ function State(props) {
       color: chartFontColor,
     },
   };
-  const ghgLayout = {
+  const ceLayout = {
     autosize: true,
     margin: {
       t: tMargin,
@@ -221,34 +221,34 @@ function State(props) {
         </Modal.Content>
       </Modal>;
 
-  const ghgModal =
+  const ceModal =
       <Modal
         onClose={() => setOpen3(false)}
         onOpen={() => setOpen3(true)}
         open={open3}
         trigger={<Button className='community-button'>Show Breakdown By County</Button>}
       >
-        <Modal.Header className='card-modal'>GHG Data Breakdown</Modal.Header>
+        <Modal.Header className='card-modal'>CE Data Breakdown</Modal.Header>
         <Modal.Content className='card-modal'>
           <Grid centered>
             <Grid.Row>
               <Grid.Column width={8}>
                 <Card className='card-modal' fluid>
                   <Card.Header className='card-header'>
-                    GHG Reduced By County
+                    CE Reduced By County
                   </Card.Header>
                   <Card.Content>
-                    <Chart chartData={ghgSavedCounties} chartLayout={ghgLayout}/>
+                    <Chart chartData={ceSavedCounties} chartLayout={ceLayout}/>
                   </Card.Content>
                 </Card>
               </Grid.Column>
               <Grid.Column width={8}>
                 <Card className='card-modal' fluid>
                   <Card.Header className='card-header'>
-                    GHG Produced By County
+                    CE Produced By County
                   </Card.Header>
                   <Card.Content>
-                    <Chart chartData={ghgProducedCounties} chartLayout={ghgLayout}/>
+                    <Chart chartData={ceProducedCounties} chartLayout={ceLayout}/>
                   </Card.Content>
                 </Card>
               </Grid.Column>
@@ -283,7 +283,7 @@ function State(props) {
         communityModal[i].classList.remove('dark-card');
       }
     }
-  }, [props, vmtModal, fuelModal, ghgModal]);
+  }, [props, vmtModal, fuelModal, ceModal]);
 
   return (
     <Grid centered>
@@ -325,17 +325,17 @@ function State(props) {
       </Grid.Row>
       <Grid.Row>
         <Grid.Column width={3} textAlign='center'> <Statistic color="red">
-          <Statistic.Value><Icon name='cloud'/>{totalGhgProduced}</Statistic.Value>
+          <Statistic.Value><Icon name='cloud'/>{totalCeProduced}</Statistic.Value>
           <Statistic.Label className='community-statistic'>pounds of C02 produced</Statistic.Label>
         </Statistic>
         </Grid.Column>
         <Grid.Column width={5} textAlign='center'> <Statistic>
-          <Statistic.Value className='community-statistic'><Icon name='cloud'/>{totalGhgReduced}</Statistic.Value>
+          <Statistic.Value className='community-statistic'><Icon name='cloud'/>{totalCeReduced}</Statistic.Value>
           <Statistic.Label className='community-statistic'>pounds of CO2 reduced</Statistic.Label>
         </Statistic>
         </Grid.Column>
         <Grid.Column width={5}>
-          <Progress value={totalGhgReduced} total='858000'
+          <Progress value={totalCeReduced} total='858000'
             label="2021 GOAL: 858,000 POUNDS OF CO2 REDUCED" color="blue"/></Grid.Column>
       </Grid.Row>
       <Grid.Row>
@@ -378,11 +378,11 @@ function State(props) {
         <Grid.Column width={7}>
           <Card className='community-card' fluid>
             <Card.Header className='card-header'>
-                GHG Data
+                CE Data
             </Card.Header>
             <Card.Content>
-              <Chart chartData={ghgData} chartLayout={ghgLayout}/>
-              {ghgModal}
+              <Chart chartData={ceData} chartLayout={ceLayout}/>
+              {ceModal}
             </Card.Content>
           </Card>
         </Grid.Column>

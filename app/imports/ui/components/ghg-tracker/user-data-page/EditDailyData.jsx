@@ -8,7 +8,7 @@ import swal from 'sweetalert';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
 import { AutoForm, BoolField, DateField, ErrorsField, SelectField, SubmitField } from 'uniforms-semantic';
 import { UserSavedDistances } from '../../../../api/user/UserSavedDistanceCollection';
-import { getDateToday, getKilometersTraveled, getMilesTraveled, getModeType } from '../../../utilities/DailyGHGData';
+import { getDateToday, getKilometersTraveled, getMilesTraveled, getModeType } from '../../../utilities/DailyCeData';
 import { UserDailyData } from '../../../../api/user/UserDailyDataCollection';
 import { altSelectFieldOptions } from '../../../utilities/GlobalVariables';
 import { userDailyDataUpdateMethod } from '../../../../api/user/UserDailyDataCollection.methods';

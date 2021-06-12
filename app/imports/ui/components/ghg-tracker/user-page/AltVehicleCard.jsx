@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Card, Header, Image } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { getCumulativePerMode } from '../../../utilities/CumulativeGHGData';
+import { getCumulativePerMode } from '../../../utilities/CumulativeCeData';
 
 /** Renders a single vehicle card. */
 class AltVehicleCard extends React.Component {

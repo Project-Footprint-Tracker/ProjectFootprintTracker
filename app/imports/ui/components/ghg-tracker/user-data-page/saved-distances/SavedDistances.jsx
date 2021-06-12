@@ -5,7 +5,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import { Button, Form, Icon, Loader, Modal, Popup, Table } from 'semantic-ui-react';
 import swal from 'sweetalert';
 import { UserSavedDistances } from '../../../../../api/user/UserSavedDistanceCollection';
-import { getMilesTraveled } from '../../../../utilities/DailyGHGData';
+import { getMilesTraveled } from '../../../../utilities/DailyCeData';
 import { userSavedDistanceDefineMethod } from '../../../../../api/user/UserSavedDistanceCollection.methods';
 import SavedDistanceItem from './SavedDistanceItem';
 

@@ -3,22 +3,22 @@ import { Grid } from 'semantic-ui-react';
 import { HorizontalBar } from 'react-chartjs-2';
 import { _ } from 'meteor/underscore';
 import PropTypes from 'prop-types';
-import { getCumulativeGHG } from '../../utilities/CumulativeGHGData';
+import { getCumulativeCE } from '../../utilities/CumulativeCeData';
 
 // Displaying a pie chart of the mode of transportation from DailyUserData collection
 const ComparisonGraph = (props) => {
   const date = new Date();
   const getByMonthIndividual = _.filter(props.userData, (userTrip) => (userTrip.inputDate.getMonth() ===
             date.getMonth() && userTrip.inputDate.getFullYear() === date.getFullYear()));
-  const userGHGData = getCumulativeGHG(getByMonthIndividual, props.vehicles);
-  const totalCO2Reduced = (userGHGData.cO2Reduced).toFixed(2);
-  const totalCO2Produced = (userGHGData.cO2Produced).toFixed(2);
+  const userCeData = getCumulativeCE(getByMonthIndividual, props.vehicles);
+  const totalCO2Reduced = (userCeData.cO2Reduced).toFixed(2);
+  const totalCO2Produced = (userCeData.cO2Produced).toFixed(2);
 
   const getByMonthAll = _.filter(props.userDataAll, (userTrip) => (userTrip.inputDate.getMonth() ===
             date.getMonth() && userTrip.inputDate.getFullYear() === date.getFullYear()));
-  const usersGHGData = getCumulativeGHG(getByMonthAll, props.allVehicles);
-  const allCO2Reduced = (usersGHGData.cO2Reduced / _.size(props.users)).toFixed(2);
-  const allCO2Produced = (usersGHGData.cO2Produced / _.size(props.users)).toFixed(2);
+  const usersCeData = getCumulativeCE(getByMonthAll, props.allVehicles);
+  const allCO2Reduced = (usersCeData.cO2Reduced / _.size(props.users)).toFixed(2);
+  const allCO2Produced = (usersCeData.cO2Produced / _.size(props.users)).toFixed(2);
   const stateAll = {
     labels: ['Carbon Reduced', 'Carbon Produced'],
     datasets: [

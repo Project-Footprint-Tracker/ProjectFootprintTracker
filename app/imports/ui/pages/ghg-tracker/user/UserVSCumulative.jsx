@@ -8,7 +8,7 @@ import { Users } from '../../../../api/user/UserCollection';
 import { UserDailyData } from '../../../../api/user/UserDailyDataCollection';
 import ComparisonGraph from '../../../components/ghg-tracker/ComparisonGraph';
 import TransportationOptions from '../../../components/ghg-tracker/user-page/TransportationOptions';
-import { getCumulativeGHG } from '../../../utilities/CumulativeGHGData';
+import { getCumulativeCE } from '../../../utilities/CumulativeCeData';
 import { UserVehicles } from '../../../../api/user/UserVehicleCollection';
 
 const paddingStyle = { padding: 20 };
@@ -25,9 +25,9 @@ class UserVSCumulative extends React.Component {
       'October', 'November', 'December'];
     const getThisMonth = _.filter(this.props.dailyData, (userTrip) => (userTrip.inputDate.getMonth() ===
             date.getMonth() && userTrip.inputDate.getFullYear() === date.getFullYear()));
-    const thisMonthGHGData = getCumulativeGHG(getThisMonth, this.props.vehicles);
-    const thisMonthCO2Produced = thisMonthGHGData.cO2Produced;
-    const thisMonthCO2Reduced = thisMonthGHGData.cO2Reduced;
+    const thisMonthCeData = getCumulativeCE(getThisMonth, this.props.vehicles);
+    const thisMonthCO2Produced = thisMonthCeData.cO2Produced;
+    const thisMonthCO2Reduced = thisMonthCeData.cO2Reduced;
     let result;
     if (thisMonthCO2Produced > 0 && (thisMonthCO2Reduced === 0 || thisMonthCO2Reduced < thisMonthCO2Produced)) {
       result = 'Uh-oh. It looks like you are producing more emissions rather than reducing them.' +
@@ -43,7 +43,7 @@ class UserVSCumulative extends React.Component {
         <Container style={paddingStyle}>
           <Grid stackable>
             <Grid.Column textAlign='center' width={16}>
-              <Header as='h1'>My GHG Statistics vs HEI Community</Header>
+              <Header as='h1'>My CE Statistics vs HEI Community</Header>
               <Header as='h1'>{months[date.getMonth()]} {date.getFullYear()}</Header>
               <ComparisonGraph userData={this.props.dailyData} userDataAll={this.props.dailyDataAll}
                 users={this.props.users}

@@ -1,6 +1,6 @@
 /**
- * DailyGHGData.js is a global document that contains the utility function that computes for a single
- * GHG Data or climate-related metrics
+ * DailyCeData.js is a global document that contains the utility function that computes for a single
+ * CE Data or climate-related metrics
  *
  * author(s):   Daphne Marie Tapia, Chak Hon Lam
  */
@@ -8,7 +8,7 @@ import { _ } from 'meteor/underscore';
 import {
   altSelectFieldOptions,
   averageAutoMPG,
-  gHGPerGallon,
+  cePerGallon,
   kmToMiFactor,
   miToKmFactor,
 } from './GlobalVariables';
@@ -37,7 +37,7 @@ export const getModeType = (modeOfTransportation, userVehicles) => ((altSelectFi
  * @param userVehicles, all vehicles owned by current user
  * @returns {Object}
  */
-export const getDailyGHG = (milesTraveled, modeOfTransportation, userVehicles) => {
+export const getDailyCE = (milesTraveled, modeOfTransportation, userVehicles) => {
   const eImpactDaily = {};
 
   // get max MPG (replace with favorite car's MPG later)
@@ -55,7 +55,7 @@ export const getDailyGHG = (milesTraveled, modeOfTransportation, userVehicles) =
 
   const fuelSaved = milesTraveled / autoMPG;
   eImpactDaily.fuelSaved = Number(((typeof fuelSaved === 'number') ? fuelSaved : 0).toFixed(2));
-  eImpactDaily.cO2Reduced = Number((fuelSaved * gHGPerGallon).toFixed(2));
+  eImpactDaily.cO2Reduced = Number((fuelSaved * cePerGallon).toFixed(2));
 
   return eImpactDaily;
 };

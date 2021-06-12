@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import swal from 'sweetalert';
 import { UserSavedDistances } from '../../../../api/user/UserSavedDistanceCollection';
-import { getMilesTraveled, getDateToday, getKilometersTraveled, getModeType } from '../../../utilities/DailyGHGData';
+import { getMilesTraveled, getDateToday, getKilometersTraveled, getModeType } from '../../../utilities/DailyCeData';
 import { altSelectFieldOptions } from '../../../utilities/GlobalVariables';
 import { userDailyDataDefineMethod } from '../../../../api/user/UserDailyDataCollection.methods';
 

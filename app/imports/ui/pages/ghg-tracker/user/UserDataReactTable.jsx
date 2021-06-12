@@ -7,7 +7,7 @@ import AddDailyData from '../../../components/ghg-tracker/user-data-page/AddDail
 import { UserDailyData } from '../../../../api/user/UserDailyDataCollection';
 import WhatIf from '../../../components/ghg-tracker/user-data-page/WhatIf';
 import 'react-smart-data-table/dist/react-smart-data-table.css';
-import { getDailyGHG, getKilometersTraveled } from '../../../utilities/DailyGHGData';
+import { getDailyCE, getKilometersTraveled } from '../../../utilities/DailyCeData';
 import DeleteDailyData from '../../../components/ghg-tracker/user-data-page/DeleteDailyData';
 import EditDailyData from '../../../components/ghg-tracker/user-data-page/EditDailyData';
 import { UserVehicles } from '../../../../api/user/UserVehicleCollection';
@@ -34,7 +34,7 @@ class UserDataReactTable extends React.Component {
     } else {
       data.milesTraveled = dailyData.milesTraveled;
     }
-    const eImpactDaily = getDailyGHG(dailyData.milesTraveled, data.modeOfTransportation, vehicles);
+    const eImpactDaily = getDailyCE(dailyData.milesTraveled, data.modeOfTransportation, vehicles);
     data.cO2Reduced = eImpactDaily.cO2Reduced;
     data.fuelSaved = eImpactDaily.fuelSaved;
     return data;

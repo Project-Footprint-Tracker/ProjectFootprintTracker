@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { UserDailyData } from '../../../../api/user/UserDailyDataCollection';
-import { getCumulativeGHG } from '../../../utilities/CumulativeGHGData';
+import { getCumulativeCE } from '../../../utilities/CumulativeCeData';
 import { UserVehicles } from '../../../../api/user/UserVehicleCollection';
 
 const paddingStyle = { padding: '20px' };
@@ -16,8 +16,8 @@ class LandingCumulativeData extends React.Component {
 
   renderPage() {
     // Get daily data
-    const ghgData = getCumulativeGHG(this.props.dailyData, this.props.vehicles);
-    const totalCO2Reduced = ghgData.cO2Reduced.toFixed(2);
+    const ceData = getCumulativeCE(this.props.dailyData, this.props.vehicles);
+    const totalCO2Reduced = ceData.cO2Reduced.toFixed(2);
 
     return (
       <div className='landing-data' style={paddingStyle}>

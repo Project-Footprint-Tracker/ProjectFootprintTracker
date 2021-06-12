@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { _ } from 'meteor/underscore';
 import { UserDailyData } from '../../../../api/user/UserDailyDataCollection';
 import CumulativeCard from './CumulativeCard';
-import { getCumulativeGHG } from '../../../utilities/CumulativeGHGData';
+import { getCumulativeCE } from '../../../utilities/CumulativeCeData';
 import { UserVehicles } from '../../../../api/user/UserVehicleCollection';
 
 class CumulativeDataCard extends React.Component {
@@ -38,11 +38,11 @@ class CumulativeDataCard extends React.Component {
         }
         return altData;
       });
-      const cumulativeGHG = getCumulativeGHG(this.props.userDailyData, this.props.vehicles);
+      const cumulativeCE = getCumulativeCE(this.props.userDailyData, this.props.vehicles);
       eImpact[0].data = sumData(altData, 'milesTraveled');
-      eImpact[1].data = cumulativeGHG.cO2Reduced.toFixed(1);
-      eImpact[2].data = cumulativeGHG.cO2Produced.toFixed(1);
-      eImpact[3].data = cumulativeGHG.fuelSaved.toFixed(1);
+      eImpact[1].data = cumulativeCE.cO2Reduced.toFixed(1);
+      eImpact[2].data = cumulativeCE.cO2Produced.toFixed(1);
+      eImpact[3].data = cumulativeCE.fuelSaved.toFixed(1);
       return eImpact;
     };
 
@@ -53,12 +53,12 @@ class CumulativeDataCard extends React.Component {
         data: '0',
       },
       {
-        title: 'Green House Gas (GHG) Reduced',
+        title: 'Carbon Emissions (CE) Reduced',
         img: '/images/colored-clipart/2.png',
         data: '0',
       },
       {
-        title: 'Green House Gas (GHG) Produced',
+        title: 'Carbon Emissions (CE) Produced',
         img: '/images/colored-clipart/5.png',
         data: '0',
       },

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Grid, Card, Statistic } from 'semantic-ui-react';
 import SideBar from './SideBar';
 import Chart from './Chart';
+import { cePerGallonFuel } from '../../../api/utilities/constants';
 
 /* global document */
 
@@ -15,12 +16,12 @@ function WhatIfContent(
     modesOfTransport,
     userProfile,
     userReady,
-    ghgProducedTotal,
-    ghgReducedPerDay,
+    ceProducedTotal,
+    ceReducedPerDay,
     fuelSavedPerDay,
     milesSavedPerDayWI,
     modesOfTransportWI,
-    ghgReducedPerDayWI,
+    ceReducedPerDayWI,
     fuelSavedPerDayWI,
     newMilesTotal,
   },
@@ -28,10 +29,10 @@ function WhatIfContent(
 
   const milesSavedTotalWI = newMilesTotal(milesSavedPerDayWI);
   const fuelSavedTotalWI = (milesSavedTotalWI / userProfile.autoMPG).toFixed(2);
-  const ghgProducedTotalWI = (((milesSavedTotal - milesSavedTotalWI) / userProfile.autoMPG) * 19.6).toFixed(2);
-  const ghgReducedTotalWI = (fuelSavedTotalWI * 19.6).toFixed(2);
+  const ceProducedTotalWI = (((milesSavedTotal - milesSavedTotalWI) / userProfile.autoMPG) * cePerGallonFuel).toFixed(2);
+  const ceReducedTotalWI = (fuelSavedTotalWI * cePerGallonFuel).toFixed(2);
   const fuelSavedTotal = (trueMilesSavedTotal / userProfile.autoMPG).toFixed(2);
-  const ghgReducedTotal = (fuelSavedTotal * 19.6).toFixed(2);
+  const ceReducedTotal = (fuelSavedTotal * cePerGallonFuel).toFixed(2);
   const milesSavedPerDayData = [{
     x: milesSavedPerDay.date,
     y: milesSavedPerDay.distance,
@@ -69,10 +70,10 @@ function WhatIfContent(
       color: 'rgb(176,216,230)',
       width: 3 },
   };
-  const ghgReducedPerDayData = {
-    x: ghgReducedPerDay.date,
-    y: ghgReducedPerDay.ghg,
-    name: 'Original GHG Reduced (pounds)',
+  const ceReducedPerDayData = {
+    x: ceReducedPerDay.date,
+    y: ceReducedPerDay.ce,
+    name: 'Original CE Reduced (pounds)',
     type: 'scatter',
     mode: 'lines+markers',
     hoverinfo: 'y',
@@ -80,10 +81,10 @@ function WhatIfContent(
       color: 'rgb(44,160,44)',
       width: 4 },
   };
-  const ghgReducedPerDayDataWI = {
-    x: ghgReducedPerDayWI.date,
-    y: ghgReducedPerDayWI.ghg,
-    name: 'What If GHG Reduced (pounds)',
+  const ceReducedPerDayDataWI = {
+    x: ceReducedPerDayWI.date,
+    y: ceReducedPerDayWI.ce,
+    name: 'What If CE Reduced (pounds)',
     type: 'scatter',
     mode: 'lines+markers',
     hoverinfo: 'y',
@@ -154,7 +155,7 @@ function WhatIfContent(
     },
   };
 
-  const fuelAndGhgPerDayLayout = {
+  const fuelAndCePerDayLayout = {
     autosize: true,
     margin: {
       t: tMargin,
@@ -168,8 +169,8 @@ function WhatIfContent(
       gridcolor: chartGridColor,
     },
     yaxis: {
-      title: 'Fuel and GHG saved',
-      range: [0, Math.max(...ghgReducedPerDay.ghg)],
+      title: 'Fuel and CE saved',
+      range: [0, Math.max(...ceReducedPerDay.ce)],
       type: 'linear',
       gridcolor: chartGridColor,
     },
@@ -272,34 +273,34 @@ function WhatIfContent(
         </Card>
         <Card className='whatif-card'>
           <Card.Header className='card-header'>
-              Green House Gas (GHG) Produced
+              Carbon Emissions (CE) Produced
           </Card.Header>
           <Card.Content textAlign='center'>
             <Statistic>
-              <Statistic.Value className='whatif-statistic'>{ghgProducedTotal}</Statistic.Value>
+              <Statistic.Value className='whatif-statistic'>{ceProducedTotal}</Statistic.Value>
               <Statistic.Label className='whatif-statistic'>pounds</Statistic.Label>
             </Statistic>
           </Card.Content>
           <Card.Content textAlign='center'>
             <Statistic>
-              <Statistic.Value className='whatif-statistic'>{ghgProducedTotalWI}</Statistic.Value>
+              <Statistic.Value className='whatif-statistic'>{ceProducedTotalWI}</Statistic.Value>
               <Statistic.Label className='whatif-statistic'>what if pounds</Statistic.Label>
             </Statistic>
           </Card.Content>
         </Card>
         <Card className='whatif-card'>
           <Card.Header className='card-header'>
-              Green House Gas (GHG) Reduced
+              Carbon Emissions (CE) Reduced
           </Card.Header>
           <Card.Content textAlign='center'>
             <Statistic>
-              <Statistic.Value className='whatif-statistic'>{ghgReducedTotal}</Statistic.Value>
+              <Statistic.Value className='whatif-statistic'>{ceReducedTotal}</Statistic.Value>
               <Statistic.Label className='whatif-statistic'>pounds</Statistic.Label>
             </Statistic>
           </Card.Content>
           <Card.Content textAlign='center'>
             <Statistic>
-              <Statistic.Value className='whatif-statistic'>{ghgReducedTotalWI}</Statistic.Value>
+              <Statistic.Value className='whatif-statistic'>{ceReducedTotalWI}</Statistic.Value>
               <Statistic.Label className='whatif-statistic'>what if pounds</Statistic.Label>
             </Statistic>
           </Card.Content>
@@ -333,10 +334,10 @@ function WhatIfContent(
         <Grid.Column>
           <Card className='whatif-card' fluid>
             <Card.Header className='card-header'>
-                Fuel Saved and GHG Reduced per Day
+                Fuel Saved and CE Reduced per Day
             </Card.Header>
             <Card.Content>
-              <Chart chartData={[fuelSavedPerDayData, ghgReducedPerDayData, fuelSavedPerDayDataWI, ghgReducedPerDayDataWI]} chartLayout={fuelAndGhgPerDayLayout}/>
+              <Chart chartData={[fuelSavedPerDayData, ceReducedPerDayData, fuelSavedPerDayDataWI, ceReducedPerDayDataWI]} chartLayout={fuelAndCePerDayLayout}/>
             </Card.Content>
           </Card>
         </Grid.Column>
@@ -352,12 +353,12 @@ WhatIfContent.propTypes = {
   modesOfTransport: PropTypes.object,
   userProfile: PropTypes.object,
   userReady: PropTypes.bool,
-  ghgProducedTotal: PropTypes.string,
-  ghgReducedPerDay: PropTypes.object,
+  ceProducedTotal: PropTypes.string,
+  ceReducedPerDay: PropTypes.object,
   fuelSavedPerDay: PropTypes.object,
   milesSavedPerDayWI: PropTypes.object,
   modesOfTransportWI: PropTypes.object,
-  ghgReducedPerDayWI: PropTypes.object,
+  ceReducedPerDayWI: PropTypes.object,
   fuelSavedPerDayWI: PropTypes.object,
   newMilesTotal: PropTypes.func,
 };

@@ -3,32 +3,16 @@ import SimpleSchema from 'simpl-schema';
 import _ from 'lodash';
 import swal from 'sweetalert';
 import BaseCollection from '../base/BaseCollection';
+import { tripModesArray, fuelCost, avgMpge, cePerGallonFuel, tripModes } from '../utilities/constants';
 
-export const tripModes = ['Telework', 'Public Transportation', 'Bike', 'Walk', 'Carpool', 'Electric Vehicle', 'Gas Car'];
 export const tripPublications = {
   trip: 'Trip',
   tripCommunity: 'TripCommunity',
 };
 
-export const ghgPerGallonFuel = 19.6;
-export const poundsOfGhgPerTree = 48;
-
-// Values taken from https://www.energy.gov/maps/egallon using Hawaii prices
-export const fuelCost = 3.10;
-export const eGallon = 2.65;
-
-// https://en.wikipedia.org/wiki/Miles_per_gallon_gasoline_equivalent#Conversion_to_MPGe
-// MPGe = (33,705 Wh/gal) / (Wh/mi of an electric car)
-
-// https://afdc.energy.gov/vehicles/electric_emissions_sources.html
-// average kWh/mi of an EV is 0.32 kWh/mi = 320 Wh/mi
-
-// average MPGe = (33,705 Wh/gal) / (320 Wh/mi) = 105.33 mi/gal
-export const avgMpge = 105;
-
 class TripCollection extends BaseCollection {
   constructor() {
-    super('Trips', new SimpleSchema({
+    super('Trip', new SimpleSchema({
       date: {
         type: Date,
         defaultValue: new Date(),
@@ -36,8 +20,8 @@ class TripCollection extends BaseCollection {
       distance: Number,
       mode: {
         type: String,
-        allowedValues: tripModes,
-        defaultValue: 'Gas Car',
+        allowedValues: tripModesArray,
+        defaultValue: tripModes.GAS_CAR,
       },
       passenger: {
         type: Number,
@@ -54,6 +38,7 @@ class TripCollection extends BaseCollection {
    * @param date of trip.
    * @param distance traveled.
    * @param mode of transportation.
+   * @param passenger number of passengers.
    * @param mpg of vehicle.
    * @param owner the owner of the item.
    * @param county the county of the owner.
@@ -367,8 +352,8 @@ class TripCollection extends BaseCollection {
       }
     });
 
-    const print = { date: date, distance: saved, mode: savedMode };
-    console.log(print);
+    // const print = { date: date, distance: saved, mode: savedMode };
+    // console.log(print);
 
     return {
       milesSaved: { date: date, distance: saved, mode: savedMode },
@@ -377,41 +362,39 @@ class TripCollection extends BaseCollection {
   }
 
   /**
-   * Returns the GHG that the specified user produced. GHG is produced whenever the user uses the Carpool and Gas Car modes.
+   * Returns the CE that the specified user produced. CE is produced whenever the user uses the Carpool and Gas Car modes.
    * @param username the username of the user.
    * @param userMPG the MPG of the user
-   * @returns {string} the amount of GHG that the user produced. It is a string because the function does a .toFixed(2) to round
+   * @returns {string} the amount of CE that the user produced. It is a string because the function does a .toFixed(2) to round
    * the number to two decimal places.
    */
-  getGHGProducedTotal(username, userMPG) {
+  getCEProducedTotal(username, userMPG) {
     const userTrips = this._collection.find({ owner: username }).fetch();
 
-    const ghgPerGallon = 19.6;
-    let ghgProduced = 0;
+    let ceProduced = 0;
 
     _.forEach(userTrips, function (objects) {
       if (objects.mode === 'Gas Car' || objects.mode === 'Carpool') {
-        ghgProduced += ((objects.distance / userMPG) * ghgPerGallon);
+        ceProduced += ((objects.distance / userMPG) * cePerGallonFuel);
       }
     });
 
-    return ghgProduced.toFixed(2);
+    return ceProduced.toFixed(2);
   }
 
   /**
-   * Gets the GHG that the user has reduced each day.
+   * Gets the CE that the user has reduced each day.
    * @param username the username of the user.
    * @param userMPG the MPG of the user.
-   * @returns {{date: [], ghg: []}}
-   * An object that contains an array of dates for the trips and an array of GHG that they saved for each of the respective date.
+   * @returns {{date: [], ce: []}}
+   * An object that contains an array of dates for the trips and an array of CE that they saved for each of the respective date.
    */
-  getGHGReducedPerDay(username, userMpg) {
+  getCEReducedPerDay(username, userMpg) {
     const userTrips = this._collection.find({ owner: username }).fetch();
 
     const date = [];
-    const ghg = [];
+    const ce = [];
 
-    const ghgPerGallon = 19.6;
     let prevDate = new Date();
 
     _.forEach(userTrips, function (objects) {
@@ -422,18 +405,18 @@ class TripCollection extends BaseCollection {
       if (tripMode !== 'Gas Car') {
         if (prevDate.getTime() !== tripDate.getTime()) {
           date.push(tripDate);
-          ghg.push(((tripDistance / userMpg) * ghgPerGallon).toFixed(2));
+          ce.push(((tripDistance / userMpg) * cePerGallonFuel).toFixed(2));
           prevDate = tripDate;
         } else {
-          let currentGhg = parseFloat(ghg[ghg.length - 1]);
-          currentGhg += ((tripDistance / userMpg) * ghgPerGallon);
-          ghg[ghg.length - 1] = currentGhg.toFixed(2);
+          let currentCE = parseFloat(ce[ce.length - 1]);
+          currentCE += ((tripDistance / userMpg) * cePerGallonFuel);
+          ce[ce.length - 1] = currentCE.toFixed(2);
         }
       }
 
     });
 
-    return { date: date, ghg: ghg };
+    return { date, ce };
   }
 
   /**
@@ -734,7 +717,7 @@ class TripCollection extends BaseCollection {
     };
   }
 
-  getGhgAvg(username) {
+  getCEAvg(username) {
     const userTrips = this._collection.find({ owner: username }).fetch();
 
     let currentYear = '';
@@ -777,37 +760,37 @@ class TripCollection extends BaseCollection {
       }
     });
 
-    const yearEvGhgAvg = (yearEvFuel / numOfYear) * ghgPerGallonFuel;
-    const monthEvGhgAvg = (monthEvFuel / numOfMonth) * ghgPerGallonFuel;
-    const dayEvGhgAvg = (dayEvFuel / numOfDay) * ghgPerGallonFuel;
+    const yearEvCeAvg = (yearEvFuel / numOfYear) * cePerGallonFuel;
+    const monthEvCeAvg = (monthEvFuel / numOfMonth) * cePerGallonFuel;
+    const dayEvCeAvg = (dayEvFuel / numOfDay) * cePerGallonFuel;
 
     const fuelAvg = this.getFuelAvg(username);
 
     const fuelSavedAvg = fuelAvg.fuelSavedAvg;
-    const yearGhgReducedAvg = (fuelSavedAvg.year * ghgPerGallonFuel).toFixed(2);
-    const monthGhgReducedAvg = (fuelSavedAvg.month * ghgPerGallonFuel).toFixed(2);
-    const dayGhgReducedAvg = (fuelSavedAvg.day * ghgPerGallonFuel).toFixed(2);
+    const yearCeReducedAvg = (fuelSavedAvg.year * cePerGallonFuel).toFixed(2);
+    const monthCeReducedAvg = (fuelSavedAvg.month * cePerGallonFuel).toFixed(2);
+    const dayCeReducedAvg = (fuelSavedAvg.day * cePerGallonFuel).toFixed(2);
 
     const fuelSpentAvg = fuelAvg.fuelSpentAvg;
-    const yearGhgProducedAvg = (fuelSpentAvg.year * ghgPerGallonFuel).toFixed(2);
-    const monthGhgProducedAvg = (fuelSpentAvg.month * ghgPerGallonFuel).toFixed(2);
-    const dayGhgProducedAvg = (fuelSpentAvg.day * ghgPerGallonFuel).toFixed(2);
+    const yearCeProducedAvg = (fuelSpentAvg.year * cePerGallonFuel).toFixed(2);
+    const monthCeProducedAvg = (fuelSpentAvg.month * cePerGallonFuel).toFixed(2);
+    const dayCeProducedAvg = (fuelSpentAvg.day * cePerGallonFuel).toFixed(2);
 
     return {
-      ghgReducedAvg: {
-        ghgReducedAvgPerYear: yearGhgReducedAvg,
-        ghgReducedAvgPerMonth: monthGhgReducedAvg,
-        ghgReducedAvgPerDay: dayGhgReducedAvg,
+      ceReducedAvg: {
+        ceReducedAvgPerYear: yearCeReducedAvg,
+        ceReducedAvgPerMonth: monthCeReducedAvg,
+        ceReducedAvgPerDay: dayCeReducedAvg,
       },
-      ghgProducedAvg: {
-        ghgProducedAvgPerYear: yearGhgProducedAvg,
-        ghgProducedAvgPerMonth: monthGhgProducedAvg,
-        ghgProducedAvgPerDay: dayGhgProducedAvg,
+      ceProducedAvg: {
+        ceProducedAvgPerYear: yearCeProducedAvg,
+        ceProducedAvgPerMonth: monthCeProducedAvg,
+        ceProducedAvgPerDay: dayCeProducedAvg,
       },
-      evGhgProducedAvg: {
-        evGhgProducedAvgPerYear: yearEvGhgAvg ? yearEvGhgAvg.toFixed(2) : '0.00',
-        evGhgProducedAvgPerMonth: monthEvGhgAvg ? monthEvGhgAvg.toFixed(2) : '0.00',
-        evGhgProducedAvgPerDay: dayEvGhgAvg ? dayEvGhgAvg.toFixed(2) : '0.00',
+      evCeProducedAvg: {
+        evCeProducedAvgPerYear: yearEvCeAvg ? yearEvCeAvg.toFixed(2) : '0.00',
+        evCeProducedAvgPerMonth: monthEvCeAvg ? monthEvCeAvg.toFixed(2) : '0.00',
+        evCeProducedAvgPerDay: dayEvCeAvg ? dayEvCeAvg.toFixed(2) : '0.00',
       },
     };
   }

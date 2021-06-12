@@ -5,15 +5,15 @@ import DashboardStatisticsCard from './DashboardStatisticsCard';
 
 function DashboardTreeCard(
   {
-    treesPerGhgReduced,
-    treesPerGhgProduced,
+    treesPerCeReduced,
+    treesPerCeProduced,
     userProfile,
   },
 ) {
 
   return (
     <DashboardStatisticsCard
-      cardHeader='Tree per GHG'
+      cardHeader='Tree per CE'
       topContent={
         <Grid>
           <Grid.Column className='tree-icon' width={6}>
@@ -22,14 +22,14 @@ function DashboardTreeCard(
           <Grid.Column width={10} textAlign='center' style={{ paddingLeft: '0.4rem' }}>
             <Statistic >
               <Statistic.Value className='dashboard-statistic'>
-                {treesPerGhgReduced}
+                {treesPerCeReduced}
               </Statistic.Value>
-              <Statistic.Label className='dashboard-statistic'>tree equivalence to ghg reduced</Statistic.Label>
+              <Statistic.Label className='dashboard-statistic'>tree equivalence to ce reduced</Statistic.Label>
             </Statistic>
           </Grid.Column>
         </Grid>
       }
-      popupTop='One tree absorbs 48 pounds of GHG each year. Based on the amount of GHG you reduced, this number represents your contribution in reducing GHG in terms of trees.'
+      popupTop='One tree absorbs 48 pounds of CE each year. Based on the amount of CE you reduced, this number represents your contribution in reducing CE in terms of trees.'
       bottomContent={
         <Grid>
           <Grid.Column className='tree-icon' width={6}>
@@ -38,23 +38,23 @@ function DashboardTreeCard(
           <Grid.Column width={10} textAlign='center' style={{ paddingLeft: '0.4rem' }}>
             <Statistic >
               <Statistic.Value className='dashboard-statistic'>
-                {treesPerGhgProduced}
+                {treesPerCeProduced}
               </Statistic.Value>
-              <Statistic.Label className='dashboard-statistic'>tree equivalence to ghg produced</Statistic.Label>
+              <Statistic.Label className='dashboard-statistic'>tree equivalence to ce produced</Statistic.Label>
             </Statistic>
           </Grid.Column>
         </Grid>
 
       }
-      popupBottom='One tree absorbs 48 pounds of GHG each year. Based on the amount of GHG you produced, you would need to plant this many trees in order to offset the produced GHG.'
+      popupBottom='One tree absorbs 48 pounds of CE each year. Based on the amount of CE you produced, you would need to plant this many trees in order to offset the produced CE.'
       userProfile={userProfile}
     />
   );
 }
 
 DashboardTreeCard.propTypes = {
-  treesPerGhgReduced: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  treesPerGhgProduced: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  treesPerCeReduced: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  treesPerCeProduced: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   userProfile: PropTypes.object,
 };
 

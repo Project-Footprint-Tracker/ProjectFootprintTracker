@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { Grid, Form, Card, Image, Header, Popup, Button } from 'semantic-ui-react';
 import '../../../../client/style.css';
+import { cePerGallonFuel } from '../../../api/utilities/constants';
 
 const QuickAccess = () => {
   const [miles, setMiles] = useState(1);
   const [mpg, setMpg] = useState(1);
-  const [ghg, setGhg] = useState(0);
+  const [ce, setCe] = useState(0);
   const [transportationMethod, setTransportation] = useState('produced');
   const updateProduced = (updatedMiles, updatedMpg) => {
-    setGhg((updatedMiles / updatedMpg) * 19.64);
+    setCe((updatedMiles / updatedMpg) * cePerGallonFuel);
   };
   const handleMiles = newMiles => {
     if (newMiles.target.value === '') {
@@ -122,10 +123,10 @@ const QuickAccess = () => {
               <Card>
                 {// Temporary Image from:https://favpng.com/png_view/array-health-greenhouse-gas-lyocell-material-logo-png/M35VccaZ
                 }
-                <img src={'/images/e-impact/LeafLogo.png'} width={280} height={280} alt="GHG Logo" />
+                <img src={'/images/e-impact/LeafLogo.png'} width={280} height={280} alt="CE Logo" />
                 <Card.Content>
                   <Card.Header>CO2 {transportationMethod}</Card.Header>
-                  <Card.Description>You {transportationMethod} a total of <strong>{ghg.toFixed(2)} lb. of Carbon
+                  <Card.Description>You {transportationMethod} a total of <strong>{ce.toFixed(2)} lb. of Carbon
                     Dioxide(CO2)</strong></Card.Description>
                 </Card.Content>
               </Card>

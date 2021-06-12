@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Header, Image } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { _ } from 'meteor/underscore';
-import { getCumulativeGHG } from '../../../utilities/CumulativeGHGData';
+import { getCumulativeCE } from '../../../utilities/CumulativeCeData';
 
 /** Renders the Page for displaying the user's data: Their numbers for the day, overview of their carbon footprint, and
  * users may also edit their data of their entries.
@@ -14,17 +14,17 @@ const MyNumbers = (props) => {
   const getByMonthIndividual = _.filter(props.dailyData, (userTrip) => (userTrip.inputDate.getMonth() ===
         date.getMonth() && userTrip.inputDate.getFullYear() === date.getFullYear()));
   const hoursTelework = _.size(_.where(getByMonthIndividual, { modeOfTransportation: 'Telework' }));
-  const ghgData = getCumulativeGHG(getByMonthIndividual, props.vehicles);
-  const totalCO2Reduced = ghgData.cO2Reduced;
-  const totalMiles = ghgData.VMTReduced;
-  const totalFuelSaved = ghgData.fuelSaved;
-  const totalGHGProduced = ghgData.cO2Produced;
+  const ceData = getCumulativeCE(getByMonthIndividual, props.vehicles);
+  const totalCO2Reduced = ceData.cO2Reduced;
+  const totalMiles = ceData.VMTReduced;
+  const totalFuelSaved = ceData.fuelSaved;
+  const totalCeProduced = ceData.cO2Produced;
   return (
     <div className='background-total-user-data'>
       <Grid stackable columns={3}>
         <Grid.Column width={16}>
           <Header as='h1' textAlign='center'>
-                        My {months[date.getMonth()]} {date.getFullYear()} GHG Breakdown</Header>
+                        My {months[date.getMonth()]} {date.getFullYear()} CE Breakdown</Header>
           <hr/>
         </Grid.Column>
       </Grid>
@@ -64,7 +64,7 @@ const MyNumbers = (props) => {
               margin: '0 auto' }} src="/images/colored-clipart/5.png"
             size='small' alt="biking"/>
             <Header as='h1' textAlign='center'>Total CO2 Produced</Header>
-            <Header as='h2' textAlign='center'>{totalGHGProduced.toFixed(2)} lb(s)</Header>
+            <Header as='h2' textAlign='center'>{totalCeProduced.toFixed(2)} lb(s)</Header>
           </Grid.Column>
         </Grid>
       </div>

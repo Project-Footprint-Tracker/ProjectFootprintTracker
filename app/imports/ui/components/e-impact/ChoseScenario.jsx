@@ -6,6 +6,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import swal from 'sweetalert';
 import { Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { cePerGallonFuel, tripModes } from '../../../api/utilities/constants';
 
 /* global window */
 
@@ -14,7 +15,7 @@ function ChoseScenario(
     milesSavedPerDay,
     modesOfTransport,
     userProfile,
-    ghgProducedTotal,
+    ceProducedTotal,
     test,
   },
 ) {
@@ -35,21 +36,21 @@ function ChoseScenario(
     value: modesOfTransport.value[i],
   })));
 
-  const nGHGProducedTotal = useRef(ghgProducedTotal);
+  const nCeProducedTotal = useRef(ceProducedTotal);
 
   function colorType(type) {
     let color;
-    if (type === 'Telework') {
+    if (type === tripModes.TELEWORK) {
       color = '#1f77b4';
-    } else if (type === 'Carpool') {
+    } else if (type === tripModes.CARPOOL) {
       color = '#ff7f0e';
-    } else if (type === 'Bike') {
+    } else if (type === tripModes.BIKE) {
       color = '#2ca02c';
-    } else if (type === 'Walk') {
+    } else if (type === tripModes.WALK) {
       color = '#e377c2';
-    } else if (type === 'Electric Vehicle') {
+    } else if (type === tripModes.ELECTRIC_VEHICLE) {
       color = '#d62728';
-    } else if (type === 'Gas Car') {
+    } else if (type === tripModes.GAS_CAR) {
       color = '#9467bd';
     } else {
       color = '#8c564b';
@@ -109,24 +110,23 @@ function ChoseScenario(
   // on clicking submit button, updates state events with new info
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    // let ghgReduced = 0;
+    // let ceReduced = 0;
     const modesOTV = [];
     const modesOTL = [];
     let modesOT = {};
-    let ghgProduced = 0;
+    let ceProduced = 0;
     const milesSPDDate = [];
     const milesSPDDistance = [];
     const milesSPDM = [];
     let milesSPD = {};
-    const ghgRPDD = [];
-    const ghgRPDG = [];
-    let ghgRPD = {};
+    const ceRPDD = [];
+    const ceRPDG = [];
+    let ceRPD = {};
     const fuelSPDD = [];
     const fuelSPDF = [];
     const fuelSPDP = [];
     let fuelSPD = {};
     const userMPG = userProfile.autoMPG;
-    const ghgPerGallon = 19.6;
     // check that event is selected to change
     if (isEventSelected.current === true) {
       // store event state in array
@@ -166,8 +166,8 @@ function ChoseScenario(
       });
       modesOT = { value: modesOTV, label: modesOTL };
       // FINISHED MODES OF TRANSPORT CHANGES.
-      // MILES SAVED & GHG PRODUCED
-      // update nGHGProducedTotal
+      // MILES SAVED & CE PRODUCED
+      // update nCEProducedTotal
       // ! check for if user doesn't have autoMPG registered
       // Get date of original selected event.
       const indexOfOldMiles = nMilesSavedPerDay.current.findIndex(({ date }) => date === selectedEvent.oldDateFormat);
@@ -182,34 +182,33 @@ function ChoseScenario(
         milesSPDM.push(objects.mode);
       });
       milesSPD = { date: milesSPDDate, distance: milesSPDDistance, mode: milesSPDM };
-      // If event produced miles & ghg
+      // If event produced miles & ce
       _.forEach(nMilesSavedPerDay.current, function (objects) {
-        if (objects.mode === 'Gas Car' || objects.mode === 'Carpool') {
-          ghgProduced += ((objects.distance / userMPG) * ghgPerGallon);
-          ghgRPDD.push(objects.date);
-          ghgRPDG.push(0);
+        if (objects.mode === tripModes.GAS_CAR || objects.mode === tripModes.CARPOOL) {
+          ceProduced += ((objects.distance / userMPG) * cePerGallonFuel);
+          ceRPDD.push(objects.date);
+          ceRPDG.push(0);
           fuelSPDD.push(objects.date);
           fuelSPDF.push(0);
           fuelSPDP.push(((objects.distance / userMPG) * 3.77).toFixed(2));
         } else {
-          // ghgReduced += ((objects.distance / userMPG) * ghgPerGallon);
-          ghgRPDD.push(objects.date);
-          ghgRPDG.push(((objects.distance / userMPG) * ghgPerGallon).toFixed(2));
+          ceRPDD.push(objects.date);
+          ceRPDG.push(((objects.distance / userMPG) * cePerGallonFuel).toFixed(2));
           fuelSPDD.push(objects.date);
           fuelSPDF.push((objects.distance / userMPG).toFixed(2));
           fuelSPDP.push(((objects.distance / userMPG) * 3.77).toFixed(2));
         }
       });
-      // If event reduced miles & ghg
-      ghgRPD = { date: ghgRPDD, ghg: ghgRPDG };
+      // If event reduced miles & ce
+      ceRPD = { date: ceRPDD, ce: ceRPDG };
       fuelSPD = { date: fuelSPDD, fuel: fuelSPDF, price: fuelSPDP };
-      nGHGProducedTotal.current = ghgProduced;
+      nCeProducedTotal.current = ceProduced;
       // sets the selected event to the change in case of additional changes before selecting a new event.
       setSelectedEvent(() => ({ id: selectedEvent.id, title: transport, date: selectedEvent.date, oldDateFormat: selectedEvent.oldDateFormat }));
     } else {
       swal('Pick a date');
     }
-    test(milesSPD, modesOT, ghgRPD, fuelSPD);
+    test(milesSPD, modesOT, ceRPD, fuelSPD);
   };
 
   // updates selected state transport
@@ -296,8 +295,8 @@ ChoseScenario.propTypes = {
   milesSavedPerDay: PropTypes.object,
   modesOfTransport: PropTypes.object,
   userProfile: PropTypes.object,
-  ghgProducedTotal: PropTypes.string,
-  ghgReducedPerDay: PropTypes.object,
+  ceProducedTotal: PropTypes.string,
+  ceReducedPerDay: PropTypes.object,
   fuelSavedPerDay: PropTypes.object,
   test: PropTypes.func,
 };

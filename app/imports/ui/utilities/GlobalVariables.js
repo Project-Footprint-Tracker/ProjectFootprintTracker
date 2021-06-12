@@ -1,5 +1,5 @@
 // Common conversion factor of 8,887 grams of CO2 emissions per gallon of gasoline consumed (Federal Register 2010)
-export const gHGPerGallon = 19.6;
+export const cePerGallon = 19.6;
 
 // The weighted average combined fuel economy for cars and light trucks in 2017 (FHWA 2019)
 // Read more: https://www.epa.gov/energy/greenhouse-gases-equivalencies-calculator-calculations-and-references

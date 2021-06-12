@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Card } from 'semantic-ui-react';
-import { getCumulativeGHG } from '../../../utilities/CumulativeGHGData';
+import { getCumulativeCE } from '../../../utilities/CumulativeCeData';
 
 /** A simple static component to render some text for the landing page. */
 class LeafWidget extends React.Component {
 
   constructor(props) {
     super(props);
-    this.data = getCumulativeGHG(this.props.userData, this.props.userVehicles);
+    this.data = getCumulativeCE(this.props.userData, this.props.userVehicles);
     this.startPer = 0;
     this.endPer = ((this.data.cO2Reduced.toFixed(1) % 48) / 48) * 100;
     this.state = { percent: 0 };

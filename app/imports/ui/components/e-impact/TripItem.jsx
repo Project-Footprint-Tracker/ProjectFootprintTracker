@@ -7,6 +7,7 @@ import { Trips } from '../../../api/trip/TripCollection';
 import { savedTripPublications, SavedTrips } from '../../../api/trip/SavedTripCollection';
 import { Users } from '../../../api/user/UserCollection';
 import SaveTripModal from './SaveTripModal';
+import { cePerGallonFuel } from '../../../api/utilities/constants';
 
 /* global document */
 
@@ -20,7 +21,7 @@ const TripItem = (props) => {
   } else {
     gallons = -(props.trip.distance !== 0 ? ((props.trip.distance / tripMpg)) : 0);
   }
-  const ghg = gallons === 0 ? 0 : gallons * 19.6;
+  const ce = gallons === 0 ? 0 : gallons * cePerGallonFuel;
 
   const gStyle = gallons > 0 ? { color: 'red' } : { color: 'green' };
 
@@ -87,7 +88,7 @@ const TripItem = (props) => {
       <Table.Cell className='daily-table-data'>{props.trip.distance} mi</Table.Cell>
       <Table.Cell className='daily-table-data'>{props.trip.mpg}</Table.Cell>
       <Table.Cell style={gStyle}>{gallons === 0 ? 0 : `${abs(gallons).toFixed(2)} gal`}</Table.Cell>
-      <Table.Cell style={gStyle}>{ghg === 0 ? 0 : `${abs(ghg).toFixed(2)} lbs`}</Table.Cell>
+      <Table.Cell style={gStyle}>{ce === 0 ? 0 : `${abs(ce).toFixed(2)} lbs`}</Table.Cell>
       <Table.Cell>
         <Modal
           id='save-trip-modal'

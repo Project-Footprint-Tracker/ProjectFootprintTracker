@@ -5,9 +5,9 @@ import SideBar from './SideBar';
 import Chart from './Chart';
 import DashboardMilesCard from './DashboardMilesCard';
 import DashboardFuelCard from './DashboardFuelCard';
-import DashboardGhgCard from './DashboardGhgCard';
+import DashboardCeCard from './DashboardCeCard';
 import DashboardTreeCard from './DashboardTreeCard';
-import { ghgPerGallonFuel, poundsOfGhgPerTree } from '../../../api/trip/TripCollection';
+import { cePerGallonFuel, poundsOfCePerTree } from '../../../api/utilities/constants';
 
 /* global document */
 
@@ -22,15 +22,15 @@ function DashboardContent(
     milesPerMode,
     userProfile,
     userReady,
-    ghgReducedPerDay,
+    ceReducedPerDay,
     fuelSavedPerDay,
     milesSavedAvg,
     milesTraveledAvg,
     fuelSavedAvg,
     fuelSpentAvg,
-    ghgReducedAvg,
-    ghgProducedAvg,
-    evGhgProducedAvg,
+    ceReducedAvg,
+    ceProducedAvg,
+    evCeProducedAvg,
   },
 ) {
 
@@ -76,21 +76,21 @@ function DashboardContent(
     mode: 'lines+markers',
   };
 
-  const ghgProducedTotal = (fuelCostTotal * ghgPerGallonFuel).toFixed(2);
+  const ceProducedTotal = (fuelCostTotal * cePerGallonFuel).toFixed(2);
 
-  const ghgReducedTotal = (fuelSavedTotal * ghgPerGallonFuel).toFixed(2);
+  const ceReducedTotal = (fuelSavedTotal * cePerGallonFuel).toFixed(2);
 
-  const ghgReducedPerDayData = {
-    x: ghgReducedPerDay.date,
-    y: ghgReducedPerDay.ghg,
-    name: 'GHG Reduced (pounds)',
+  const ceReducedPerDayData = {
+    x: ceReducedPerDay.date,
+    y: ceReducedPerDay.ce,
+    name: 'CE Reduced (pounds)',
     type: 'bar',
   };
 
   // 100,000 trees = 2,400 tons of CO2 or 4,800,000 pounds of CO2
   // 1 tree = 48 pounds of CO2
-  const treesPerGhgProduced = (ghgProducedTotal / poundsOfGhgPerTree).toFixed(0);
-  const treesPerGhgReduced = (ghgReducedTotal / poundsOfGhgPerTree).toFixed(0);
+  const treesPerCeProduced = (ceProducedTotal / poundsOfCePerTree).toFixed(0);
+  const treesPerCeReduced = (ceReducedTotal / poundsOfCePerTree).toFixed(0);
 
   const modesOfTransportData = [{
     values: modesOfTransport.value,
@@ -189,7 +189,7 @@ function DashboardContent(
     },
   };
 
-  const ghgReducedPerDayLayout = {
+  const ceReducedPerDayLayout = {
     autosize: true,
     height: '400',
     margin: {
@@ -197,14 +197,14 @@ function DashboardContent(
       b: bMargin,
     },
     xaxis: {
-      range: [ghgReducedPerDay.date[0], ghgReducedPerDay.date[10]],
-      rangeslider: { range: [ghgReducedPerDay.date[0], ghgReducedPerDay.date[ghgReducedPerDay.length - 1]] },
+      range: [ceReducedPerDay.date[0], ceReducedPerDay.date[10]],
+      rangeslider: { range: [ceReducedPerDay.date[0], ceReducedPerDay.date[ceReducedPerDay.length - 1]] },
       type: 'date',
       gridcolor: chartGridColor,
     },
     yaxis: {
-      title: 'GHG Reduced (pounds)',
-      range: [0, Math.max(...ghgReducedPerDay.ghg)],
+      title: 'CE Reduced (pounds)',
+      range: [0, Math.max(...ceReducedPerDay.ce)],
       type: 'linear',
       gridcolor: chartGridColor,
     },
@@ -266,17 +266,17 @@ function DashboardContent(
           fuelSpentAvgPerDay={fuelSpentAvg.day}
           userProfile={userProfile}
         />
-        <DashboardGhgCard
-          ghgProducedTotal={ghgProducedTotal}
-          ghgReducedTotal={ghgReducedTotal}
-          ghgProducedAvg={ghgProducedAvg}
-          ghgReducedAvg={ghgReducedAvg}
-          evGhgProducedAvg={evGhgProducedAvg}
+        <DashboardCeCard
+          ceProducedTotal={ceProducedTotal}
+          ceReducedTotal={ceReducedTotal}
+          ceProducedAvg={ceProducedAvg}
+          ceReducedAvg={ceReducedAvg}
+          evCeProducedAvg={evCeProducedAvg}
           userProfile={userProfile}
         />
         <DashboardTreeCard
-          treesPerGhgProduced={treesPerGhgProduced}
-          treesPerGhgReduced={treesPerGhgReduced}
+          treesPerCeProduced={treesPerCeProduced}
+          treesPerCeReduced={treesPerCeReduced}
           userProfile={userProfile}
         />
       </Card.Group>
@@ -319,10 +319,10 @@ function DashboardContent(
         <Grid.Column>
           <Card className='general-card' fluid>
             <Card.Header className='card-header'>
-                GHG Reduced per Day
+                CE Reduced per Day
             </Card.Header>
             <Card.Content>
-              <Chart chartData={[ghgReducedPerDayData]} chartLayout={ghgReducedPerDayLayout}/>
+              <Chart chartData={[ceReducedPerDayData]} chartLayout={ceReducedPerDayLayout}/>
             </Card.Content>
           </Card>
         </Grid.Column>
@@ -341,16 +341,16 @@ DashboardContent.propTypes = {
   milesPerMode: PropTypes.array,
   userProfile: PropTypes.object,
   userReady: PropTypes.bool,
-  ghgProducedTotal: PropTypes.string,
-  ghgReducedPerDay: PropTypes.object,
+  ceProducedTotal: PropTypes.string,
+  ceReducedPerDay: PropTypes.object,
   fuelSavedPerDay: PropTypes.object,
   milesSavedAvg: PropTypes.object,
   milesTraveledAvg: PropTypes.object,
   fuelSavedAvg: PropTypes.object,
   fuelSpentAvg: PropTypes.object,
-  ghgReducedAvg: PropTypes.object,
-  ghgProducedAvg: PropTypes.object,
-  evGhgProducedAvg: PropTypes.object,
+  ceReducedAvg: PropTypes.object,
+  ceProducedAvg: PropTypes.object,
+  evCeProducedAvg: PropTypes.object,
 };
 
 export default DashboardContent;

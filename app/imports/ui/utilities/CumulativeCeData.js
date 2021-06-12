@@ -1,11 +1,11 @@
 /**
- * CumulativeGHGData.js is a global document that contains utility functions that computes for the cumulative GHG Data
+ * CumulativeCeData.js is a global document that contains utility functions that computes for the cumulative CE Data
  * or climate-related metrics needed for data charts and dashboards implemented in this application.
  *
  * author(s):   Daphne Marie Tapia, Sophia Elize Cruz, Timothy Huo, Chak Hon Lam
  */
 import { altSelectFieldOptions } from './GlobalVariables';
-import { getDailyGHG } from './DailyGHGData';
+import { getDailyCE } from './DailyCeData';
 
 const filterDailyData = (dailyData) => {
   const filtered = {};
@@ -15,11 +15,11 @@ const filterDailyData = (dailyData) => {
   return (filtered);
 };
 
-const getGHGData = (dailyData, userVehicles) => {
+const getCeData = (dailyData, userVehicles) => {
   const filtered = filterDailyData(dailyData);
-  const computeCO2 = (array) => array.map(data => Math.abs(getDailyGHG(data.milesTraveled, data.modeOfTransportation, userVehicles).cO2Reduced))
+  const computeCO2 = (array) => array.map(data => Math.abs(getDailyCE(data.milesTraveled, data.modeOfTransportation, userVehicles).cO2Reduced))
     .reduce((a, b) => a + b, 0);
-  const computeFuel = (array) => array.map(data => Math.abs(getDailyGHG(data.milesTraveled, data.modeOfTransportation, userVehicles).fuelSaved))
+  const computeFuel = (array) => array.map(data => Math.abs(getDailyCE(data.milesTraveled, data.modeOfTransportation, userVehicles).fuelSaved))
     .reduce((a, b) => a + b, 0);
   const computeVMT = (array) => array.map(data => data.milesTraveled)
     .reduce((a, b) => a + b, 0);
@@ -41,7 +41,7 @@ const getGHGData = (dailyData, userVehicles) => {
  * @returns {Object}
  */
 export const getCumulativePerMode = (dailyData, mode, userVehicles) => {
-  const ghgPerMode = {};
+  const cePerMode = {};
   let filtered;
 
   // Retrieves relevant user data from collection, filtered by modeOfTransportation
@@ -53,16 +53,16 @@ export const getCumulativePerMode = (dailyData, mode, userVehicles) => {
     filtered = dailyData.filter(({ modeType }) => modeType === 'Gas');
   }
 
-  const ghgData = getGHGData(filtered, userVehicles);
-  ghgPerMode.cO2Reduced = ghgData.reducedCO2;
-  ghgPerMode.cO2Produced = ghgData.producedCO2;
-  ghgPerMode.VMTReduced = ghgData.VMTReduced;
-  ghgPerMode.VMTProduced = ghgData.VMTProduced;
-  ghgPerMode.fuelSaved = ghgData.fuelSaved;
-  ghgPerMode.fuelSpent = ghgData.fuelSpent;
-  ghgPerMode.timesUsed = filtered.length;
+  const ceData = getCeData(filtered, userVehicles);
+  cePerMode.cO2Reduced = ceData.reducedCO2;
+  cePerMode.cO2Produced = ceData.producedCO2;
+  cePerMode.VMTReduced = ceData.VMTReduced;
+  cePerMode.VMTProduced = ceData.VMTProduced;
+  cePerMode.fuelSaved = ceData.fuelSaved;
+  cePerMode.fuelSpent = ceData.fuelSpent;
+  cePerMode.timesUsed = filtered.length;
 
-  return ghgPerMode;
+  return cePerMode;
 };
 
 /**
@@ -70,16 +70,16 @@ export const getCumulativePerMode = (dailyData, mode, userVehicles) => {
  * @param dailyData, an array of objects or documents from the DailyUserDataCollection
  * @returns {Object}
  */
-export const getCumulativeGHG = (dailyData, userVehicles) => {
-  const ghg = {};
+export const getCumulativeCE = (dailyData, userVehicles) => {
+  const ce = {};
 
-  const ghgData = getGHGData(dailyData, userVehicles);
-  ghg.cO2Reduced = ghgData.reducedCO2;
-  ghg.cO2Produced = ghgData.producedCO2;
-  ghg.VMTReduced = ghgData.VMTReduced;
-  ghg.VMTProduced = ghgData.VMTProduced;
-  ghg.fuelSaved = ghgData.fuelSaved;
-  ghg.fuelSpent = ghgData.fuelSpent;
+  const ceData = getCeData(dailyData, userVehicles);
+  ce.cO2Reduced = ceData.reducedCO2;
+  ce.cO2Produced = ceData.producedCO2;
+  ce.VMTReduced = ceData.VMTReduced;
+  ce.VMTProduced = ceData.VMTProduced;
+  ce.fuelSaved = ceData.fuelSaved;
+  ce.fuelSpent = ceData.fuelSpent;
 
-  return ghg;
+  return ce;
 };

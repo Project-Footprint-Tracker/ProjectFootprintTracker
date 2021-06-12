@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form, Icon, Modal, Popup, Table } from 'semantic-ui-react';
 import swal from 'sweetalert';
-import { getKilometersTraveled, getMilesTraveled } from '../../../../utilities/DailyGHGData';
+import { getKilometersTraveled, getMilesTraveled } from '../../../../utilities/DailyCeData';
 import {
   userSavedDistanceUpdateMethod,
   userSavedDistanceRemoveItMethod,

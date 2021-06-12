@@ -2,11 +2,12 @@ import { Meteor } from 'meteor/meteor';
 import { _ } from 'lodash';
 import moment from 'moment';
 import { Trips } from '../trip/TripCollection';
+import { cePerGallonFuel, tripModes } from './constants';
 
 export const getCountyData = (county) => {
-  const nonCarArr = Trips.find({ county: county, mode: { $not: 'Gas Car' } }).fetch().map(function (element) {
+  const nonCarArr = Trips.find({ county: county, mode: { $not: tripModes.GAS_CAR } }).fetch().map(function (element) {
     element.fuelSaved = element.distance / element.mpg;
-    element.ghgSaved = element.fuelSaved * 19.6;
+    element.ceSaved = element.fuelSaved * 19.6;
     return element;
   });
 
@@ -17,7 +18,7 @@ export const getCountyData = (county) => {
     }
     m[d.date].distance += d.distance;
     m[d.date].fuelSaved += d.fuelSaved;
-    m[d.date].ghgSaved += d.ghgSaved;
+    m[d.date].ceSaved += d.ceSaved;
     m[d.date].count += 1;
     return m;
   }, {});
@@ -28,13 +29,13 @@ export const getCountyData = (county) => {
       date: item.date,
       distance: item.distance,
       fuelSaved: (item.fuelSaved).toFixed(2),
-      ghgSaved: (item.ghgSaved).toFixed(2),
+      ceSaved: (item.ceSaved).toFixed(2),
     };
   });
 
-  const carArr = Trips.find({ county: county, mode: 'Gas Car' }).fetch().map(function (element) {
+  const carArr = Trips.find({ county: county, mode: tripModes.GAS_CAR }).fetch().map(function (element) {
     element.fuelUsed = element.distance / element.mpg;
-    element.ghgProduced = element.fuelUsed * 19.6;
+    element.ceProduced = element.fuelUsed * cePerGallonFuel;
     return element;
   });
 
@@ -45,7 +46,7 @@ export const getCountyData = (county) => {
     }
     m[d.date].distance += d.distance;
     m[d.date].fuelUsed += d.fuelUsed;
-    m[d.date].ghgProduced += d.ghgProduced;
+    m[d.date].ceProduced += d.ceProduced;
     m[d.date].count += 1;
     return m;
   }, {});
@@ -56,7 +57,7 @@ export const getCountyData = (county) => {
       date: item.date,
       distance: item.distance,
       fuelUsed: (item.fuelUsed).toFixed(2),
-      ghgProduced: (item.ghgProduced).toFixed(2),
+      ceProduced: (item.ceProduced).toFixed(2),
     };
   });
 
@@ -68,8 +69,8 @@ export const getCountyData = (county) => {
   const milesProduced = _.map(carByDay, 'distance');
   const fuelSavedByDay = _.map(nonCarByDay, 'fuelSaved');
   const fuelUsedByDay = _.map(carByDay, 'fuelUsed');
-  const ghgSavedByDay = _.map(nonCarByDay, 'ghgSaved');
-  const ghgProducedByDay = _.map(carByDay, 'ghgProduced');
+  const ceSavedByDay = _.map(nonCarByDay, 'ceSaved');
+  const ceProducedByDay = _.map(carByDay, 'ceProduced');
 
   const totalUsers = Meteor.users.find({ 'profile.county': county }).count();
 
@@ -77,28 +78,28 @@ export const getCountyData = (county) => {
   const carMpgs = _.map(Trips.find({ county: county, mode: 'Gas Car' }).fetch(), 'mpg');
   const fuelUsed = _.zipWith(carDistances, carMpgs, (distance, mpg) => distance / mpg);
   const totalFuelUsed = _.sum(fuelUsed).toFixed(2);
-  const totalGhgProduced = (totalFuelUsed * 19.6).toFixed(2);
+  const totalCeProduced = (totalFuelUsed * cePerGallonFuel).toFixed(2);
 
   const otherDistances = _.map(Trips.find({ county: county, mode: { $not: 'Gas Car' } }).fetch(), 'distance');
   const totalMilesSaved = _.sum(otherDistances).toFixed(2);
   const otherMpgs = _.map(Trips.find({ county: county, mode: { $not: 'Gas Car' } }).fetch(), 'mpg');
   const fuelSaved = _.zipWith(otherDistances, otherMpgs, (distance, mpg) => distance / mpg);
   const totalFuelSaved = _.sum(fuelSaved).toFixed(2);
-  const totalGhgReduced = (totalFuelSaved * 19.6).toFixed(2);
+  const totalCeReduced = (totalFuelSaved * cePerGallonFuel).toFixed(2);
 
-  const bikeCount = _.size(Trips.find({ county: county, mode: 'Bike' }).fetch());
-  const carpoolCount = _.size(Trips.find({ county: county, mode: 'Carpool' }).fetch());
-  const evCount = _.size(Trips.find({ county: county, mode: 'Electric Vehicle' }).fetch());
-  const carCount = _.size(Trips.find({ county: county, mode: 'Gas Car' }).fetch());
-  const ptCount = _.size(Trips.find({ county: county, mode: 'Public Transportation' }).fetch());
-  const teleworkCount = _.size(Trips.find({ county: county, mode: 'Telework' }).fetch());
-  const walkCount = _.size(Trips.find({ county: county, mode: 'Walk' }).fetch());
+  const bikeCount = _.size(Trips.find({ county: county, mode: tripModes.BIKE }).fetch());
+  const carpoolCount = _.size(Trips.find({ county: county, mode: tripModes.CARPOOL }).fetch());
+  const evCount = _.size(Trips.find({ county: county, mode: tripModes.ELECTRIC_VEHICLE }).fetch());
+  const carCount = _.size(Trips.find({ county: county, mode: tripModes.GAS_CAR }).fetch());
+  const ptCount = _.size(Trips.find({ county: county, mode: tripModes.PUBLIC_TRANSPORTATION }).fetch());
+  const teleworkCount = _.size(Trips.find({ county: county, mode: tripModes.TELEWORK }).fetch());
+  const walkCount = _.size(Trips.find({ county: county, mode: tripModes.WALK }).fetch());
 
   const modeDistribution = [{
     type: 'pie',
     hole: 0.4,
     values: [bikeCount, carpoolCount, evCount, carCount, ptCount, teleworkCount, walkCount],
-    labels: ['Bike', 'Carpool', 'Electric Vehicle', 'Gas Car', 'Public Transportation', 'Telework', 'Walk'],
+    labels: [tripModes.BIKE, tripModes.CARPOOL, tripModes.ELECTRIC_VEHICLE, tripModes.GAS_CAR, tripModes.PUBLIC_TRANSPORTATION, tripModes.TELEWORK, tripModes.WALK],
     hoverinfo: 'label+percent',
     textposition: 'inside',
   }];
@@ -139,31 +140,31 @@ export const getCountyData = (county) => {
 
   const fuelData = [fuelSavings, fuelUsage];
 
-  const ghgSavings =
+  const ceSavings =
       {
         x: formattedDates,
-        y: ghgSavedByDay,
+        y: ceSavedByDay,
         stackgroup: 'one',
         name: 'Saved',
       };
 
-  const ghgProduction =
+  const ceProduction =
       {
         x: formattedDates2,
-        y: ghgProducedByDay,
+        y: ceProducedByDay,
         stackgroup: 'one',
         name: 'Produced',
       };
 
-  const ghgData = [ghgSavings, ghgProduction];
+  const ceData = [ceSavings, ceProduction];
 
   return {
     totalUsers,
     totalMilesSaved,
     totalFuelUsed,
     totalFuelSaved,
-    totalGhgProduced,
-    totalGhgReduced,
+    totalCeProduced,
+    totalCeReduced,
     modeDistribution,
     vmtReduced,
     vmtProduced,
@@ -171,18 +172,18 @@ export const getCountyData = (county) => {
     fuelSavings,
     fuelUsage,
     fuelData,
-    ghgSavings,
-    ghgProduction,
-    ghgData,
+    ceSavings,
+    ceProduction,
+    ceData,
   };
 };
 
 export const getStateData = () => {
-  const nonCarArr = Trips.find({ mode: { $not: 'Gas Car' } }).fetch().map(function (element) {
+  const nonCarArr = Trips.find({ mode: { $not: tripModes.GAS_CAR } }).fetch().map(function (element) {
     // eslint-disable-next-line no-param-reassign
     element.fuelSaved = element.distance / element.mpg;
     // eslint-disable-next-line no-param-reassign
-    element.ghgSaved = element.fuelSaved * 19.6;
+    element.ceSaved = element.fuelSaved * cePerGallonFuel;
     return element;
   });
 
@@ -193,7 +194,7 @@ export const getStateData = () => {
     }
     m[d.date].distance += d.distance;
     m[d.date].fuelSaved += d.fuelSaved;
-    m[d.date].ghgSaved += d.ghgSaved;
+    m[d.date].ceSaved += d.ceSaved;
     m[d.date].count += 1;
     return m;
   }, {});
@@ -204,13 +205,13 @@ export const getStateData = () => {
       date: item.date,
       distance: item.distance,
       fuelSaved: (item.fuelSaved).toFixed(2),
-      ghgSaved: (item.ghgSaved).toFixed(2),
+      ceSaved: (item.ceSaved).toFixed(2),
     };
   });
 
-  const carArr = Trips.find({ mode: 'Gas Car' }).fetch().map(function (element) {
+  const carArr = Trips.find({ mode: tripModes.GAS_CAR }).fetch().map(function (element) {
     element.fuelUsed = element.distance / element.mpg;
-    element.ghgProduced = element.fuelUsed * 19.6;
+    element.ceProduced = element.fuelUsed * cePerGallonFuel;
     return element;
   });
 
@@ -221,7 +222,7 @@ export const getStateData = () => {
     }
     m[d.date].distance += d.distance;
     m[d.date].fuelUsed += d.fuelUsed;
-    m[d.date].ghgProduced += d.ghgProduced;
+    m[d.date].ceProduced += d.ceProduced;
     m[d.date].count += 1;
     return m;
   }, {});
@@ -232,7 +233,7 @@ export const getStateData = () => {
       date: item.date,
       distance: item.distance,
       fuelUsed: (item.fuelUsed).toFixed(2),
-      ghgProduced: (item.ghgProduced).toFixed(2),
+      ceProduced: (item.ceProduced).toFixed(2),
     };
   });
 
@@ -244,40 +245,40 @@ export const getStateData = () => {
   const milesProduced = _.map(carByDay, 'distance');
   const fuelSavedByDay = _.map(nonCarByDay, 'fuelSaved');
   const fuelUsedByDay = _.map(carByDay, 'fuelUsed');
-  const ghgSavedByDay = _.map(nonCarByDay, 'ghgSaved');
-  const ghgProducedByDay = _.map(carByDay, 'ghgProduced');
+  const ceSavedByDay = _.map(nonCarByDay, 'ceSaved');
+  const ceProducedByDay = _.map(carByDay, 'ceProduced');
 
   const totalUsers = getCountyData('Hawaii').totalUsers + getCountyData('Honolulu').totalUsers +
       getCountyData('Kalawao').totalUsers + getCountyData('Kauai').totalUsers
       + getCountyData('Maui').totalUsers;
 
-  const carDistances = _.map(Trips.find({ mode: 'Gas Car' }).fetch(), 'distance');
-  const carMpgs = _.map(Trips.find({ mode: 'Gas Car' }).fetch(), 'mpg');
+  const carDistances = _.map(Trips.find({ mode: tripModes.GAS_CAR }).fetch(), 'distance');
+  const carMpgs = _.map(Trips.find({ mode: tripModes.GAS_CAR }).fetch(), 'mpg');
   const fuelUsed = _.zipWith(carDistances, carMpgs, (distance, mpg) => distance / mpg);
   const totalFuelUsed = _.sum(fuelUsed).toFixed(2);
-  const totalGhgProduced = (totalFuelUsed * 19.6).toFixed(2);
+  const totalCeProduced = (totalFuelUsed * cePerGallonFuel).toFixed(2);
 
-  const otherDistances = _.map(Trips.find({ mode: { $not: 'Gas Car' } }).fetch(), 'distance');
+  const otherDistances = _.map(Trips.find({ mode: { $not: tripModes.GAS_CAR } }).fetch(), 'distance');
   const totalMilesSaved = _.sum(otherDistances).toFixed(2);
-  const otherMpgs = _.map(Trips.find({ mode: { $not: 'Gas Car' } }).fetch(), 'mpg');
+  const otherMpgs = _.map(Trips.find({ mode: { $not: tripModes.GAS_CAR } }).fetch(), 'mpg');
   const fuelSaved = _.zipWith(otherDistances, otherMpgs, (distance, mpg) => distance / mpg);
 
   const totalFuelSaved = _.sum(fuelSaved).toFixed(2);
-  const totalGhgReduced = (totalFuelSaved * 19.6).toFixed(2);
+  const totalCeReduced = (totalFuelSaved * cePerGallonFuel).toFixed(2);
 
-  const bikeCount = _.size(Trips.find({ mode: 'Bike' }).fetch());
-  const carpoolCount = _.size(Trips.find({ mode: 'Carpool' }).fetch());
-  const evCount = _.size(Trips.find({ mode: 'Electric Vehicle' }).fetch());
-  const carCount = _.size(Trips.find({ mode: 'Gas Car' }).fetch());
-  const ptCount = _.size(Trips.find({ mode: 'Public Transportation' }).fetch());
-  const teleworkCount = _.size(Trips.find({ mode: 'Telework' }).fetch());
-  const walkCount = _.size(Trips.find({ mode: 'Walk' }).fetch());
+  const bikeCount = _.size(Trips.find({ mode: tripModes.BIKE }).fetch());
+  const carpoolCount = _.size(Trips.find({ mode: tripModes.CARPOOL }).fetch());
+  const evCount = _.size(Trips.find({ mode: tripModes.ELECTRIC_VEHICLE }).fetch());
+  const carCount = _.size(Trips.find({ mode: tripModes.GAS_CAR }).fetch());
+  const ptCount = _.size(Trips.find({ mode: tripModes.PUBLIC_TRANSPORTATION }).fetch());
+  const teleworkCount = _.size(Trips.find({ mode: tripModes.TELEWORK }).fetch());
+  const walkCount = _.size(Trips.find({ mode: tripModes.WALK }).fetch());
 
   const modeDistribution = [{
     type: 'pie',
     hole: 0.4,
     values: [bikeCount, carpoolCount, evCount, carCount, ptCount, teleworkCount, walkCount],
-    labels: ['Bike', 'Carpool', 'Electric Vehicle', 'Gas Car', 'Public Transportation', 'Telework', 'Walk'],
+    labels: [tripModes.BIKE, tripModes.CARPOOL, tripModes.ELECTRIC_VEHICLE, tripModes.GAS_CAR, tripModes.PUBLIC_TRANSPORTATION, tripModes.TELEWORK, tripModes.WALK],
     hoverinfo: 'label+percent',
     textposition: 'inside',
   }];
@@ -318,23 +319,23 @@ export const getStateData = () => {
 
   const fuelData = [fuelSavings, fuelUsage];
 
-  const ghgSavings =
+  const ceSavings =
       {
         x: formattedDates,
-        y: ghgSavedByDay,
+        y: ceSavedByDay,
         stackgroup: 'one',
         name: 'Saved',
       };
 
-  const ghgProduction =
+  const ceProduction =
       {
         x: formattedDates2,
-        y: ghgProducedByDay,
+        y: ceProducedByDay,
         stackgroup: 'one',
         name: 'Produced',
       };
 
-  const ghgData = [ghgSavings, ghgProduction];
+  const ceData = [ceSavings, ceProduction];
 
   const hawaiiData = getCountyData('Hawaii');
   const vmtReducedHawaii = hawaiiData.vmtReduced;
@@ -345,10 +346,10 @@ export const getStateData = () => {
   fuelSavedHawaii.name = 'Hawaii';
   const fuelUsedHawaii = hawaiiData.fuelUsage;
   fuelUsedHawaii.name = 'Hawaii';
-  const ghgSavedHawaii = hawaiiData.ghgSavings;
-  ghgSavedHawaii.name = 'Hawaii';
-  const ghgProducedHawaii = hawaiiData.ghgProduction;
-  ghgProducedHawaii.name = 'Hawaii';
+  const ceSavedHawaii = hawaiiData.ceSavings;
+  ceSavedHawaii.name = 'Hawaii';
+  const ceProducedHawaii = hawaiiData.ceProduction;
+  ceProducedHawaii.name = 'Hawaii';
 
   const honoluluData = getCountyData('Honolulu');
   const vmtReducedHonolulu = honoluluData.vmtReduced;
@@ -359,10 +360,10 @@ export const getStateData = () => {
   fuelSavedHonolulu.name = 'Honolulu';
   const fuelUsedHonolulu = honoluluData.fuelUsage;
   fuelUsedHonolulu.name = 'Honolulu';
-  const ghgSavedHonolulu = honoluluData.ghgSavings;
-  ghgSavedHonolulu.name = 'Honolulu';
-  const ghgProducedHonolulu = honoluluData.ghgProduction;
-  ghgProducedHonolulu.name = 'Honolulu';
+  const ceSavedHonolulu = honoluluData.ceSavings;
+  ceSavedHonolulu.name = 'Honolulu';
+  const ceProducedHonolulu = honoluluData.ceProduction;
+  ceProducedHonolulu.name = 'Honolulu';
 
   const kalawaoData = getCountyData('Kalawao');
   const vmtReducedKalawao = kalawaoData.vmtReduced;
@@ -373,10 +374,10 @@ export const getStateData = () => {
   fuelSavedKalawao.name = 'Kalawao';
   const fuelUsedKalawao = kalawaoData.fuelUsage;
   fuelUsedKalawao.name = 'Kalawao';
-  const ghgSavedKalawao = kalawaoData.ghgSavings;
-  ghgSavedKalawao.name = 'Kalawao';
-  const ghgProducedKalawao = kalawaoData.ghgProduction;
-  ghgProducedKalawao.name = 'Kalawao';
+  const ceSavedKalawao = kalawaoData.ceSavings;
+  ceSavedKalawao.name = 'Kalawao';
+  const ceProducedKalawao = kalawaoData.ceProduction;
+  ceProducedKalawao.name = 'Kalawao';
 
   const kauaiData = getCountyData('Kauai');
   const vmtReducedKauai = kauaiData.vmtReduced;
@@ -387,10 +388,10 @@ export const getStateData = () => {
   fuelSavedKauai.name = 'Kauai';
   const fuelUsedKauai = kauaiData.fuelUsage;
   fuelUsedKauai.name = 'Kauai';
-  const ghgSavedKauai = kauaiData.ghgSavings;
-  ghgSavedKauai.name = 'Kauai';
-  const ghgProducedKauai = kauaiData.ghgProduction;
-  ghgProducedKauai.name = 'Kauai';
+  const ceSavedKauai = kauaiData.ceSavings;
+  ceSavedKauai.name = 'Kauai';
+  const ceProducedKauai = kauaiData.ceProduction;
+  ceProducedKauai.name = 'Kauai';
 
   const mauiData = getCountyData('Maui');
   const vmtReducedMaui = mauiData.vmtReduced;
@@ -401,23 +402,23 @@ export const getStateData = () => {
   fuelSavedMaui.name = 'Maui';
   const fuelUsedMaui = mauiData.fuelUsage;
   fuelUsedMaui.name = 'Maui';
-  const ghgSavedMaui = mauiData.ghgSavings;
-  ghgSavedMaui.name = 'Maui';
-  const ghgProducedMaui = mauiData.ghgProduction;
-  ghgProducedMaui.name = 'Maui';
+  const ceSavedMaui = mauiData.ceSavings;
+  ceSavedMaui.name = 'Maui';
+  const ceProducedMaui = mauiData.ceProduction;
+  ceProducedMaui.name = 'Maui';
 
   const vmtReducedCounties = [vmtReducedHawaii, vmtReducedHonolulu, vmtReducedKalawao, vmtReducedKauai, vmtReducedMaui];
   const vmtProducedCounties =
       [vmtProducedHawaii, vmtProducedHonolulu, vmtProducedKalawao, vmtProducedKauai, vmtProducedMaui];
   const fuelSavedCounties = [fuelSavedHawaii, fuelSavedHonolulu, fuelSavedKalawao, fuelSavedKauai, fuelSavedMaui];
   const fuelUsedCounties = [fuelUsedHawaii, fuelUsedHonolulu, fuelUsedKalawao, fuelUsedKauai, fuelUsedMaui];
-  const ghgSavedCounties = [ghgSavedHawaii, ghgSavedHonolulu, ghgSavedKalawao, ghgSavedKauai, ghgSavedMaui];
-  const ghgProducedCounties =
-      [ghgProducedHawaii, ghgProducedHonolulu, ghgProducedKalawao, ghgProducedKauai, ghgProducedMaui];
+  const ceSavedCounties = [ceSavedHawaii, ceSavedHonolulu, ceSavedKalawao, ceSavedKauai, ceSavedMaui];
+  const ceProducedCounties =
+      [ceProducedHawaii, ceProducedHonolulu, ceProducedKalawao, ceProducedKauai, ceProducedMaui];
 
   const ed = moment();
   const sd = moment().subtract(30, 'd');
-  const result = Trips.find({ mode: { $not: 'Gas Car' } }).fetch().filter(d => {
+  const result = Trips.find({ mode: { $not: tripModes.GAS_CAR } }).fetch().filter(d => {
     const date = new Date(d.date);
     return (sd < date && date < ed);
   });
@@ -425,33 +426,33 @@ export const getStateData = () => {
   const resultDistances = _.map(result, 'distance');
   const resultMpgs = _.map(result, 'mpg');
   const resultFuelSaved = _.zipWith(resultDistances, resultMpgs, (distance, mpg) => distance / mpg);
-  const resultGhgSaved = resultFuelSaved.map(i => i * 19.6);
+  const resultCeSaved = resultFuelSaved.map(i => i * cePerGallonFuel);
   const avgMilesReduced = (_.sum(resultDistances) / totalDays / totalUsers).toFixed(2);
   const avgFuelSaved = (_.sum(resultFuelSaved) / totalDays / totalUsers).toFixed(2);
-  const avgGhgSaved = (_.sum(resultGhgSaved) / totalDays / totalUsers).toFixed(2);
+  const avgCeSaved = (_.sum(resultCeSaved) / totalDays / totalUsers).toFixed(2);
 
-  const myNonCarTrips = Trips.find({ owner: Meteor.user()?.username, mode: { $not: 'Gas Car' } }).fetch().filter(d => {
+  const myNonCarTrips = Trips.find({ owner: Meteor.user()?.username, mode: { $not: tripModes.GAS_CAR } }).fetch().filter(d => {
     const date = new Date(d.date);
     return (sd < date && date < ed);
   });
   const myNonCarDistances = _.map(myNonCarTrips, 'distance');
   const myNonCarMpgs = _.map(myNonCarTrips, 'mpg');
   const myFuelSaved = _.zipWith(myNonCarDistances, myNonCarMpgs, (distance, mpg) => distance / mpg);
-  const myGhgReduced = myFuelSaved.map(i => i * 19.6);
+  const myCeReduced = myFuelSaved.map(i => i * cePerGallonFuel);
   const myAvgMilesReduced = (_.sum(myNonCarDistances) / totalDays).toFixed(2);
   const myAvgFuelSaved = (_.sum(myFuelSaved) / totalDays).toFixed(2);
-  const myAvgGhgReduced = (_.sum(myGhgReduced) / totalDays).toFixed(2);
+  const myAvgCeReduced = (_.sum(myCeReduced) / totalDays).toFixed(2);
 
   const AvgSaved = {
-    x: ['VMT Reduced', 'Fuel Saved', 'GHG Reduced'],
-    y: [avgMilesReduced, avgFuelSaved, avgGhgSaved],
+    x: ['VMT Reduced', 'Fuel Saved', 'CE Reduced'],
+    y: [avgMilesReduced, avgFuelSaved, avgCeSaved],
     name: 'Mean',
     type: 'bar',
   };
 
   const userAvgSaved = {
-    x: ['VMT Reduced', 'Fuel Saved', 'GHG Reduced'],
-    y: [myAvgMilesReduced, myAvgFuelSaved, myAvgGhgReduced],
+    x: ['VMT Reduced', 'Fuel Saved', 'CE Reduced'],
+    y: [myAvgMilesReduced, myAvgFuelSaved, myAvgCeReduced],
     name: 'My Average',
     type: 'bar',
   };
@@ -465,33 +466,33 @@ export const getStateData = () => {
   const resultDistances2 = _.map(result2, 'distance');
   const resultMpgs2 = _.map(result2, 'mpg');
   const resultFuelUsed = _.zipWith(resultDistances2, resultMpgs2, (distance, mpg) => distance / mpg);
-  const resultGhgProduced = resultFuelUsed.map(i => i * 19.6);
+  const resultCeProduced = resultFuelUsed.map(i => i * cePerGallonFuel);
   const avgMilesProduced = (_.sum(resultDistances2) / totalDays / totalUsers).toFixed(2);
   const avgFuelUsed = (_.sum(resultFuelUsed) / totalDays / totalUsers).toFixed(2);
-  const avgGhgProduced = (_.sum(resultGhgProduced) / totalDays / totalUsers).toFixed(2);
+  const avgCeProduced = (_.sum(resultCeProduced) / totalDays / totalUsers).toFixed(2);
 
-  const myCarTrips = Trips.find({ owner: Meteor.user()?.username, mode: 'Gas Car' }).fetch().filter(d => {
+  const myCarTrips = Trips.find({ owner: Meteor.user()?.username, mode: tripModes.GAS_CAR }).fetch().filter(d => {
     const date = new Date(d.date);
     return (sd < date && date < ed);
   });
   const myCarDistances = _.map(myCarTrips, 'distance');
   const myCarMpgs = _.map(myCarTrips, 'mpg');
   const myFuelUsed = _.zipWith(myCarDistances, myCarMpgs, (distance, mpg) => distance / mpg);
-  const myGhgProduced = myFuelUsed.map(i => i * 19.6);
+  const myCeProduced = myFuelUsed.map(i => i * cePerGallonFuel);
   const myAvgMilesProduced = (_.sum(myCarDistances) / totalDays).toFixed(2);
   const myAvgFuelUsed = (_.sum(myFuelUsed) / totalDays).toFixed(2);
-  const myAvgGhgProduced = (_.sum(myGhgProduced) / totalDays).toFixed(2);
+  const myAvgCeProduced = (_.sum(myCeProduced) / totalDays).toFixed(2);
 
   const AvgProduced = {
-    x: ['VMT Produced', 'Fuel Used', 'GHG Produced'],
-    y: [avgMilesProduced, avgFuelUsed, avgGhgProduced],
+    x: ['VMT Produced', 'Fuel Used', 'CE Produced'],
+    y: [avgMilesProduced, avgFuelUsed, avgCeProduced],
     name: 'Mean',
     type: 'bar',
   };
 
   const userAvgProduced = {
-    x: ['VMT Produced', 'Fuel Used', 'GHG Produced'],
-    y: [myAvgMilesProduced, myAvgFuelUsed, myAvgGhgProduced],
+    x: ['VMT Produced', 'Fuel Used', 'CE Produced'],
+    y: [myAvgMilesProduced, myAvgFuelUsed, myAvgCeProduced],
     name: 'My Average',
     type: 'bar',
   };
@@ -499,8 +500,8 @@ export const getStateData = () => {
   const dataProduced = [AvgProduced, userAvgProduced];
 
   return {
-    totalUsers, totalMilesSaved, totalFuelUsed, totalFuelSaved, totalGhgProduced, totalGhgReduced, modeDistribution,
-    vmtReduced, vmtProduced, vmtData, fuelData, ghgData, vmtReducedCounties, vmtProducedCounties, fuelSavedCounties,
-    fuelUsedCounties, ghgSavedCounties, ghgProducedCounties, dataReduced, dataProduced,
+    totalUsers, totalMilesSaved, totalFuelUsed, totalFuelSaved, totalCeProduced, totalCeReduced, modeDistribution,
+    vmtReduced, vmtProduced, vmtData, fuelData, ceData, vmtReducedCounties, vmtProducedCounties, fuelSavedCounties,
+    fuelUsedCounties, ceSavedCounties, ceProducedCounties, dataReduced, dataProduced,
   };
 };

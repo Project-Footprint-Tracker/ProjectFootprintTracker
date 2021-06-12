@@ -18,12 +18,12 @@ function CommunityStats(props) {
     totalMilesSaved,
     totalFuelUsed,
     totalFuelSaved,
-    totalGhgProduced,
-    totalGhgReduced,
+    totalCeProduced,
+    totalCeReduced,
     modeDistribution,
     vmtData,
     fuelData,
-    ghgData,
+    ceData,
   } = getCountyData(county);
 
   const endDate = moment().format('YYYY-MM-DD');
@@ -100,7 +100,7 @@ function CommunityStats(props) {
       color: chartFontColor,
     },
   };
-  const ghgLayout = {
+  const ceLayout = {
     autosize: true,
     margin: {
       t: tMargin,
@@ -185,17 +185,17 @@ function CommunityStats(props) {
       </Grid.Row>
       <Grid.Row>
         <Grid.Column width={3} textAlign='center'> <Statistic color="red">
-          <Statistic.Value><Icon name='cloud'/>{totalGhgProduced}</Statistic.Value>
+          <Statistic.Value><Icon name='cloud'/>{totalCeProduced}</Statistic.Value>
           <Statistic.Label className='community-statistic'>pounds of C02 produced</Statistic.Label>
         </Statistic>
         </Grid.Column>
         <Grid.Column width={5} textAlign='center'> <Statistic>
-          <Statistic.Value className='community-statistic'><Icon name='cloud'/>{totalGhgReduced}</Statistic.Value>
+          <Statistic.Value className='community-statistic'><Icon name='cloud'/>{totalCeReduced}</Statistic.Value>
           <Statistic.Label className='community-statistic'>pounds of CO2 reduced</Statistic.Label>
         </Statistic>
         </Grid.Column>
         <Grid.Column width={5}>
-          <Progress value={totalGhgReduced} total='171000'
+          <Progress value={totalCeReduced} total='171000'
             label="2021 GOAL: 171,000 POUNDS OF CO2 REDUCED" color="blue"/></Grid.Column>
       </Grid.Row>
       <Grid.Row>
@@ -234,10 +234,10 @@ function CommunityStats(props) {
         <Grid.Column width={7}>
           <Card className='community-card' fluid>
             <Card.Header className='card-header'>
-                GHG Data
+                CE Data
             </Card.Header>
             <Card.Content>
-              <Chart chartData={ghgData} chartLayout={ghgLayout}/>
+              <Chart chartData={ceData} chartLayout={ceLayout}/>
             </Card.Content>
           </Card>
         </Grid.Column>

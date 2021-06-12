@@ -6,6 +6,7 @@ import { Table, Button, Modal, Header } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { Trips, tripPublications } from '../../../api/trip/TripCollection';
 import { Users } from '../../../api/user/UserCollection';
+import { cePerGallonFuel, tripModes } from '../../../api/utilities/constants';
 
 /* global document */
 
@@ -14,12 +15,12 @@ const TripItem = (props) => {
   let gallons;
   // eslint-disable-next-line no-nested-ternary
   const tripMpg = props.trip.mpg > 0 ? props.trip.mpg : Users.getUserProfile(props.trip.owner)?.autoMPG.isDefined() ? Users.getUserProfile(props.trip.owner).autoMPG : 25;
-  if (props.trip.mode === 'Gas Car' || props.trip.mode === 'Carpool') {
+  if (props.trip.mode === tripModes.GAS_CAR || props.trip.mode === tripModes.CARPOOL) {
     gallons = (props.trip.distance !== 0 ? ((props.trip.distance / tripMpg)) : 0);
   } else {
     gallons = -(props.trip.distance !== 0 ? ((props.trip.distance / tripMpg)) : 0);
   }
-  const ghg = gallons === 0 ? 0 : gallons * 19.6;
+  const ce = gallons === 0 ? 0 : gallons * cePerGallonFuel;
 
   const gStyle = gallons > 0 ? { color: 'red' } : { color: 'green' };
 
@@ -71,7 +72,7 @@ const TripItem = (props) => {
       <Table.Cell className='daily-table-data'>{props.trip.distance} mi</Table.Cell>
       <Table.Cell className='daily-table-data'>{props.trip.mpg}</Table.Cell>
       <Table.Cell style={gStyle}>{gallons === 0 ? 0 : `${abs(gallons).toFixed(2)} gal`}</Table.Cell>
-      <Table.Cell style={gStyle}>{ghg === 0 ? 0 : `${abs(ghg).toFixed(2)} lbs`}</Table.Cell>
+      <Table.Cell style={gStyle}>{ce === 0 ? 0 : `${abs(ce).toFixed(2)} lbs`}</Table.Cell>
       <Table.Cell>
         <Modal
           id='save-trip-modal'

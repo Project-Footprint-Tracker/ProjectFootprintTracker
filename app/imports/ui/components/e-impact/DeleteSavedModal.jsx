@@ -28,7 +28,7 @@ function DeleteSavedModal(props) {
                 <Table.HeaderCell className='daily-table-header'>Distance</Table.HeaderCell>
                 <Table.HeaderCell className='daily-table-header'>mpg</Table.HeaderCell>
                 <Table.HeaderCell className='daily-table-header'>Net Gallons</Table.HeaderCell>
-                <Table.HeaderCell className='daily-table-header'>Net GHG</Table.HeaderCell>
+                <Table.HeaderCell className='daily-table-header'>Net CE</Table.HeaderCell>
                 <Table.HeaderCell className='daily-table-header'>Unsave Trip</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
