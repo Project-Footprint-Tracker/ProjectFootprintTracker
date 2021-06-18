@@ -12,7 +12,7 @@ import {
 import { Button, Form, Modal, Grid, Image, Divider, Loader } from 'semantic-ui-react';
 import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
-import { UserSavedDistances } from '../../../../api/user/UserSavedDistanceCollection';
+import { UserSavedDistances } from '../../../../api/trip/UserSavedDistanceCollection';
 import {
   getMilesTraveled,
   getKilometersTraveled,
@@ -21,8 +21,8 @@ import {
 } from '../../../utilities/DailyCeData';
 import { altSelectFieldOptions } from '../../../utilities/GlobalVariables';
 import { getCumulativeCE } from '../../../utilities/CumulativeCeData';
-import { UserDailyData } from '../../../../api/user/UserDailyDataCollection';
-import { UserVehicles } from '../../../../api/user/UserVehicleCollection';
+import { UserDailyData } from '../../../../api/trip/UserDailyDataCollection';
+import { UserVehicles } from '../../../../api/vehicle/UserVehicleCollection';
 
 // Initializes a schema that specifies the structure of the data to appear in the form.
 

@@ -14,10 +14,10 @@ import { Button, Divider, Form, Loader, Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import swal from 'sweetalert';
-import { UserSavedDistances } from '../../../../api/user/UserSavedDistanceCollection';
+import { UserSavedDistances } from '../../../../api/trip/UserSavedDistanceCollection';
 import { getMilesTraveled, getDateToday, getKilometersTraveled, getModeType } from '../../../utilities/DailyCeData';
 import { altSelectFieldOptions } from '../../../utilities/GlobalVariables';
-import { userDailyDataDefineMethod } from '../../../../api/user/UserDailyDataCollection.methods';
+import { userDailyDataDefineMethod } from '../../../../api/trip/UserDailyDataCollection.methods';
 
 const AddDailyData = (props) => {
   const [modalOpen, setModalOpen] = useState(false);

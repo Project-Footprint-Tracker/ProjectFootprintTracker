@@ -3,12 +3,12 @@ import { Roles } from 'meteor/alanning:roles';
 import SimpleSchema from 'simpl-schema';
 import { check } from 'meteor/check';
 import BaseCollection from '../base/BaseCollection';
-import { UserVehicles } from './UserVehicleCollection';
-import { UserSavedDistances } from './UserSavedDistanceCollection';
-import { UserDailyData } from './UserDailyDataCollection';
-import { userVehicleRemoveItMethod } from './UserVehicleCollection.methods';
-import { userDailyDataRemoveItMethod } from './UserDailyDataCollection.methods';
-import { userSavedDistanceRemoveItMethod } from './UserSavedDistanceCollection.methods';
+import { UserVehicles } from '../vehicle/UserVehicleCollection';
+import { UserSavedDistances } from '../trip/UserSavedDistanceCollection';
+import { UserDailyData } from '../trip/UserDailyDataCollection';
+import { userVehicleRemoveItMethod } from '../vehicle/UserVehicleCollection.methods';
+import { userDailyDataRemoveItMethod } from '../trip/UserDailyDataCollection.methods';
+import { userSavedDistanceRemoveItMethod } from '../trip/UserSavedDistanceCollection.methods';
 
 export const userPublications = {
   user: 'User',

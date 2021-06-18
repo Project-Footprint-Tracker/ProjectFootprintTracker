@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { _ } from 'meteor/underscore';
 import VehicleCard from './VehicleCard';
 import AddVehicleModal from './AddVehicleModal';
-import { UserVehicles } from '../../../../api/user/UserVehicleCollection';
+import { UserVehicles } from '../../../../api/vehicle/UserVehicleCollection';
 import { AllVehicles } from '../../../../api/vehicle/AllVehicleCollection';
 
 /** Renders a feed containing all of the Vehicle documents. Use <VehicleCard> to render each card. */

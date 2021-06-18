@@ -3,9 +3,9 @@ import { Header, Button, Grid, Loader } from 'semantic-ui-react';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
-import { UserDailyData } from '../../../../api/user/UserDailyDataCollection';
+import { UserDailyData } from '../../../../api/trip/UserDailyDataCollection';
 import { getCumulativeCE } from '../../../utilities/CumulativeCeData';
-import { UserVehicles } from '../../../../api/user/UserVehicleCollection';
+import { UserVehicles } from '../../../../api/vehicle/UserVehicleCollection';
 
 const paddingStyle = { padding: '20px' };
 

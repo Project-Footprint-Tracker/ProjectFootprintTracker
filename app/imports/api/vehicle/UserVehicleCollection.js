@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import SimpleSchema from 'simpl-schema';
 import { _ } from 'meteor/underscore';
 import BaseCollection from '../base/BaseCollection';
-import { VehicleMakes } from '../vehicle/VehicleMakeCollection';
+import { VehicleMakes } from './VehicleMakeCollection';
 
 export const userVehiclePublications = {
   userVehicle: 'UserVehicle',

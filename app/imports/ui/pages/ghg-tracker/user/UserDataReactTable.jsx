@@ -4,13 +4,13 @@ import PropTypes from 'prop-types';
 import SmartDataTable from 'react-smart-data-table';
 import { withTracker } from 'meteor/react-meteor-data';
 import AddDailyData from '../../../components/ghg-tracker/user-data-page/AddDailyData';
-import { UserDailyData } from '../../../../api/user/UserDailyDataCollection';
+import { UserDailyData } from '../../../../api/trip/UserDailyDataCollection';
 import WhatIf from '../../../components/ghg-tracker/user-data-page/WhatIf';
 import 'react-smart-data-table/dist/react-smart-data-table.css';
 import { getDailyCE, getKilometersTraveled } from '../../../utilities/DailyCeData';
 import DeleteDailyData from '../../../components/ghg-tracker/user-data-page/DeleteDailyData';
 import EditDailyData from '../../../components/ghg-tracker/user-data-page/EditDailyData';
-import { UserVehicles } from '../../../../api/user/UserVehicleCollection';
+import { UserVehicles } from '../../../../api/vehicle/UserVehicleCollection';
 import SavedDistances from '../../../components/ghg-tracker/user-data-page/saved-distances/SavedDistances';
 
 class UserDataReactTable extends React.Component {
