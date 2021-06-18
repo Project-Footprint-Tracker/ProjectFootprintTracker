@@ -3,11 +3,11 @@ import _ from 'lodash';
 export const tripModes = {
   TELEWORK: 'Telework',
   PUBLIC_TRANSPORTATION: 'Public Transportation',
-  BIKE: 'Bike',
-  WALK: 'Walk',
+  BIKE: 'Biking',
+  WALK: 'Walking',
   CARPOOL: 'Carpool',
-  ELECTRIC_VEHICLE: 'Electric Vehicle',
-  GAS_CAR: 'Gas Car',
+  ELECTRIC_VEHICLE: 'EV/Hybrid',
+  GAS_CAR: 'Gas Vehicle',
 };
 
 export const tripModesArray = _.values(tripModes);

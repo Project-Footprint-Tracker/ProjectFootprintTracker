@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Card, Header, Image } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { getCumulativePerMode } from '../../../utilities/CumulativeCeData';
+import { tripModes } from '../../../../api/utilities/constants';
 
 /** Renders a single vehicle card. */
 class AltVehicleCard extends React.Component {
@@ -25,7 +26,7 @@ class AltVehicleCard extends React.Component {
   /** Renders the page */
   render() {
     /** Array of transportation and images */
-    const transportation = ['Walking', 'Biking', 'Public Transportation', 'Carpool', 'Telework'];
+    const transportation = [tripModes.WALK, tripModes.BIKE, tripModes.PUBLIC_TRANSPORTATION, tripModes.CARPOOL, tripModes.TELEWORK];
     const images = ['images/altvehicle-page/Walking.png', 'images/altvehicle-page/Biking.png', 'images/altvehicle-page/Bussing.jpg',
       'images/altvehicle-page/Carpool.png', 'images/altvehicle-page/telework.png'];
 

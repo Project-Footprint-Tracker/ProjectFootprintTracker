@@ -4,17 +4,18 @@ import { Pie } from 'react-chartjs-2';
 import PropTypes from 'prop-types';
 import { _ } from 'meteor/underscore';
 import { getCumulativePerMode } from '../../../utilities/CumulativeCeData';
+import { tripModes } from '../../../../api/utilities/constants';
 
 // Pie chart of the all time mileage for each mode of transportation for a specific user
 const graphObject = {
-  telework: 'Telework',
-  pTransportation: 'Public Transportation',
-  biking: 'Biking',
-  walking: 'Walking',
-  carpool: 'Carpool',
+  telework: tripModes.TELEWORK,
+  pTransportation: tripModes.PUBLIC_TRANSPORTATION,
+  biking: tripModes.BIKE,
+  walking: tripModes.WALK,
+  carpool: tripModes.CARPOOL,
   evHybrid: 'EVHybrid',
-  transportationTypes: ['Telework', 'Public Transportation', 'Biking',
-    'Walk', 'Carpool', 'EV/Hybrid', 'Gas'],
+  transportationTypes: [tripModes.TELEWORK, tripModes.PUBLIC_TRANSPORTATION, tripModes.BIKE,
+    tripModes.WALK, tripModes.CARPOOL, 'EV/Hybrid', tripModes.GAS_CAR],
   graphColors: ['#5c8d89', '#4b8796', '#4f7fa0', '#6872a0', '#846391', '#F7B733', '#FC4A1A'],
 };
 

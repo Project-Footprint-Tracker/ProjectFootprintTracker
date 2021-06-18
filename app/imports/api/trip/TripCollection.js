@@ -165,13 +165,13 @@ class TripCollection extends BaseCollection {
   getModesOfTransport(username) {
     const userTrips = this._collection.find({ owner: username }).fetch();
     const modesOfTransport = [
-      { mode: 'Telework', value: 0 },
-      { mode: 'Public Transportation', value: 0 },
-      { mode: 'Bike', value: 0 },
-      { mode: 'Walk', value: 0 },
-      { mode: 'Carpool', value: 0 },
-      { mode: 'Electric Vehicle', value: 0 },
-      { mode: 'Gas Car', value: 0 },
+      { mode: tripModes.TELEWORK, value: 0 },
+      { mode: tripModes.PUBLIC_TRANSPORTATION, value: 0 },
+      { mode: tripModes.BIKE, value: 0 },
+      { mode: tripModes.WALK, value: 0 },
+      { mode: tripModes.CARPOOL, value: 0 },
+      { mode: tripModes.ELECTRIC_VEHICLE, value: 0 },
+      { mode: tripModes.GAS_CAR, value: 0 },
     ];
 
     // iterate over user's trips and increment each value of mode they used.
@@ -197,13 +197,13 @@ class TripCollection extends BaseCollection {
   getMilesPerMode(username) {
     const userTrips = this._collection.find({ owner: username }).fetch();
     const modesOfTransport = [
-      { mode: 'Telework', miles: 0 },
-      { mode: 'Public Transportation', miles: 0 },
-      { mode: 'Bike', miles: 0 },
-      { mode: 'Walk', miles: 0 },
-      { mode: 'Carpool', miles: 0 },
-      { mode: 'Electric Vehicle', miles: 0 },
-      { mode: 'Gas Car', miles: 0 },
+      { mode: tripModes.TELEWORK, miles: 0 },
+      { mode: tripModes.PUBLIC_TRANSPORTATION, miles: 0 },
+      { mode: tripModes.BIKE, miles: 0 },
+      { mode: tripModes.WALK, miles: 0 },
+      { mode: tripModes.CARPOOL, miles: 0 },
+      { mode: tripModes.ELECTRIC_VEHICLE, miles: 0 },
+      { mode: tripModes.GAS_CAR, miles: 0 },
     ];
 
     _.forEach(userTrips, function (objects) {

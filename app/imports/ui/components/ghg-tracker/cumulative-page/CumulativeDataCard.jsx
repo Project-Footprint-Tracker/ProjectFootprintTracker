@@ -7,6 +7,7 @@ import { UserDailyData } from '../../../../api/user/UserDailyDataCollection';
 import CumulativeCard from './CumulativeCard';
 import { getCumulativeCE } from '../../../utilities/CumulativeCeData';
 import { UserVehicles } from '../../../../api/user/UserVehicleCollection';
+import { tripModes } from '../../../../api/utilities/constants';
 
 class CumulativeDataCard extends React.Component {
 
@@ -18,7 +19,7 @@ class CumulativeDataCard extends React.Component {
     const sumData = (arr, key) => _.reduce(_.pluck(arr, key), function (sum, num) { return sum + num; }, 0).toFixed(1);
 
     const CalculateCumulative = (userDaily, impactArr) => {
-      const altTransportation = ['Biking', 'Carpool', 'Public Transportation', 'Telework', 'Walking'];
+      const altTransportation = [tripModes.BIKE, tripModes.CARPOOL, tripModes.PUBLIC_TRANSPORTATION, tripModes.TELEWORK, tripModes.WALK];
       const userData = userDaily;
       const eImpact = impactArr;
       const altData = [];
