@@ -6,8 +6,6 @@ import { Roles } from 'meteor/alanning:roles';
 import swal from 'sweetalert';
 import BaseCollection from '../base/BaseCollection';
 
-/* global document */
-
 export const userPublications = {
   user: 'User',
   userAdmin: 'UserAdmin',
@@ -35,9 +33,8 @@ class UserCollectionCombined extends BaseCollection {
     return docID;
   }
 
-  defineWithMessage({ username, autoMPG, homeRoundTrip }) {
-    const theme = 'light';
-    const docID = this._collection.insert({ username, autoMPG, homeRoundTrip, theme }, (error) => {
+  defineWithMessage({ email, firstName, lastName, zipCode, goal }) {
+    const docID = this._collection.insert({ email, firstName, lastName, zipCode, goal }, (error) => {
       if (error) {
         swal('Error', error.message, 'error');
       } else {
@@ -47,53 +44,32 @@ class UserCollectionCombined extends BaseCollection {
     return docID;
   }
 
-  /**
-   * Gets the data for the specified user.
-   * @param username the username of the user.
-   * @returns {*} An object that contains all the data of the user.
-   */
-  getUserProfile(username) {
-    const user = this._collection.findOne({ username: username });
-    return user;
-  }
-
-  // Updates the theme to either light or dark.
-  updateTheme(username) {
-    const user = this._collection.findOne({ username: username });
-    const id = user._id;
-    if (user.theme === 'light') {
-      this._collection.update(id, { $set: { theme: 'dark' } });
-    } else {
-      this._collection.update(id, { $set: { theme: 'light' } });
-    }
-  }
-
-  /**
-   * Updates the given document.
-   * @param username: the username of the user.
-   * @param autoMPG: the mpg of the user's vehicle.
-   * @param homeRoundTrip: the round trip distance between the user's house and their work.
-   */
-  update(docID, { username, autoMPG, homeRoundTrip }) {
+  update(docID, { email, firstName, lastName, zipCode, goal }) {
     const updateData = {};
-    // if (distance) { NOTE: 0 is falsy so we need to check if the quantity is a number.
-    if (username) {
-      updateData.username = username;
+
+    if (email) {
+      updateData.email = email;
     }
-    if (_.isNumber(autoMPG)) {
-      updateData.autoMPG = autoMPG;
+
+    if (firstName) {
+      updateData.firstName = firstName;
     }
-    if (_.isNumber(homeRoundTrip)) {
-      updateData.homeRoundTrip = homeRoundTrip;
+
+    if (lastName) {
+      updateData.lastName = lastName;
     }
+
+    if (_.isNumber(zipCode)) {
+      updateData.zipCode = zipCode;
+    }
+
+    if (goal) {
+      updateData.goal = goal;
+    }
+
     this._collection.update(docID, { $set: updateData });
   }
 
-  /**
-   * A stricter form of remove that throws an error if the document or docID could not be found in this collection.
-   * @param { String | Object } name A document or docID in this collection.
-   * @returns true
-   */
   removeIt(name) {
     const doc = this.findDoc(name);
     check(doc, Object);
@@ -101,10 +77,6 @@ class UserCollectionCombined extends BaseCollection {
     return true;
   }
 
-  /**
-   * Default publication method for entities.
-   * It publishes the entire collection for admin and just the trip associated to an owner.
-   */
   publish() {
     if (Meteor.isServer) {
       // get the TripCollection instance.
@@ -128,9 +100,6 @@ class UserCollectionCombined extends BaseCollection {
     }
   }
 
-  /**
-   * Subscription method for trip owned by the current user.
-   */
   subscribeUser() {
     if (Meteor.isClient) {
       return Meteor.subscribe(userPublications.user);
@@ -138,10 +107,6 @@ class UserCollectionCombined extends BaseCollection {
     return null;
   }
 
-  /**
-   * Subscription method for admin users.
-   * It subscribes to the entire collection.
-   */
   subscribeUserAdmin() {
     if (Meteor.isClient) {
       return Meteor.subscribe(userPublications.userAdmin);
@@ -149,24 +114,9 @@ class UserCollectionCombined extends BaseCollection {
     return null;
   }
 
-  communityStyling(props) {
-    const communityCard = document.getElementsByClassName('community-card');
-    const communityCardHeader = document.getElementsByClassName('community-card-header');
-    if (props.userProfile.theme === 'dark') {
-      for (let i = 0; i < communityCard.length; i++) {
-        communityCard[i].classList.add('dark-community-card');
-      }
-      for (let i = 0; i < communityCardHeader.length; i++) {
-        communityCardHeader[i].classList.add('dark-community-card-header');
-      }
-    } else {
-      for (let i = 0; i < communityCard.length; i++) {
-        communityCard[i].classList.remove('dark-community-card');
-      }
-      for (let i = 0; i < communityCardHeader.length; i++) {
-        communityCardHeader[i].classList.remove('dark-community-card-header');
-      }
-    }
+  getUserProfile(email) {
+    const user = this._collection.findOne({ email: email });
+    return user;
   }
 }
 
