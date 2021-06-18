@@ -1,4 +1,4 @@
-name: ProjectFootprintTracker
+name: ci-project-footprint-tracker
 
 on:
   push:
