@@ -3,7 +3,10 @@ import { Grid, Header, Loader } from 'semantic-ui-react';
 import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import { Pie } from 'react-chartjs-2';
+
 import { UserDailyData } from '../../../../api/trip/UserDailyDataCollection';
+import { tripModes } from '../../../../api/utilities/constants';
+
 
 // Displaying a pie chart of the mode of transportation from UserDailyData collection
 class CumulativeDataChart extends React.Component {
@@ -24,9 +27,9 @@ class CumulativeDataChart extends React.Component {
         EVHybrid: 0,
       };
       allUserData.map((data) => {
-        if (data.modeOfTransportation === 'Telework') {
+        if (data.modeOfTransportation === tripModes.TELEWORK) {
           altData.Telework += 1;
-        } else if (data.modeOfTransportation === 'Carpool') {
+        } else if (data.modeOfTransportation === tripModes.CARPOOL) {
           altData.Carpool += 1;
         } else if (otherAltTransportation.includes(data.modeOfTransportation)) {
           altData.Other += 1;
@@ -42,7 +45,7 @@ class CumulativeDataChart extends React.Component {
     // Forming the layout for pie chart
     const pieDataSet = (userDaily) => {
       const dataSets = {
-        labels: ['Telework', 'Carpool', 'Other', 'EV/Hybrid Vehicle', 'Gas Vehicle'],
+        labels: [tripModes.TELEWORK, tripModes.CARPOOL, 'Other', 'EV/Hybrid Vehicle', tripModes.GAS_CAR],
         datasets: [
           {
             data: transportationData(userDaily),

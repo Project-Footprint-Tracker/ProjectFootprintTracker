@@ -1,9 +1,9 @@
-name: ci-meteor-application-template-react
+name: ci-project-footprint-tracker
 
 on:
   push:
     branches:
-      - master
+      - main
 
 defaults:
   run:

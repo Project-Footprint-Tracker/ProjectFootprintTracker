@@ -37,7 +37,7 @@ const getCeData = (dailyData, userVehicles) => {
  * Returns an object with attributes equal to climate-related metrics related to a specific mode of the transportation
  * @param dailyData, an array of objects or documents from the DailyUserDataCollection
  * @param mode, the mode of transportation
- *        allowed values: ['Biking', 'Carpool', 'Public Transportation', 'Telework', 'Walking', 'EVHybrid', 'Gas']
+ *        allowed values: ['Biking', 'Carpool', 'Public Transportation', 'Telework', 'Walking', 'EV/Hybrid', 'Gas']
  * @returns {Object}
  */
 export const getCumulativePerMode = (dailyData, mode, userVehicles) => {

@@ -3,6 +3,7 @@ import { Grid, Header, Image } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { _ } from 'meteor/underscore';
 import { getCumulativeCE } from '../../../utilities/CumulativeCeData';
+import { tripModes } from '../../../../api/utilities/constants';
 
 /** Renders the Page for displaying the user's data: Their numbers for the day, overview of their carbon footprint, and
  * users may also edit their data of their entries.
@@ -13,7 +14,7 @@ const MyNumbers = (props) => {
     'October', 'November', 'December'];
   const getByMonthIndividual = _.filter(props.dailyData, (userTrip) => (userTrip.inputDate.getMonth() ===
         date.getMonth() && userTrip.inputDate.getFullYear() === date.getFullYear()));
-  const hoursTelework = _.size(_.where(getByMonthIndividual, { modeOfTransportation: 'Telework' }));
+  const hoursTelework = _.size(_.where(getByMonthIndividual, { modeOfTransportation: tripModes.TELEWORK }));
   const ceData = getCumulativeCE(getByMonthIndividual, props.vehicles);
   const totalCO2Reduced = ceData.cO2Reduced;
   const totalMiles = ceData.VMTReduced;

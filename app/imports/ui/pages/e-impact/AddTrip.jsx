@@ -12,6 +12,7 @@ import { savedTripPublications, SavedTrips } from '../../../api/trip/SavedTripCo
 import { Users } from '../../../api/user/UserCollection1';
 import SideBar from '../../components/e-impact/SideBar';
 import DeleteSavedModal from '../../components/e-impact/DeleteSavedModal';
+import { tripModes } from '../../../api/utilities/constants';
 
 /* global document */
 
@@ -33,8 +34,8 @@ const AddTrip = (props) => {
     },
     mode: {
       type: String,
-      allowedValues: ['Bike', 'Carpool', 'Electric Vehicle', 'Gas Car', 'Public Transportation', 'Telework', 'Walk'],
-      defaultValue: 'Gas Car',
+      allowedValues: [tripModes.BIKE, tripModes.CARPOOL, tripModes.ELECTRIC_VEHICLE, tripModes.GAS_CAR, tripModes.PUBLIC_TRANSPORTATION, tripModes.TELEWORK, tripModes.WALK],
+      defaultValue: tripModes.GAS_CAR,
     },
     distance: Number,
     mpg: Number,
