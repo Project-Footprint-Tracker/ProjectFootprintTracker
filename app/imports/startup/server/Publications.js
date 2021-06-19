@@ -2,11 +2,10 @@ import { Meteor } from 'meteor/meteor';
 import { Roles } from 'meteor/alanning:roles';
 import { Stuffs } from '../../api/stuff/Stuff';
 import { Trips } from '../../api/trip/TripCollection';
-import { Users2 } from '../../api/user/UserCollection2';
 import { SavedTrips } from '../../api/trip/SavedTripCollection';
 import { AllVehicles } from '../../api/vehicle/AllVehicleCollection';
 import { VehicleMakes } from '../../api/vehicle/VehicleMakeCollection';
-import { Users } from '../../api/user/UserCollection1';
+import { Users } from '../../api/user/UserCollection';
 import { UserVehicles } from '../../api/vehicle/UserVehicleCollection';
 import { UserDailyData } from '../../api/trip/UserDailyDataCollection';
 import { UserSavedDistances } from '../../api/trip/UserSavedDistanceCollection';
@@ -31,7 +30,6 @@ Meteor.publish(Stuffs.adminPublicationName, function () {
 });
 
 Trips.publish();
-Users2.publish();
 SavedTrips.publish();
 
 const allCollections = [
