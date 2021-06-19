@@ -1,4 +1,6 @@
 // Common conversion factor of 8,887 grams of CO2 emissions per gallon of gasoline consumed (Federal Register 2010)
+import { tripModes } from '../../api/utilities/constants';
+
 export const cePerGallon = 19.6;
 
 // The weighted average combined fuel economy for cars and light trucks in 2017 (FHWA 2019)
@@ -14,22 +16,22 @@ export const miToKmFactor = 1.609344;
 // An array of all the Alternative Transportation modes that are not EV/Hybrid vehicles
 export const altTransportation = [
   {
-    label: 'Biking',
+    label: tripModes.BIKE,
     value: 'biking',
   }, {
-    label: 'Carpool',
+    label: tripModes.CARPOOL,
     value: 'carpool',
   }, {
-    label: 'Public Transportation',
+    label: tripModes.PUBLIC_TRANSPORTATION,
     value: 'publicTransportation',
   }, {
-    label: 'Telework',
+    label: tripModes.TELEWORK,
     value: 'telework',
   }, {
-    label: 'Walking',
+    label: tripModes.WALK,
     value: 'walking',
   }, {
-    label: 'EV/Hybrid',
+    label: tripModes.ELECTRIC_VEHICLE,
     value: 'EVHybrid',
   }];
 
@@ -37,8 +39,8 @@ export const altTransportation = [
 export const altTransportationLabels = altTransportation.map(alt => alt.label);
 
 // An array of Alternative Transportation labels without 'EV/Hybrid'
-export const altSelectFieldOptions = altTransportationLabels.filter(label => label !== 'EV/Hybrid');
+export const altSelectFieldOptions = altTransportationLabels.filter(label => label !== tripModes.ELECTRIC_VEHICLE);
 
-export const altNoEVWalking = altSelectFieldOptions.filter(label => label !== 'Walking');
+export const altNoEVWalking = altSelectFieldOptions.filter(label => label !== tripModes.WALK);
 
-export const altNoEVWalkingBiking = altNoEVWalking.filter(label => label !== 'Biking');
+export const altNoEVWalkingBiking = altNoEVWalking.filter(label => label !== tripModes.BIKE);

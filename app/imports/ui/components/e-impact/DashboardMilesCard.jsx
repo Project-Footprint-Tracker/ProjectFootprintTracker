@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Statistic, Grid, Table, Header } from 'semantic-ui-react';
 import _ from 'lodash';
 import DashboardStatisticsCard from './DashboardStatisticsCard';
+import { tripModes } from '../../../api/utilities/constants';
 
 function DashboardMilesCard(
   {
@@ -19,13 +20,13 @@ function DashboardMilesCard(
   },
 ) {
 
-  const teleworkMiles = (_.find(milesPerMode, { mode: 'Telework' })).miles;
-  const publicMiles = (_.find(milesPerMode, { mode: 'Public Transportation' })).miles;
-  const bikeMiles = (_.find(milesPerMode, { mode: 'Bike' })).miles;
-  const walkMiles = (_.find(milesPerMode, { mode: 'Walk' })).miles;
-  const carpoolMiles = (_.find(milesPerMode, { mode: 'Carpool' })).miles;
-  const electricMiles = (_.find(milesPerMode, { mode: 'Electric Vehicle' })).miles;
-  const gasMiles = (_.find(milesPerMode, { mode: 'Gas Car' })).miles;
+  const teleworkMiles = (_.find(milesPerMode, { mode: tripModes.TELEWORK })).miles;
+  const publicMiles = (_.find(milesPerMode, { mode: tripModes.PUBLIC_TRANSPORTATION })).miles;
+  const bikeMiles = (_.find(milesPerMode, { mode: tripModes.BIKE })).miles;
+  const walkMiles = (_.find(milesPerMode, { mode: tripModes.WALK })).miles;
+  const carpoolMiles = (_.find(milesPerMode, { mode: tripModes.CARPOOL })).miles;
+  const electricMiles = (_.find(milesPerMode, { mode: tripModes.ELECTRIC_VEHICLE })).miles;
+  const gasMiles = (_.find(milesPerMode, { mode: tripModes.GAS_CAR })).miles;
 
   return (
     <DashboardStatisticsCard

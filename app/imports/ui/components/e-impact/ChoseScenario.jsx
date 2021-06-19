@@ -235,46 +235,46 @@ function ChoseScenario(
         </Form.Field>
         <Form.Group inline>
           <Form.Radio
-            label='Bike'
-            checked={transport === 'Bike'}
-            value='Bike'
+            label={tripModes.BIKE}
+            checked={transport === tripModes.BIKE}
+            value={tripModes.BIKE}
             onClick={handleChange}
           />
 
           <Form.Radio
-            label='Carpool'
-            checked={transport === 'Carpool'}
-            value='Carpool'
+            label={tripModes.CARPOOL}
+            checked={transport === tripModes.CARPOOL}
+            value={tripModes.CARPOOL}
             onClick={handleChange}
           />
           <Form.Radio
-            label='Electric Vehicle'
-            checked={transport === 'Electric Vehicle'}
-            value='Electric Vehicle'
+            label={tripModes.ELECTRIC_VEHICLE}
+            checked={transport === tripModes.ELECTRIC_VEHICLE}
+            value={tripModes.ELECTRIC_VEHICLE}
             onClick={handleChange}
           />
           <Form.Radio
-            label='Gas Car'
-            checked={transport === 'Gas Car'}
-            value='Gas Car'
+            label={tripModes.GAS_CAR}
+            checked={transport === tripModes.GAS_CAR}
+            value={tripModes.GAS_CAR}
             onClick={handleChange}
           />
           <Form.Radio
-            label='Public Transportation'
-            checked={transport === 'Public Transportation'}
-            value='Public Transportation'
+            label={tripModes.PUBLIC_TRANSPORTATION}
+            checked={transport === tripModes.PUBLIC_TRANSPORTATION}
+            value={tripModes.PUBLIC_TRANSPORTATION}
             onClick={handleChange}
           />
           <Form.Radio
-            label='Telework'
-            checked={transport === 'Telework'}
-            value='Telework'
+            label={tripModes.TELEWORK}
+            checked={transport === tripModes.TELEWORK}
+            value={tripModes.TELEWORK}
             onClick={handleChange}
           />
           <Form.Radio
-            label='Walk'
-            checked={transport === 'Walk'}
-            value='Walk'
+            label={tripModes.WALK}
+            checked={transport === tripModes.WALK}
+            value={tripModes.WALK}
             onClick={handleChange}
           />
         </Form.Group>
