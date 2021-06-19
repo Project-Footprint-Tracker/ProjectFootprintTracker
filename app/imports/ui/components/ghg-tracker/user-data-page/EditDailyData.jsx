@@ -7,11 +7,11 @@ import { Divider, Form, Icon, Loader, Modal } from 'semantic-ui-react';
 import swal from 'sweetalert';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
 import { AutoForm, BoolField, DateField, ErrorsField, SelectField, SubmitField } from 'uniforms-semantic';
-import { UserSavedDistances } from '../../../../api/user/UserSavedDistanceCollection';
+import { UserSavedDistances } from '../../../../api/trip/UserSavedDistanceCollection';
 import { getDateToday, getKilometersTraveled, getMilesTraveled, getModeType } from '../../../utilities/DailyCeData';
-import { UserDailyData } from '../../../../api/user/UserDailyDataCollection';
+import { UserDailyData } from '../../../../api/trip/UserDailyDataCollection';
 import { altSelectFieldOptions } from '../../../utilities/GlobalVariables';
-import { userDailyDataUpdateMethod } from '../../../../api/user/UserDailyDataCollection.methods';
+import { userDailyDataUpdateMethod } from '../../../../api/trip/UserDailyDataCollection.methods';
 
 const EditDailyData = (props) => {
   const doc = props.dailies.find(({ _id }) => _id === props.transportationID);

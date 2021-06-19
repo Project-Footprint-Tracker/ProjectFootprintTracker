@@ -6,6 +6,7 @@ import BaseCollection from '../base/BaseCollection';
 class AllVehicleCollection extends BaseCollection {
   constructor() {
     super('AllVehicle', new SimpleSchema({
+      Owner: String,
       Year: Number,
       Make: String,
       Model: String,
@@ -13,8 +14,9 @@ class AllVehicleCollection extends BaseCollection {
     }));
   }
 
-  define({ Year, Make, Model, Mpg }) {
+  define({ Owner, Year, Make, Model, Mpg }) {
     const docID = this._collection.insert({
+      Owner,
       Year,
       Make,
       Model,

@@ -10,6 +10,10 @@ import { Accounts } from 'meteor/accounts-base';
 const Signup = ({ location }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [zipCode, setZipCode] = useState(0);
+  const [goal, setGoal] = useState('');
   const [error, setError] = useState('');
   const [redirectToReferer, setRedirectToReferer] = useState(false);
 
@@ -22,14 +26,26 @@ const Signup = ({ location }) => {
     case 'password':
       setPassword(value);
       break;
+    case 'firstName':
+      setFirstName(value);
+      break;
+    case 'lastName':
+      setLastName(value);
+      break;
+    case 'zipCode':
+      setZipCode(value);
+      break;
+    case 'goal':
+      setGoal(value);
+      break;
     default:
-      // do nothing
+        // do nothing
     }
   };
 
   /* Handle Signup submission. Create user account and a profile entry, then redirect to the home page. */
   const submit = () => {
-    Accounts.createUser({ email, username: email, password }, (err) => {
+    Accounts.createUser({ email, password, firstName, lastName, zipCode, goal }, (err) => {
       if (err) {
         setError(err.reason);
       } else {
@@ -46,46 +62,82 @@ const Signup = ({ location }) => {
     return <Redirect to={from} />;
   }
   return (
-    <Container id="signup-page">
-      <Grid textAlign="center" verticalAlign="middle" centered columns={2}>
+    <Container id='signup-page'>
+      <Grid textAlign='center' verticalAlign='middle' centered columns={2}>
         <Grid.Column>
-          <Header as="h2" textAlign="center">
+          <Header as='h2' textAlign='center'>
             Register your account
           </Header>
           <Form onSubmit={submit}>
             <Segment stacked>
               <Form.Input
-                label="Email"
-                id="signup-form-email"
-                icon="user"
-                iconPosition="left"
-                name="email"
-                type="email"
-                placeholder="E-mail address"
+                label='Email'
+                id='signup-form-email'
+                icon='user'
+                iconPosition='left'
+                name='email'
+                type='email'
+                placeholder='E-mail address'
                 onChange={handleChange}
               />
               <Form.Input
-                label="Password"
-                id="signup-form-password"
-                icon="lock"
-                iconPosition="left"
-                name="password"
-                placeholder="Password"
-                type="password"
+                label='Password'
+                id='signup-form-password'
+                icon='lock'
+                iconPosition='left'
+                name='password'
+                placeholder='Password'
+                type='password'
                 onChange={handleChange}
               />
-              <Form.Button id="signup-form-submit" content="Submit" />
+              <Form.Input
+                label="First Name"
+                id='signup-form-first-name'
+                icon='user'
+                iconPosition='left'
+                name='firstName'
+                type='text'
+                onChange={handleChange}
+              />
+              <Form.Input
+                label='Last Name'
+                id='signup-form-last-name'
+                icon='user'
+                iconPosition='left'
+                name='lastName'
+                type='text'
+                onChange={handleChange}
+              />
+              <Form.Input
+                label='Zip Code'
+                id='signup-form-zip-code'
+                icon='point'
+                iconPosition='left'
+                name='zipCode'
+                type='number'
+                onChange={handleChange}
+              />
+              <Form.Input
+                label='Goal'
+                id='signup-form-goal'
+                icon='trophy'
+                iconPosition='left'
+                name='goal'
+                type='text'
+                onChange={handleChange}
+              />
+              <Form.Button id='signup-form-submit' content='Submit' />
             </Segment>
           </Form>
           <Message>
-            Already have an account? Login <Link to="/signin">here</Link>
+            Already have an account? Login <Link to='/signin'>here</Link>
           </Message>
           {error === '' ? (
             ''
           ) : (
             <Message
               error
-              header="Registration was not successful"
+              header='Registration was not successful'
               content={error}
             />
           )}

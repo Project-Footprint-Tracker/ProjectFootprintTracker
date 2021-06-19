@@ -7,9 +7,9 @@ import { SavedTrips } from '../../api/trip/SavedTripCollection';
 import { AllVehicles } from '../../api/vehicle/AllVehicleCollection';
 import { VehicleMakes } from '../../api/vehicle/VehicleMakeCollection';
 import { Users } from '../../api/user/UserCollection';
-import { UserVehicles } from '../../api/user/UserVehicleCollection';
-import { UserDailyData } from '../../api/user/UserDailyDataCollection';
-import { UserSavedDistances } from '../../api/user/UserSavedDistanceCollection';
+import { UserVehicles } from '../../api/vehicle/UserVehicleCollection';
+import { UserDailyData } from '../../api/trip/UserDailyDataCollection';
+import { UserSavedDistances } from '../../api/trip/UserSavedDistanceCollection';
 
 // User-level publication.
 // If logged in, then publish documents owned by this user. Otherwise publish nothing.

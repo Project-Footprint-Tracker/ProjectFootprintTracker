@@ -7,7 +7,7 @@ import { motion, AnimatePresence, AnimateSharedLayout } from 'framer-motion';
 import { _ } from 'meteor/underscore';
 import PropTypes from 'prop-types';
 import { VehicleMakes } from '../../../../api/vehicle/VehicleMakeCollection';
-import { userVehicleDefineMethod } from '../../../../api/user/UserVehicleCollection.methods';
+import { userVehicleDefineMethod } from '../../../../api/vehicle/UserVehicleCollection.methods';
 
 const AddVehicleModal = (props) => {
   // getMPGType function that gets the MPG and type from user input(make, model, year)

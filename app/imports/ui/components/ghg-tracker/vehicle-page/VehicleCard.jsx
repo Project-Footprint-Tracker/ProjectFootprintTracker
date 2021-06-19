@@ -9,7 +9,7 @@ import {
   getVehicleYearsList,
   getVehicle,
 } from '../../../utilities/vehicleDropdown';
-import { userVehicleRemoveItMethod } from '../../../../api/user/UserVehicleCollection.methods';
+import { userVehicleRemoveItMethod } from '../../../../api/vehicle/UserVehicleCollection.methods';
 import { VehicleMakes } from '../../../../api/vehicle/VehicleMakeCollection';
 
 /** Renders a single vehicle card. */
