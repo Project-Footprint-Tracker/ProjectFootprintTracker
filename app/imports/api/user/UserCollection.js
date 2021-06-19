@@ -123,4 +123,4 @@ class UserCollection extends BaseCollection {
 /**
  * Provides the singleton instance of this class to all other entities.
  */
-export const Users = new UserCollection();
+export const UsersCombined = new UserCollection();
