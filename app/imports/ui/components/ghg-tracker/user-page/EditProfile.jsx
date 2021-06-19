@@ -11,8 +11,8 @@ import {
   HiddenField,
   TextField,
 } from 'uniforms-semantic';
-import { Users } from '../../../../api/user/UserCollection';
-import { userUpdateMethod } from '../../../../api/user/UserCollection.methods';
+import { Users } from '../../../../api/user/UserCollection1';
+import { userUpdateMethod } from '../../../../api/user/UserCollection1.methods';
 
 const bridge = new SimpleSchema2Bridge(Users.getSchema());
 

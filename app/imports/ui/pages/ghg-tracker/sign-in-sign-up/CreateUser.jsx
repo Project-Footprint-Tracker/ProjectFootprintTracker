@@ -8,8 +8,8 @@ import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
 import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
-import { Users } from '../../../../api/user/UserCollection';
-import { userDefineMethod } from '../../../../api/user/UserCollection.methods';
+import { Users } from '../../../../api/user/UserCollection1';
+import { userDefineMethod } from '../../../../api/user/UserCollection1.methods';
 
 const paddingStyle = {
   marginRight: 'auto',

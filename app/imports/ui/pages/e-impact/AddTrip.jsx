@@ -9,7 +9,7 @@ import SimpleSchema from 'simpl-schema';
 import PropTypes from 'prop-types';
 import { tripPublications, Trips } from '../../../api/trip/TripCollection';
 import { savedTripPublications, SavedTrips } from '../../../api/trip/SavedTripCollection';
-import { Users } from '../../../api/user/UserCollection';
+import { Users } from '../../../api/user/UserCollection1';
 import SideBar from '../../components/e-impact/SideBar';
 import DeleteSavedModal from '../../components/e-impact/DeleteSavedModal';
 

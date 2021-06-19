@@ -8,7 +8,7 @@ import { useParams } from 'react-router-dom';
 import SideBar from '../../components/e-impact/SideBar';
 import { Trips, tripPublications } from '../../../api/trip/TripCollection';
 import TripItemAdmin from '../../components/e-impact/TripItemAdmin';
-import { Users } from '../../../api/user/UserCollection';
+import { Users } from '../../../api/user/UserCollection1';
 
 /* global document */
 

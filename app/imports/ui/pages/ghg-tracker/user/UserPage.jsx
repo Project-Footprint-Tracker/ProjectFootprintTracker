@@ -3,7 +3,7 @@ import { Grid, Header, Container, Loader, Card, Button } from 'semantic-ui-react
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { NavLink } from 'react-router-dom';
-import { Users } from '../../../../api/user/UserCollection';
+import { Users } from '../../../../api/user/UserCollection1';
 import { UserDailyData } from '../../../../api/trip/UserDailyDataCollection';
 import ProfileCard from '../../../components/ghg-tracker/user-page/ProfileCard';
 import MyDataChart from '../../../components/ghg-tracker/user-page/MyDataChart';

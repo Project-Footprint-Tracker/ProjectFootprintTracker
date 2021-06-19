@@ -6,7 +6,7 @@ import { Users2 } from '../../api/user/UserCollection2';
 import { SavedTrips } from '../../api/trip/SavedTripCollection';
 import { AllVehicles } from '../../api/vehicle/AllVehicleCollection';
 import { VehicleMakes } from '../../api/vehicle/VehicleMakeCollection';
-import { Users } from '../../api/user/UserCollection';
+import { Users } from '../../api/user/UserCollection1';
 import { UserVehicles } from '../../api/vehicle/UserVehicleCollection';
 import { UserDailyData } from '../../api/trip/UserDailyDataCollection';
 import { UserSavedDistances } from '../../api/trip/UserSavedDistanceCollection';

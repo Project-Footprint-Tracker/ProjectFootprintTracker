@@ -6,7 +6,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import { Trips } from '../../../api/trip/TripCollection';
 import Chart from './Chart';
-import { Users } from '../../../api/user/UserCollection';
+import { Users } from '../../../api/user/UserCollection1';
 import { getCountyData } from '../../../api/utilities/Utilities';
 
 /* global document */

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
 import { Grid, Header, Image, Card, Divider, Loader } from 'semantic-ui-react';
-import { Users } from '../../../api/user/UserCollection';
+import { Users } from '../../../api/user/UserCollection1';
 import SideBar from '../../components/e-impact/SideBar';
 
 /* global document */

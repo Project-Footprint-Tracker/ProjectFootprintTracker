@@ -2,7 +2,7 @@ import React from 'react';
 import swal from 'sweetalert';
 import { Button, Icon, Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { userRemoveItMethod } from '../../../../api/user/UserCollection.methods';
+import { userRemoveItMethod } from '../../../../api/user/UserCollection1.methods';
 
 class DeleteUser extends React.Component {
   constructor(props) {

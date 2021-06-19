@@ -6,7 +6,7 @@ import DarkModeToggle from 'react-dark-mode-toggle';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Roles } from 'meteor/alanning:roles';
-import { Users } from '../../../api/user/UserCollection';
+import { Users } from '../../../api/user/UserCollection1';
 import Settings from './Settings';
 
 /* global document */

@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { _ } from 'meteor/underscore';
 import SideBar from '../../components/e-impact/SideBar';
 import { Trips, tripPublications } from '../../../api/trip/TripCollection';
-import { Users } from '../../../api/user/UserCollection';
+import { Users } from '../../../api/user/UserCollection1';
 import TripItem from '../../components/e-impact/TripItem';
 
 /* global document */

@@ -5,7 +5,7 @@ import { Table, Button, Modal, Header } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { Trips } from '../../../api/trip/TripCollection';
 import { savedTripPublications, SavedTrips } from '../../../api/trip/SavedTripCollection';
-import { Users } from '../../../api/user/UserCollection';
+import { Users } from '../../../api/user/UserCollection1';
 import SaveTripModal from './SaveTripModal';
 import { cePerGallonFuel } from '../../../api/utilities/constants';
 

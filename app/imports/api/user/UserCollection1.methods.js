@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { CallPromiseMixin } from 'meteor/didericis:callpromise-mixin';
-import { Users } from './UserCollection';
+import { Users } from './UserCollection1';
 
 export const userDefineMethod = new ValidatedMethod({
   name: 'UserCollection.define',

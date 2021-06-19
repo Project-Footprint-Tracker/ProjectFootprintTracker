@@ -5,7 +5,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import { Table, Button, Modal, Header } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { Trips, tripPublications } from '../../../api/trip/TripCollection';
-import { Users } from '../../../api/user/UserCollection';
+import { Users } from '../../../api/user/UserCollection1';
 import { cePerGallonFuel, tripModes } from '../../../api/utilities/constants';
 
 /* global document */

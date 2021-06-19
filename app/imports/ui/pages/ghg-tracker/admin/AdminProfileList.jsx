@@ -3,7 +3,7 @@ import { Loader, Table, Container, Input, Header, Divider } from 'semantic-ui-re
 import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import SmartDataTable from 'react-smart-data-table';
-import { Users } from '../../../../api/user/UserCollection';
+import { Users } from '../../../../api/user/UserCollection1';
 import 'react-smart-data-table/dist/react-smart-data-table.css';
 import DeleteUser from '../../../components/ghg-tracker/admin-users-page/DeleteUser';
 

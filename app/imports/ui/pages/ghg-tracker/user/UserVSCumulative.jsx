@@ -4,7 +4,7 @@ import { Grid, Container, Header, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { _ } from 'meteor/underscore';
-import { Users } from '../../../../api/user/UserCollection';
+import { Users } from '../../../../api/user/UserCollection1';
 import { UserDailyData } from '../../../../api/trip/UserDailyDataCollection';
 import ComparisonGraph from '../../../components/ghg-tracker/ComparisonGraph';
 import TransportationOptions from '../../../components/ghg-tracker/user-page/TransportationOptions';
