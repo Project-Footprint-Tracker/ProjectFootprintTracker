@@ -7,7 +7,7 @@ import { cePerGallonFuel, tripModes } from './constants';
 export const getCountyData = (county) => {
   const nonCarArr = Trips.find({ county: county, mode: { $not: tripModes.GAS_CAR } }).fetch().map(function (element) {
     element.fuelSaved = element.distance / element.mpg;
-    element.ceSaved = element.fuelSaved * 19.6;
+    element.ceSaved = element.fuelSaved * cePerGallonFuel;
     return element;
   });
 
