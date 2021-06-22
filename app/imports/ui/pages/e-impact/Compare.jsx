@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
 import { Grid, Header, Image, Card, Divider, Loader } from 'semantic-ui-react';
-import { Users } from '../../../api/user/UserCollection1';
+import { UsersCombined } from '../../../api/user/UserCollection';
 import SideBar from '../../components/e-impact/SideBar';
 
 /* global document */
@@ -134,8 +134,8 @@ Compare.propTypes = {
 
 export default withTracker(({ match }) => {
   const username = match.params._id;
-  const userSubscribe = Users.subscribeUser();
-  const userProfile = Users.getUserProfile(username);
+  const userSubscribe = UsersCombined.subscribeUser();
+  const userProfile = UsersCombined.getUserProfile(username);
   return {
     userReady: userSubscribe.ready(),
     username,

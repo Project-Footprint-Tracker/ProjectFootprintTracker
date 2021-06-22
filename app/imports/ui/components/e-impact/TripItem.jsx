@@ -5,7 +5,7 @@ import { Table, Button, Modal, Header } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { Trips } from '../../../api/trip/TripCollection';
 import { savedTripPublications, SavedTrips } from '../../../api/trip/SavedTripCollection';
-import { Users } from '../../../api/user/UserCollection1';
+import { UsersCombined } from '../../../api/user/UserCollection';
 import SaveTripModal from './SaveTripModal';
 import { cePerGallonFuel } from '../../../api/utilities/constants';
 
@@ -132,7 +132,7 @@ TripItem.propTypes = {
 
 export default withTracker(() => {
   const username = Meteor.user()?.username;
-  const userProfile = Users.getUserProfile(username);
+  const userProfile = UsersCombined.getUserProfile(username);
   const readySaved = Meteor.subscribe(savedTripPublications.savedTrip).ready() && username !== undefined;
   const savedTrips = SavedTrips.find({}).fetch();
   return {

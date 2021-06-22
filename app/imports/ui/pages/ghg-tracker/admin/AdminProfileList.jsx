@@ -3,7 +3,7 @@ import { Loader, Table, Container, Input, Header, Divider } from 'semantic-ui-re
 import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import SmartDataTable from 'react-smart-data-table';
-import { Users } from '../../../../api/user/UserCollection1';
+import { UsersCombined } from '../../../../api/user/UserCollection';
 import 'react-smart-data-table/dist/react-smart-data-table.css';
 import DeleteUser from '../../../components/ghg-tracker/admin-users-page/DeleteUser';
 
@@ -107,8 +107,8 @@ AdminProfileList.propTypes = {
   ready: PropTypes.bool.isRequired,
 };
 export default withTracker(() => {
-  const ready = Users.subscribeUserAdmin().ready();
-  const users = Users.find({}, { sort: { lastName: 1 } }).fetch();
+  const ready = UsersCombined.subscribeUserAdmin().ready();
+  const users = UsersCombined.find({}, { sort: { lastName: 1 } }).fetch();
   return {
     users,
     ready,
