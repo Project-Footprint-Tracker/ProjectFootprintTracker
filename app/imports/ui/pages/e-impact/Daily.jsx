@@ -8,6 +8,7 @@ import SideBar from '../../components/e-impact/SideBar';
 import { Trips, tripPublications } from '../../../api/trip/TripCollection';
 import { Users } from '../../../api/user/UserCollection';
 import TripItem from '../../components/e-impact/TripItem';
+import { cePerGallonFuel } from '../../../api/utilities/constants';
 
 /* global document */
 
@@ -19,7 +20,7 @@ const Daily = (props) => {
   let monthlySum = 0;
   for (let i = 0; i < monthTrips.length; i++) {
     const tripMpg = monthTrips[i].mpg > 0 ? monthTrips[i].mpg : 25;
-    const add = (monthTrips[i].distance / tripMpg) * 19.6;
+    const add = (monthTrips[i].distance / tripMpg) * cePerGallonFuel;
     if (!Number.isNaN(add) && Number.isFinite(add)) {
       if (monthTrips[i].mode === 'Gas Car' || monthTrips[i].mode === 'Carpool') {
         monthlySum += add;
