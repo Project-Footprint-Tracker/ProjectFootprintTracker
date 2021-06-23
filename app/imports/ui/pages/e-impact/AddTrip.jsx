@@ -9,7 +9,7 @@ import SimpleSchema from 'simpl-schema';
 import PropTypes from 'prop-types';
 import { tripPublications, Trips } from '../../../api/trip/TripCollection';
 import { savedTripPublications, SavedTrips } from '../../../api/trip/SavedTripCollection';
-import { Users } from '../../../api/user/UserCollection';
+import { UsersCombined } from '../../../api/user/UserCollection';
 import SideBar from '../../components/e-impact/SideBar';
 import DeleteSavedModal from '../../components/e-impact/DeleteSavedModal';
 import { tripModes } from '../../../api/utilities/constants';
@@ -152,8 +152,8 @@ AddTrip.propTypes = {
 
 export default withTracker(() => {
   const username = Meteor.user()?.username;
-  const userProfile = Users.getUserProfile(username);
-  const userReady = Users.subscribeUser().ready();
+  const userProfile = UsersCombined.getUserProfile(username);
+  const userReady = UsersCombined.subscribeUser().ready();
   const readyTrips = Meteor.subscribe(tripPublications.trip).ready() && username !== undefined;
   const readySaved = Meteor.subscribe(savedTripPublications.savedTrip).ready() && username !== undefined;
   const trips = Trips.find({}, {}).fetch();

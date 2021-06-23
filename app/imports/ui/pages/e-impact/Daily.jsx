@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { _ } from 'meteor/underscore';
 import SideBar from '../../components/e-impact/SideBar';
 import { Trips, tripPublications } from '../../../api/trip/TripCollection';
-import { Users } from '../../../api/user/UserCollection';
+import { UsersCombined } from '../../../api/user/UserCollection';
 import TripItem from '../../components/e-impact/TripItem';
 import { cePerGallonFuel } from '../../../api/utilities/constants';
 
@@ -190,11 +190,11 @@ Daily.propTypes = {
 };
 
 export default withTracker(({ match }) => {
-  const userSubscribe = Users.subscribeUser();
+  const userSubscribe = UsersCombined.subscribeUser();
   const username = match.params._id;
   const ready = Meteor.subscribe(tripPublications.trip).ready() && username !== undefined;
   const trips = Trips.find({}).fetch();
-  const userProfile = Users.getUserProfile(username);
+  const userProfile = UsersCombined.getUserProfile(username);
   return {
     userReady: userSubscribe.ready(),
     ready,

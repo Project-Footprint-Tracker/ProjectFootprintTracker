@@ -8,7 +8,7 @@ import { useParams } from 'react-router-dom';
 import SideBar from '../../components/e-impact/SideBar';
 import { Trips, tripPublications } from '../../../api/trip/TripCollection';
 import TripItemAdmin from '../../components/e-impact/TripItemAdmin';
-import { Users } from '../../../api/user/UserCollection';
+import { UsersCombined } from '../../../api/user/UserCollection';
 import { cePerGallonFuel } from '../../../api/utilities/constants';
 
 /* global document */
@@ -182,10 +182,10 @@ AdminDaily.propTypes = {
 
 export default withTracker(() => {
   const { owner } = useParams();
-  const userSubscribe = Users.subscribeUser();
+  const userSubscribe = UsersCombined.subscribeUser();
   const ready = Meteor.subscribe(tripPublications.tripCommunity).ready();
   const trips = Trips.find({ owner }, {}).fetch();
-  const userProfile = Users.getUserProfile(Meteor.user()?.username);
+  const userProfile = UsersCombined.getUserProfile(Meteor.user()?.username);
   return {
     userReady: userSubscribe.ready(),
     ready,
