@@ -1,94 +1,98 @@
 import { Meteor } from 'meteor/meteor';
-import { Roles } from 'meteor/alanning:roles';
 import SimpleSchema from 'simpl-schema';
 import { check } from 'meteor/check';
+import { _ } from 'meteor/underscore';
+import { Roles } from 'meteor/alanning:roles';
+import swal from 'sweetalert';
 import BaseCollection from '../base/BaseCollection';
-import { UserVehicles } from '../vehicle/UserVehicleCollection';
-import { UserSavedDistances } from '../trip/UserSavedDistanceCollection';
-import { UserDailyData } from '../trip/UserDailyDataCollection';
-import { userVehicleRemoveItMethod } from '../vehicle/UserVehicleCollection.methods';
-import { userDailyDataRemoveItMethod } from '../trip/UserDailyDataCollection.methods';
-import { userSavedDistanceRemoveItMethod } from '../trip/UserSavedDistanceCollection.methods';
 
 export const userPublications = {
   user: 'User',
   userAdmin: 'UserAdmin',
-  userCumulative: 'UserCumulative',
 };
 
 class UserCollection extends BaseCollection {
   constructor() {
-    super('User', new SimpleSchema({
-      name: String,
-      goal: String,
+    super('Users', new SimpleSchema({
       email: String,
-      image: String,
+      firstName: String,
+      lastName: String,
+      zipCode: Number,
+      goal: String,
     }));
   }
 
-  define({ name, goal, email, image }) {
+  define({ email, firstName, lastName, zipCode, goal }) {
     const docID = this._collection.insert({
-      name,
-      goal,
       email,
-      image,
+      firstName,
+      lastName,
+      zipCode,
+      goal,
     });
     return docID;
   }
 
-  update(docID, { name, goal, image }) {
+  defineWithMessage({ email, firstName, lastName, zipCode, goal }) {
+    const docID = this._collection.insert({ email, firstName, lastName, zipCode, goal }, (error) => {
+      if (error) {
+        swal('Error', error.message, 'error');
+      } else {
+        swal('Sucess');
+      }
+    });
+    return docID;
+  }
+
+  update(docID, { email, firstName, lastName, zipCode, goal }) {
     const updateData = {};
-    if (name) {
-      updateData.name = name;
+
+    if (email) {
+      updateData.email = email;
     }
+
+    if (firstName) {
+      updateData.firstName = firstName;
+    }
+
+    if (lastName) {
+      updateData.lastName = lastName;
+    }
+
+    if (_.isNumber(zipCode)) {
+      updateData.zipCode = zipCode;
+    }
+
     if (goal) {
       updateData.goal = goal;
     }
-    if (image) {
-      updateData.image = image;
-    }
+
     this._collection.update(docID, { $set: updateData });
   }
 
-  removeIt(id) {
-    const doc = this.findDoc(id);
+  removeIt(name) {
+    const doc = this.findDoc(name);
     check(doc, Object);
-    const userVehicles = UserVehicles.find({ owner: doc.email }).fetch();
-    userVehicles.forEach(function (vehicle) {
-      userVehicleRemoveItMethod.call(vehicle._id);
-    });
-    const userDailyData = (UserDailyData.find({ owner: doc.email })).fetch();
-    userDailyData.forEach(function (dailyData) {
-      userDailyDataRemoveItMethod.call(dailyData._id);
-    });
-    const userSavedDistances = (UserSavedDistances.find({ owner: doc.email })).fetch();
-    userSavedDistances.forEach(function (savedDistance) {
-      userSavedDistanceRemoveItMethod.call(savedDistance._id);
-    });
     this._collection.remove(doc._id);
     return true;
   }
 
   publish() {
     if (Meteor.isServer) {
+      // get the TripCollection instance.
       const instance = this;
+      /** This subscription publishes only the documents associated with the logged in user */
       Meteor.publish(userPublications.user, function publish() {
         if (this.userId) {
           const username = Meteor.users.findOne(this.userId).username;
-          return instance._collection.find({ email: username });
+          return instance._collection.find({ username: username });
         }
         return this.ready();
       });
 
+      /** This subscription publishes all documents regardless of user, but only if the logged in user is the Admin. */
       Meteor.publish(userPublications.userAdmin, function publish() {
         if (this.userId && Roles.userIsInRole(this.userId, 'admin')) {
-          return instance._collection.find();
-        }
-        return this.ready();
-      });
-
-      Meteor.publish(userPublications.userCumulative, function publish() {
-        if (this.userId) {
           return instance._collection.find();
         }
         return this.ready();
@@ -110,12 +114,13 @@ class UserCollection extends BaseCollection {
     return null;
   }
 
-  subscribeUserCumulative() {
-    if (Meteor.isClient) {
-      return Meteor.subscribe(userPublications.userCumulative);
-    }
-    return null;
+  getUserProfile(email) {
+    const user = this._collection.findOne({ email: email });
+    return user;
   }
 }
 
+/**
+ * Provides the singleton instance of this class to all other entities.
+ */
 export const Users = new UserCollection();

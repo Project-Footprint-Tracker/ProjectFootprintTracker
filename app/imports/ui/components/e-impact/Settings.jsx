@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Grid, Icon, Popup } from 'semantic-ui-react';
-import { Users2 } from '../../../api/user/UserCollection2';
+import { Users } from '../../../api/user/UserCollection';
 
 class Settings extends React.Component {
 
@@ -16,7 +16,7 @@ class Settings extends React.Component {
 
   submit = () => {
     const { changeMpg, changeRoundTrip } = this.state;
-    Users2.update({ _id: this.props.docId }, {
+    Users.update({ _id: this.props.docId }, {
       username: this.props.username,
       autoMPG: Number(changeMpg) || this.props.userMpg,
       homeRoundTrip: Number(changeRoundTrip) || this.props.userHomeRoundTrip,
