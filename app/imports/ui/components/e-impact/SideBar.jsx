@@ -6,7 +6,7 @@ import DarkModeToggle from 'react-dark-mode-toggle';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Roles } from 'meteor/alanning:roles';
-import { UsersCombined } from '../../../api/user/UserCollection';
+import { Users } from '../../../api/user/UserCollection';
 import Settings from './Settings';
 
 /* global document */
@@ -14,7 +14,7 @@ import Settings from './Settings';
 function SideBar(props) {
 
   const handleChange = () => {
-    UsersCombined.updateTheme(props.userProfile.username);
+    Users.updateTheme(props.userProfile.username);
   };
 
   let sidebarLogo = 'images/EImpactLogo.png';
@@ -178,8 +178,8 @@ SideBar.propTypes = {
 };
 
 export default withTracker(() => {
-  const ready = UsersCombined.subscribeUser().ready();
-  const userProfile = UsersCombined.getUserProfile(Meteor.user()?.username);
+  const ready = Users.subscribeUser().ready();
+  const userProfile = Users.getUserProfile(Meteor.user()?.username);
   return {
     ready,
     userProfile,

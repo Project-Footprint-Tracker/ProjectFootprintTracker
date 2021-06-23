@@ -4,7 +4,7 @@ import { Grid, Container, Header, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { _ } from 'meteor/underscore';
-import { UsersCombined } from '../../../../api/user/UserCollection';
+import { Users } from '../../../../api/user/UserCollection';
 import { UserDailyData } from '../../../../api/trip/UserDailyDataCollection';
 import ComparisonGraph from '../../../components/ghg-tracker/ComparisonGraph';
 import TransportationOptions from '../../../components/ghg-tracker/user-page/TransportationOptions';
@@ -74,11 +74,11 @@ UserVSCumulative.propTypes = {
 };
 
 export default withTracker(() => {
-  const subscription1 = UsersCombined.subscribeUserCumulative();
+  const subscription1 = Users.subscribeUserCumulative();
   const subscription2 = UserDailyData.subscribeUserDailyDataCumulative();
   const subscription3 = UserVehicles.subscribeUserVehicleCumulative();
   const currentUser = Meteor.user() ? Meteor.user().username : '';
-  const users = UsersCombined.find({}, {}).fetch();
+  const users = Users.find({}, {}).fetch();
   const dailyData = UserDailyData.find({ owner: currentUser }, {}).fetch();
   const dailyDataAll = UserDailyData.find({}, {}).fetch();
   const vehicles = UserVehicles.find({ owner: currentUser }, {}).fetch();

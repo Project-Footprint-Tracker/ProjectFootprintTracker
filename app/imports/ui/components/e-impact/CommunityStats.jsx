@@ -6,7 +6,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import { Trips } from '../../../api/trip/TripCollection';
 import Chart from './Chart';
-import { UsersCombined } from '../../../api/user/UserCollection';
+import { Users } from '../../../api/user/UserCollection';
 import { getCountyData } from '../../../api/utilities/Utilities';
 
 /* global document */
@@ -259,7 +259,7 @@ CommunityStats.propTypes = {
 export default withTracker(() => {
   // Get access to Trip documents.
   const subscription = Trips.subscribeTripCommunity();
-  const userProfile = UsersCombined.getUserProfile(Meteor.user()?.username);
+  const userProfile = Users.getUserProfile(Meteor.user()?.username);
   const trips = Trips.find({}).fetch();
   const ready = subscription.ready();
   return {

@@ -7,7 +7,6 @@ import { Pie } from 'react-chartjs-2';
 import { UserDailyData } from '../../../../api/trip/UserDailyDataCollection';
 import { tripModes } from '../../../../api/utilities/constants';
 
-
 // Displaying a pie chart of the mode of transportation from UserDailyData collection
 class CumulativeDataChart extends React.Component {
   render() {

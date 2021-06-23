@@ -11,10 +11,10 @@ import {
   HiddenField,
   TextField,
 } from 'uniforms-semantic';
-import { UsersCombined } from '../../../../api/user/UserCollection';
+import { Users } from '../../../../api/user/UserCollection';
 import { userUpdateMethod } from '../../../../api/user/UserCollection1.methods';
 
-const bridge = new SimpleSchema2Bridge(UsersCombined.getSchema());
+const bridge = new SimpleSchema2Bridge(Users.getSchema());
 
 // Modal for editing user's profile data
 class EditProfile extends React.Component {
@@ -91,9 +91,9 @@ EditProfile.propTypes = {
 
 // withTracker connects Meteor data to React components.
 export default withTracker(() => {
-  const subscription = UsersCombined.subscribeUser();
+  const subscription = Users.subscribeUser();
   return {
-    users: UsersCombined.find({}).fetch(),
+    users: Users.find({}).fetch(),
     ready: subscription.ready(),
   };
 })(EditProfile);

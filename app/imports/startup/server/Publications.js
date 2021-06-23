@@ -4,7 +4,7 @@ import { Stuffs } from '../../api/stuff/Stuff';
 import { Trips } from '../../api/trip/TripCollection';
 import { SavedTrips } from '../../api/trip/SavedTripCollection';
 import { AllVehicles } from '../../api/vehicle/AllVehicleCollection';
-import { UsersCombined } from '../../api/user/UserCollection';
+import { Users } from '../../api/user/UserCollection';
 import { VehicleMakes } from '../../api/vehicle/VehicleMakeCollection';
 import { UserVehicles } from '../../api/vehicle/UserVehicleCollection';
 import { UserDailyData } from '../../api/trip/UserDailyDataCollection';
@@ -35,7 +35,7 @@ SavedTrips.publish();
 const allCollections = [
   AllVehicles,
   VehicleMakes,
-  UsersCombined,
+  Users,
   UserVehicles,
   UserDailyData,
   UserSavedDistances,
