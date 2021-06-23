@@ -8,6 +8,7 @@ const TripHistoryRow = (props) => (
     <Table.Cell>{props.trip.date.toLocaleDateString()}</Table.Cell>
     <Table.Cell>{props.trip.mode}</Table.Cell>
     <Table.Cell>{props.trip.milesTraveled}</Table.Cell>
+    <Table.Cell>{props.trip.mpg}</Table.Cell>
     <Table.Cell/>
     <Table.Cell/>
   </Table.Row>

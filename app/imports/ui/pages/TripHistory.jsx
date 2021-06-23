@@ -23,7 +23,8 @@ const TripHistory = (props) => (props.ready ? (
             <Table.Row>
               <Table.HeaderCell>Date</Table.HeaderCell>
               <Table.HeaderCell>Mode of Transportation</Table.HeaderCell>
-              <Table.HeaderCell>Distance Traveled (miles)</Table.HeaderCell>
+              <Table.HeaderCell>Distance Traveled (mi)</Table.HeaderCell>
+              <Table.HeaderCell>MPG</Table.HeaderCell>
               <Table.HeaderCell>CO2 Reduced (lbs)</Table.HeaderCell>
               <Table.HeaderCell>Fuel Saved (gal)</Table.HeaderCell>
             </Table.Row>
