@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Card, Header, Image } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { getCumulativePerMode } from '../../../utilities/CumulativeCeData';
+import { getCumulativePerMode } from '../../../utilities/to-delete/CumulativeCeData';
 import { tripModes } from '../../../../api/utilities/constants';
 
 /** Renders a single vehicle card. */

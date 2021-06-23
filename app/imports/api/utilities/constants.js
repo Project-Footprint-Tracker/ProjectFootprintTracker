@@ -27,3 +27,7 @@ export const eGallon = 2.65;
 
 // average MPGe = (33,705 Wh/gal) / (320 Wh/mi) = 105.33 mi/gal
 export const avgMpge = 105;
+
+// The weighted average combined fuel economy for cars and light trucks in 2017 (FHWA 2019)
+// Read more: https://www.epa.gov/energy/greenhouse-gases-equivalencies-calculator-calculations-and-references
+export const averageAutoMPG = 22.3;

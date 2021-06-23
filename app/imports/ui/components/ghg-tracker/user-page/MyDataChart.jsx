@@ -3,7 +3,7 @@ import { Grid, Header } from 'semantic-ui-react';
 import { Pie } from 'react-chartjs-2';
 import PropTypes from 'prop-types';
 import { _ } from 'meteor/underscore';
-import { getCumulativePerMode } from '../../../utilities/CumulativeCeData';
+import { getCumulativePerMode } from '../../../utilities/to-delete/CumulativeCeData';
 import { tripModes } from '../../../../api/utilities/constants';
 
 // Pie chart of the all time mileage for each mode of transportation for a specific user

@@ -1,5 +1,5 @@
 // Common conversion factor of 8,887 grams of CO2 emissions per gallon of gasoline consumed (Federal Register 2010)
-import { tripModes } from '../../api/utilities/constants';
+import { tripModes } from '../../../api/utilities/constants';
 
 export const cePerGallon = 19.6;
 

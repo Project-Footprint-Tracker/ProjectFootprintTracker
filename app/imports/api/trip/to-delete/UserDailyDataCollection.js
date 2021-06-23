@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import SimpleSchema from 'simpl-schema';
 import { _ } from 'meteor/underscore';
-import BaseCollection from '../base/BaseCollection';
+import BaseCollection from '../../base/BaseCollection';
 
 export const userDailyDataPublications = {
   userDailyData: 'UserDailyData',

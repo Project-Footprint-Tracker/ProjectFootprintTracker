@@ -3,9 +3,9 @@ import { Grid, Header, Loader } from 'semantic-ui-react';
 import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import { _ } from 'meteor/underscore';
-import { UserDailyData } from '../../../../api/trip/UserDailyDataCollection';
+import { UserDailyData } from '../../../../api/trip/to-delete/UserDailyDataCollection';
 import CumulativeCard from './CumulativeCard';
-import { getCumulativeCE } from '../../../utilities/CumulativeCeData';
+import { getCumulativeCE } from '../../../utilities/to-delete/CumulativeCeData';
 
 import { UserVehicles } from '../../../../api/vehicle/UserVehicleCollection';
 import { tripModes } from '../../../../api/utilities/constants';

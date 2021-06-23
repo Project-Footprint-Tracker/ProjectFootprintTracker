@@ -2,8 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import SimpleSchema from 'simpl-schema';
 
 import swal from 'sweetalert';
-import BaseCollection from '../base/BaseCollection';
-import { tripModes } from '../utilities/constants';
+import BaseCollection from '../../base/BaseCollection';
+import { tripModes } from '../../utilities/constants';
 
 export const savedTripPublications = {
   savedTrip: 'SavedTrip',

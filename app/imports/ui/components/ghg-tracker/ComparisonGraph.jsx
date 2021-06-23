@@ -3,7 +3,7 @@ import { Grid } from 'semantic-ui-react';
 import { HorizontalBar } from 'react-chartjs-2';
 import { _ } from 'meteor/underscore';
 import PropTypes from 'prop-types';
-import { getCumulativeCE } from '../../utilities/CumulativeCeData';
+import { getCumulativeCE } from '../../utilities/to-delete/CumulativeCeData';
 
 // Displaying a pie chart of the mode of transportation from DailyUserData collection
 const ComparisonGraph = (props) => {

@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Header, Image } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { _ } from 'meteor/underscore';
-import { getCumulativeCE } from '../../../utilities/CumulativeCeData';
+import { getCumulativeCE } from '../../../utilities/to-delete/CumulativeCeData';
 import { tripModes } from '../../../../api/utilities/constants';
 
 /** Renders the Page for displaying the user's data: Their numbers for the day, overview of their carbon footprint, and

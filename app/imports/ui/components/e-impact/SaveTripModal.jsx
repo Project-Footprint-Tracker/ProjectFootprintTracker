@@ -5,7 +5,7 @@ import { AutoForm, ErrorsField, SubmitField, TextField } from 'uniforms-semantic
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
 import SimpleSchema from 'simpl-schema';
 import PropTypes from 'prop-types';
-import { SavedTrips } from '../../../api/trip/SavedTripCollection';
+import { SavedTrips } from '../../../api/trip/to-delete/SavedTripCollection';
 
 /* global document */
 

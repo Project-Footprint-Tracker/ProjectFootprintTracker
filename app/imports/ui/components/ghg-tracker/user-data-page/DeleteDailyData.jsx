@@ -2,7 +2,7 @@ import React from 'react';
 import swal from 'sweetalert';
 import { Button, Icon, Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { userDailyDataRemoveItMethod } from '../../../../api/trip/UserDailyDataCollection.methods';
+import { userDailyDataRemoveItMethod } from '../../../../api/trip/to-delete/UserDailyDataCollection.methods';
 
 class DeleteDailyData extends React.Component {
   constructor(props) {

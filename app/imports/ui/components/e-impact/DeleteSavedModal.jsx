@@ -3,7 +3,7 @@ import { Button, Header, Modal, Table } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
-import { SavedTrips, savedTripPublications } from '../../../api/trip/SavedTripCollection';
+import { SavedTrips, savedTripPublications } from '../../../api/trip/to-delete/SavedTripCollection';
 import SavedTripItem from './SavedTripItem';
 
 function DeleteSavedModal(props) {

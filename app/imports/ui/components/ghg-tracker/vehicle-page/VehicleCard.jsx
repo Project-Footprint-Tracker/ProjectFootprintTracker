@@ -8,7 +8,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import {
   getVehicleYearsList,
   getVehicle,
-} from '../../../utilities/vehicleDropdown';
+} from '../../../utilities/to-delete/vehicleDropdown';
 import { userVehicleRemoveItMethod } from '../../../../api/vehicle/UserVehicleCollection.methods';
 import { VehicleMakes } from '../../../../api/vehicle/VehicleMakeCollection';
 

@@ -2,13 +2,13 @@ import { Meteor } from 'meteor/meteor';
 import { Roles } from 'meteor/alanning:roles';
 import { Stuffs } from '../../api/stuff/Stuff';
 import { Trips } from '../../api/trip/TripCollection';
-import { SavedTrips } from '../../api/trip/SavedTripCollection';
+import { SavedTrips } from '../../api/trip/to-delete/SavedTripCollection';
 import { AllVehicles } from '../../api/vehicle/AllVehicleCollection';
 import { Users } from '../../api/user/UserCollection';
 import { VehicleMakes } from '../../api/vehicle/VehicleMakeCollection';
 import { UserVehicles } from '../../api/vehicle/UserVehicleCollection';
-import { UserDailyData } from '../../api/trip/UserDailyDataCollection';
-import { UserSavedDistances } from '../../api/trip/UserSavedDistanceCollection';
+import { UserDailyData } from '../../api/trip/to-delete/UserDailyDataCollection';
+import { UserSavedDistances } from '../../api/trip/to-delete/UserSavedDistanceCollection';
 
 // User-level publication.
 // If logged in, then publish documents owned by this user. Otherwise publish nothing.

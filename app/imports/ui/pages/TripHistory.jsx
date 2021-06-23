@@ -18,7 +18,7 @@ const TripHistory = (props) => (props.ready ? (
         />
       </Grid.Row>
       <Grid.Row>
-        <Table striped singleLine compact>
+        <Table fixed striped compact textAlign='center'>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>Date</Table.HeaderCell>

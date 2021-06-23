@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Roles } from 'meteor/alanning:roles';
 import SimpleSchema from 'simpl-schema';
 import { _ } from 'meteor/underscore';
-import BaseCollection from '../base/BaseCollection';
+import BaseCollection from '../../base/BaseCollection';
 
 export const userSavedDistancePublications = {
   userSavedDistance: 'UserSavedDistance',

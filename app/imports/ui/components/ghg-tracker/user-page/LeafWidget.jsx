@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Card } from 'semantic-ui-react';
-import { getCumulativeCE } from '../../../utilities/CumulativeCeData';
+import { getCumulativeCE } from '../../../utilities/to-delete/CumulativeCeData';
 
 /** A simple static component to render some text for the landing page. */
 class LeafWidget extends React.Component {
