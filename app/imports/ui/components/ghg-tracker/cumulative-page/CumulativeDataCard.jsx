@@ -10,7 +10,6 @@ import { getCumulativeCE } from '../../../utilities/CumulativeCeData';
 import { UserVehicles } from '../../../../api/vehicle/UserVehicleCollection';
 import { tripModes } from '../../../../api/utilities/constants';
 
-
 class CumulativeDataCard extends React.Component {
 
   render() {

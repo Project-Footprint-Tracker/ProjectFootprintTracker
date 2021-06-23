@@ -8,7 +8,7 @@ import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
 import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
-import { UsersCombined } from '../../../../api/user/UserCollection';
+import { Users } from '../../../../api/user/UserCollection';
 import { userDefineMethod } from '../../../../api/user/UserCollection1.methods';
 
 const paddingStyle = {
@@ -107,8 +107,8 @@ CreateUser.propTypes = {
 /** withTracker connects Meteor data to React components. https://guide.meteor.com/react.html#using-withTracker */
 export default withTracker(() => {
   // Ensure that minimongo is populated with all collections prior to running render().
-  const sub1 = UsersCombined.subscribeUser();
-  const allUsers = UsersCombined.find({}).fetch();
+  const sub1 = Users.subscribeUser();
+  const allUsers = Users.find({}).fetch();
   return {
     allUsers,
     ready: sub1.ready(),

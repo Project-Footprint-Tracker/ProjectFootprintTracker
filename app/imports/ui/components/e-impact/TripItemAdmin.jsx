@@ -5,7 +5,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import { Table, Button, Modal, Header } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { Trips, tripPublications } from '../../../api/trip/TripCollection';
-import { UsersCombined } from '../../../api/user/UserCollection';
+import { Users } from '../../../api/user/UserCollection';
 import { cePerGallonFuel, tripModes } from '../../../api/utilities/constants';
 
 /* global document */
@@ -110,7 +110,7 @@ TripItem.propTypes = {
 };
 
 export default withTracker(() => {
-  const userProfile = UsersCombined.getUserProfile(Meteor.user()?.username);
+  const userProfile = Users.getUserProfile(Meteor.user()?.username);
   const { owner } = useParams();
   const readySaved = Meteor.subscribe(tripPublications.tripCommunity).ready();
   const allTrips = Trips.find({ owner }).fetch();

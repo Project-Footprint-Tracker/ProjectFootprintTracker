@@ -3,7 +3,7 @@ import { Grid, Header, Container, Loader, Card, Button } from 'semantic-ui-react
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { NavLink } from 'react-router-dom';
-import { UsersCombined } from '../../../../api/user/UserCollection';
+import { Users } from '../../../../api/user/UserCollection';
 import { UserDailyData } from '../../../../api/trip/UserDailyDataCollection';
 import ProfileCard from '../../../components/ghg-tracker/user-page/ProfileCard';
 import MyDataChart from '../../../components/ghg-tracker/user-page/MyDataChart';
@@ -87,10 +87,10 @@ UserPage.propTypes = {
 
 export default withTracker(() => {
   const ready = UserDailyData.subscribeUserDailyData().ready() &&
-        UsersCombined.subscribeUser().ready() &&
+      Users.subscribeUser().ready() &&
         UserVehicles.subscribeUserVehicle().ready();
   const dailyData = UserDailyData.find({}, {}).fetch();
-  const users = UsersCombined.findOne({}, {});
+  const users = Users.findOne({}, {});
   const vehicles = UserVehicles.find({}, {}).fetch();
   return {
     dailyData,
