@@ -93,7 +93,7 @@ export default withTracker(() => {
   // Get access to Trip documents.
   const owner = Meteor.user()?.username;
   const ready = Trips.subscribeTrip().ready() && SavedCommutes.subscribeSavedCommute().ready() && owner !== undefined;
-  const trips = Trips.find({}, { sort: { inputDate: -1 } }).fetch();
+  const trips = Trips.find({ owner }, { sort: { inputDate: -1 } }).fetch();
   const savedCommutes = SavedCommutes.find({}, { sort: { name: 'asc' } }).fetch();
   return {
     trips,

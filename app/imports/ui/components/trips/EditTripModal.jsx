@@ -4,9 +4,11 @@ import PropTypes from 'prop-types';
 import SimpleSchema from 'simpl-schema';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
 import { AutoForm, BoolField, DateField, ErrorsField, SelectField, SubmitField } from 'uniforms-semantic';
+import swal from 'sweetalert';
 import { Trips } from '../../../api/trip/TripCollection';
 import { getDateToday, getMilesTraveled } from '../../../api/utilities/CEData';
 import { averageAutoMPG, tripModesArray } from '../../../api/utilities/constants';
+import { updateMethod } from '../../../api/base/BaseCollection.methods';
 
 const EditTripModal = (props) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -63,6 +65,7 @@ const EditTripModal = (props) => {
 
   const handleSubmit = (data) => {
     const updateData = {};
+    updateData.id = props.trip._id;
     updateData.date = data.date;
     updateData.milesTraveled = (unit === 'mi') ? Number(distance) :
       getMilesTraveled(distance);
@@ -71,11 +74,16 @@ const EditTripModal = (props) => {
     }
     updateData.mode = data.mode;
     updateData.mpg = averageAutoMPG; // change when vehicles
-    if (Trips.update(props.trip._id, updateData)) {
-      handleModalClose();
-    }
+    const collectionName = Trips.getCollectionName();
+    updateMethod.callPromise({ collectionName, updateData })
+      .then(() => {
+        swal('Success', 'Trip updated successfully', 'success');
+        handleModalClose();
+      })
+      .catch((error) => swal('Error', error.message, 'error'));
   };
 
+  // console.log(props.trip);
   return (
     <Modal
       size='tiny'

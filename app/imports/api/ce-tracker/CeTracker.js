@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Groups } from '../group/GroupCollection';
 import { GroupMembers } from '../group/GroupMemberCollection';
+import { Trips } from '../trip/TripCollection';
 
 class CeTrackerClass {
   collections;
@@ -14,6 +15,7 @@ class CeTrackerClass {
     this.collections = [
       Groups,
       GroupMembers,
+      Trips,
     ];
     /**
      * A list of collection class instances in the order required for them to be sequentially loaded from a file.

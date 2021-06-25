@@ -4,9 +4,11 @@ import PropTypes from 'prop-types';
 import { Button, Divider, Form, Modal } from 'semantic-ui-react';
 import { AutoForm, BoolField, DateField, ErrorsField, SelectField, SubmitField } from 'uniforms-semantic';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
+import swal from 'sweetalert';
 import { getDateToday, getMilesTraveled } from '../../../api/utilities/CEData';
 import { averageAutoMPG, tripModesArray } from '../../../api/utilities/constants';
 import { Trips } from '../../../api/trip/TripCollection';
+import { defineMethod } from '../../../api/base/BaseCollection.methods';
 
 const AddTripModal = (props) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -92,19 +94,24 @@ const AddTripModal = (props) => {
   const bridge = new SimpleSchema2Bridge(formSchema);
 
   const handleSubmit = (data) => {
-    const inputData = {};
-    inputData.date = data.date;
-    inputData.milesTraveled = (unit === 'mi') ? distance :
+    const definitionData = {};
+    definitionData.date = data.date;
+    definitionData.milesTraveled = (unit === 'mi') ? distance :
       getMilesTraveled(distance);
     if (data.roundTrip) {
-      inputData.milesTraveled *= 2;
+      definitionData.milesTraveled *= 2;
     }
-    inputData.mode = data.mode;
-    inputData.mpg = averageAutoMPG; // change when vehicles
-    inputData.owner = props.owner;
-    if (Trips.defineWithMessage(inputData)) {
-      handleModalClose();
-    }
+    definitionData.mode = data.mode;
+    definitionData.mpg = averageAutoMPG; // change when vehicles
+    definitionData.owner = props.owner;
+    // CAM we're going to add the ce produced and ce saved to the Trips collection.
+    const collectionName = Trips.getCollectionName();
+    defineMethod.callPromise({ collectionName, definitionData })
+      .then(() => {
+        swal('Success', 'Trip added successfully', 'success');
+        handleModalClose();
+      })
+      .catch((error) => swal('Error', error.message, 'error'));
   };
 
   return (

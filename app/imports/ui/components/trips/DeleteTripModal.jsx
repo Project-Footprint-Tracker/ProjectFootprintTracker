@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { Button, Icon, Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import swal from 'sweetalert';
 import { Trips } from '../../../api/trip/TripCollection';
+import { removeItMethod } from '../../../api/base/BaseCollection.methods';
+import { getMetricData } from '../../../api/utilities/CEData';
 
 const DeleteTripModal = (props) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -10,10 +13,20 @@ const DeleteTripModal = (props) => {
   const handleModalClose = () => setModalOpen(false);
 
   const handleDelete = () => {
-    if (Trips.removeIt(props.tripID)) {
-      handleModalClose();
-    }
+    const collectionName = Trips.getCollectionName();
+    const instance = props.trip._id;
+    removeItMethod.callPromise({ collectionName, instance })
+      .then(() => handleModalClose())
+      .catch(error => swal('Error', error.message, 'error'));
   };
+  let distance;
+  if (props.metric) {
+    const metricData = getMetricData(props.trip.milesTraveled, props.trip.mpg, 0, 0);
+    distance = metricData.distance;
+  } else {
+    distance = props.trip.milesTraveled;
+  }
+  const label = props.metric ? 'km' : 'mi';
 
   return (
     <Modal
@@ -23,10 +36,10 @@ const DeleteTripModal = (props) => {
       open={modalOpen}
       onClose={handleModalClose}
       onOpen={handleModalOpen}
-      trigger={<Icon style={{ cursor: 'pointer' }} name='trash alternate outline'/>}
+      trigger={<Icon style={{ cursor: 'pointer' }} name='trash alternate outline' />}
     >
       <Modal.Header>Delete Trip</Modal.Header>
-      <Modal.Content>Are you sure want to delete selected data?</Modal.Content>
+      <Modal.Content>Are you sure want to delete the {`${distance} ${label} ${props.trip.mode}`} trip?</Modal.Content>
       <Modal.Actions>
         <Button
           icon
@@ -35,7 +48,7 @@ const DeleteTripModal = (props) => {
           onClick={() => handleDelete()}
         >
           Delete
-          <Icon name='trash alternate outline'/>
+          <Icon name='trash alternate outline' />
         </Button>
         <Button
           icon
@@ -43,7 +56,7 @@ const DeleteTripModal = (props) => {
           onClick={handleModalClose}
         >
           Cancel
-          <Icon name='x'/>
+          <Icon name='x' />
         </Button>
       </Modal.Actions>
     </Modal>
@@ -51,7 +64,8 @@ const DeleteTripModal = (props) => {
 };
 
 DeleteTripModal.propTypes = {
-  tripID: PropTypes.string,
+  trip: PropTypes.object.isRequired,
+  metric: PropTypes.bool,
 };
 
 export default DeleteTripModal;

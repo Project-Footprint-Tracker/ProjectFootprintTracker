@@ -42,7 +42,7 @@ const TripHistoryRow = (props) => {
       <Table.Cell style={numStyle}>{fuelSaved.toFixed(2)}</Table.Cell>
       <Table.Cell>
         <EditTripModal trip={props.trip} savedCommutes={props.savedCommutes}/>
-        <DeleteTripModal tripID={props.trip._id}/>
+        <DeleteTripModal trip={props.trip} metric={props.metric} />
       </Table.Cell>
     </Table.Row>
   );
