@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Table } from 'semantic-ui-react';
 import { getMetricData, getTripCE } from '../../../api/utilities/CEData';
 import { tripModes } from '../../../api/utilities/constants';
+import DeleteTripModal from './DeleteTripModal';
+import EditTripModal from './EditTripModal';
 
 const TripHistoryRow = (props) => {
   const milesTraveled = props.trip.milesTraveled;
@@ -38,12 +40,17 @@ const TripHistoryRow = (props) => {
       <Table.Cell>{mpgKML.toFixed(2)}</Table.Cell>
       <Table.Cell style={numStyle}>{cO2Reduced.toFixed(2)}</Table.Cell>
       <Table.Cell style={numStyle}>{fuelSaved.toFixed(2)}</Table.Cell>
+      <Table.Cell>
+        <EditTripModal trip={props.trip} savedCommutes={props.savedCommutes}/>
+        <DeleteTripModal tripID={props.trip._id}/>
+      </Table.Cell>
     </Table.Row>
   );
 };
 
 TripHistoryRow.propTypes = {
   trip: PropTypes.object.isRequired,
+  savedCommutes: PropTypes.array.isRequired,
   metric: PropTypes.bool.isRequired,
 };
 

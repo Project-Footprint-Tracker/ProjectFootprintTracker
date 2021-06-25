@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Meteor } from 'meteor/meteor';
 import { Container, Form, Grid, Header, Loader, Table } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
@@ -6,6 +7,8 @@ import { Trips } from '../../api/trip/TripCollection';
 import TripHistoryRow from '../components/trips/TripHistoryRow';
 import { imperialUnits, metricUnits } from '../../api/utilities/constants';
 import SavedCommutesModal from '../components/trips/SavedCommutesModal';
+import { SavedCommutes } from '../../api/saved-commute/SavedCommute';
+import AddTripModal from '../components/trips/AddTripModal';
 
 const TripHistory = (props) => {
   const [metric, setMetric] = useState(false);
@@ -41,24 +44,35 @@ const TripHistory = (props) => {
       </Header>
       <Grid.Row>
         <Grid.Column>
-          <SavedCommutesModal metric={metric}/>
+          <AddTripModal
+            owner={props.owner}
+            savedCommutes={props.savedCommutes}
+            metric={metric}
+          />
+          <SavedCommutesModal
+            owner={props.owner}
+            savedCommutes={props.savedCommutes}
+            metric={metric}
+          />
         </Grid.Column>
       </Grid.Row>
       <Table fixed striped compact textAlign='center'>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>Date</Table.HeaderCell>
-            <Table.HeaderCell>Mode of Transportation</Table.HeaderCell>
-            <Table.HeaderCell>Distance Traveled ({headerUnits.distance})</Table.HeaderCell>
-            <Table.HeaderCell>{headerUnits.mpgKMLUnit}</Table.HeaderCell>
-            <Table.HeaderCell>CO2 Reduced ({headerUnits.cO2Reduced})</Table.HeaderCell>
-            <Table.HeaderCell>Fuel Saved ({headerUnits.fuelSaved})</Table.HeaderCell>
+            <Table.HeaderCell width={2}>Date</Table.HeaderCell>
+            <Table.HeaderCell width={3}>Mode of Transportation</Table.HeaderCell>
+            <Table.HeaderCell width={2}>Distance Traveled ({headerUnits.distance})</Table.HeaderCell>
+            <Table.HeaderCell width={2}>{headerUnits.mpgKMLUnit}</Table.HeaderCell>
+            <Table.HeaderCell width={2}>CO2 Reduced ({headerUnits.cO2Reduced})</Table.HeaderCell>
+            <Table.HeaderCell width={2}>Fuel Saved ({headerUnits.fuelSaved})</Table.HeaderCell>
+            <Table.HeaderCell width={2}/>
           </Table.Row>
         </Table.Header>
         <Table.Body>
           {props.trips.map((trip) => <TripHistoryRow
             key={trip._id}
             trip={trip}
+            savedCommutes={props.savedCommutes}
             metric={metric}
           />)}
         </Table.Body>
@@ -70,15 +84,21 @@ const TripHistory = (props) => {
 
 TripHistory.propTypes = {
   trips: PropTypes.array.isRequired,
+  savedCommutes: PropTypes.array.isRequired,
+  owner: PropTypes.string,
   ready: PropTypes.bool.isRequired,
 };
 
 export default withTracker(() => {
   // Get access to Trip documents.
-  const ready = Trips.subscribeTrip().ready();
+  const owner = Meteor.user()?.username;
+  const ready = Trips.subscribeTrip().ready() && SavedCommutes.subscribeSavedCommute().ready() && owner !== undefined;
   const trips = Trips.find({}, { sort: { inputDate: -1 } }).fetch();
+  const savedCommutes = SavedCommutes.find({}, { sort: { name: 'asc' } }).fetch();
   return {
     trips,
+    savedCommutes,
+    owner,
     ready,
   };
 })(TripHistory);

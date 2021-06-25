@@ -84,7 +84,9 @@ class TripCollection extends BaseCollection {
     if (_.isNumber(mpg)) {
       updateData.mpg = mpg;
     }
-    this._collection.update(docID, { $set: updateData });
+    this._collection.update(docID, { $set: updateData }, (error) => (error ?
+      swal('Error', error.message, 'error') :
+      swal('Success', 'Data edited successfully', 'success')));
   }
 
   /**
@@ -94,7 +96,9 @@ class TripCollection extends BaseCollection {
    */
   removeIt(docID) {
     const doc = this.findDoc(docID);
-    this._collection.remove(doc._id);
+    this._collection.remove(doc._id, (error) => ((error) ?
+      swal('Error', error.message, 'error') :
+      swal('Success', 'Trip added successfully', 'success')));
     return true;
   }
 

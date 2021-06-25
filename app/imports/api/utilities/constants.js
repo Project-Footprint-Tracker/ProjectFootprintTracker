@@ -35,6 +35,9 @@ export const averageAutoMPG = 22.3;
 // Miles to Kilometers Conversion Factor
 export const miToKmFactor = 1.60934;
 
+// Kilometers to Miles Conversion Factor
+export const kmToMiFactor = 0.621371;
+
 // Pounds to Kilograms Conversion Factor
 export const lbsToKgFactor = 0.453592;
 
