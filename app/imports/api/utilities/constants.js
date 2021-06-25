@@ -31,3 +31,24 @@ export const avgMpge = 105;
 // The weighted average combined fuel economy for cars and light trucks in 2017 (FHWA 2019)
 // Read more: https://www.epa.gov/energy/greenhouse-gases-equivalencies-calculator-calculations-and-references
 export const averageAutoMPG = 22.3;
+
+// Miles to Kilometers Conversion Factor
+export const miToKmFactor = 1.60934;
+
+// Pounds to Kilograms Conversion Factor
+export const lbsToKgFactor = 0.453592;
+
+// Gallons to Liters Conversion Factor
+export const galToLFactor = 3.78541;
+
+export const imperialUnits = {
+  distance: 'mi',
+  cO2Reduced: 'lbs',
+  fuelSaved: 'gal',
+};
+
+export const metricUnits = {
+  distance: 'km',
+  cO2Reduced: 'kg',
+  fuelSaved: 'L',
+};

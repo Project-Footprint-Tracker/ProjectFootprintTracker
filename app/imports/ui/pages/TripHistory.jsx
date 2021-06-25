@@ -1,46 +1,64 @@
-import React from 'react';
-import { Container, Grid, Header, Loader, Table } from 'semantic-ui-react';
+import React, { useState } from 'react';
+import { Container, Form, Grid, Header, Loader, Table } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Trips } from '../../api/trip/TripCollection';
 import TripHistoryRow from '../components/TripHistoryRow';
+import { imperialUnits, metricUnits } from '../../api/utilities/constants';
 
-const TripHistory = (props) => (props.ready ? (
-  <Container style={{ margin: '2rem 1rem', width: 1000 }}>
-    <Grid id='trip-history' container>
-      <Grid.Row>
-        <Grid.Column
-          as={Header}
-          size='huge'
-          textAlign='center'
-          style={{ marginTop: '10px' }}
-          content='My Trip History'
-        />
-      </Grid.Row>
-      <Grid.Row>
-        <Table fixed striped compact textAlign='center'>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>Date</Table.HeaderCell>
-              <Table.HeaderCell>Mode of Transportation</Table.HeaderCell>
-              <Table.HeaderCell>Distance Traveled (mi)</Table.HeaderCell>
-              <Table.HeaderCell>MPG</Table.HeaderCell>
-              <Table.HeaderCell>CO2 Reduced (lbs)</Table.HeaderCell>
-              <Table.HeaderCell>Fuel Saved (gal)</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {props.trips.map((trip) => <TripHistoryRow
-              key={trip._id}
-              trip={trip}
-            />)}
-          </Table.Body>
-        </Table>
-      </Grid.Row>
-    </Grid>
-  </Container>
-) :
-  <Loader active>Getting Trip Data</Loader>);
+const TripHistory = (props) => {
+  const [metric, setMetric] = useState(false);
+
+  const handleChangeUnit = (prevState) => setMetric(!prevState);
+
+  const headerUnits = {};
+
+  if (metric) {
+    headerUnits.distance = metricUnits.distance;
+    headerUnits.cO2Reduced = metricUnits.cO2Reduced;
+    headerUnits.fuelSaved = metricUnits.fuelSaved;
+  } else {
+    headerUnits.distance = imperialUnits.distance;
+    headerUnits.cO2Reduced = imperialUnits.cO2Reduced;
+    headerUnits.fuelSaved = imperialUnits.fuelSaved;
+  }
+
+  return (props.ready ? (
+    <Container style={{ margin: '2rem 1rem', width: 1000 }}>
+      <Header as='h1' textAlign='center'>
+          MY TRIP HISTORY
+        <Header.Subheader>
+          <Grid.Column as={Form.Radio}
+            toggle
+            label='Convert to metric'
+            checked={metric}
+            onChange={() => handleChangeUnit(metric)}
+          />
+        </Header.Subheader>
+      </Header>
+      <Table fixed striped compact textAlign='center'>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>Date</Table.HeaderCell>
+            <Table.HeaderCell>Mode of Transportation</Table.HeaderCell>
+            <Table.HeaderCell>Distance Traveled ({headerUnits.distance})</Table.HeaderCell>
+            <Table.HeaderCell>MPG</Table.HeaderCell>
+            <Table.HeaderCell>CO2 Reduced ({headerUnits.cO2Reduced})</Table.HeaderCell>
+            <Table.HeaderCell>Fuel Saved ({headerUnits.fuelSaved})</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {props.trips.map((trip) => <TripHistoryRow
+            key={trip._id}
+            trip={trip}
+            metric={metric}
+          />)}
+        </Table.Body>
+      </Table>
+    </Container>
+  ) :
+    <Loader active>Getting Trip Data</Loader>);
+};
 
 TripHistory.propTypes = {
   trips: PropTypes.array.isRequired,
