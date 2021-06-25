@@ -1,4 +1,5 @@
 import { cePerGallonFuel, galToLFactor, lbsToKgFactor, miToKmFactor, mpgToKMLFactor } from './constants';
+import { kmToMiFactor } from '../../ui/utilities/to-delete/GlobalVariables';
 
 /**
  * Returns an object with attributes equal to climate-related metrics based on the user input data per trip.
@@ -26,4 +27,16 @@ export const getMetricData = (milesTraveled, mpg, cO2ReducedLbs, fuelSavedGal) =
   metricData.fuelSaved = Number((fuelSavedGal * galToLFactor).toFixed(2));
 
   return metricData;
+};
+
+export const getMilesTraveled = (distanceTraveled) => distanceTraveled * kmToMiFactor;
+
+/**
+ * Returns today's date, used in add/edit daily data forms
+ */
+export const getDateToday = () => {
+  const today = new Date();
+  today.setHours(11, 59, 59, 99);
+
+  return today;
 };

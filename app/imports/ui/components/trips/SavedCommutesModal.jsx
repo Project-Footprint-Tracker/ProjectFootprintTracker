@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
-import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
-import { withTracker } from 'meteor/react-meteor-data';
-import { Button, Loader, Modal, Table } from 'semantic-ui-react';
-import { SavedCommutes } from '../../../api/saved-commute/SavedCommute';
+import { Button, Modal, Table } from 'semantic-ui-react';
 import { imperialUnits, metricUnits } from '../../../api/utilities/constants';
 import SavedCommutesRow from './SavedCommutesRow';
 
@@ -25,7 +22,7 @@ const SavedCommutesModal = (props) => {
     mpgKMLUnit = imperialUnits.mpgKML;
   }
 
-  return props.ready ? (
+  return (
     <Modal
       size='small'
       closeIcon
@@ -40,7 +37,7 @@ const SavedCommutesModal = (props) => {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>Name</Table.HeaderCell>
-              <Table.HeaderCell>Default Mode of Transportation</Table.HeaderCell>
+              {/* <Table.HeaderCell>Default Mode of Transportation</Table.HeaderCell> */}
               <Table.HeaderCell>Distance ({distanceUnit})</Table.HeaderCell>
               <Table.HeaderCell>{mpgKMLUnit}</Table.HeaderCell>
             </Table.Row>
@@ -55,23 +52,13 @@ const SavedCommutesModal = (props) => {
         </Table>
       </Modal.Content>
     </Modal>
-  ) : <Loader active>Getting Saved Commutes Data</Loader>;
+  );
 };
 
 SavedCommutesModal.propTypes = {
   owner: PropTypes.string.isRequired,
   savedCommutes: PropTypes.array.isRequired,
-  ready: PropTypes.bool.isRequired,
   metric: PropTypes.bool.isRequired,
 };
 
-export default withTracker(() => {
-  const ready = SavedCommutes.subscribeSavedCommute().ready();
-  const savedCommutes = SavedCommutes.find({}).fetch();
-  const owner = Meteor.user().username;
-  return {
-    owner,
-    savedCommutes,
-    ready,
-  };
-})(SavedCommutesModal);
+export default SavedCommutesModal;
