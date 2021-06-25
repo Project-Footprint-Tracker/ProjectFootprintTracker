@@ -14,7 +14,7 @@ import { Button, Divider, Form, Loader, Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import swal from 'sweetalert';
-import { UserSavedDistances } from '../../../../api/trip/to-delete/UserSavedDistanceCollection';
+import { UserSavedDistances } from '../../../../api/saved-commute/to-delete/UserSavedDistanceCollection';
 import { getMilesTraveled, getDateToday, getKilometersTraveled, getModeType } from '../../../utilities/to-delete/DailyCeData';
 import { altSelectFieldOptions } from '../../../utilities/to-delete/GlobalVariables';
 import { userDailyDataDefineMethod } from '../../../../api/trip/to-delete/UserDailyDataCollection.methods';

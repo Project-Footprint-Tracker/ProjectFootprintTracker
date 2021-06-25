@@ -6,7 +6,7 @@ import { getKilometersTraveled, getMilesTraveled } from '../../../../utilities/t
 import {
   userSavedDistanceUpdateMethod,
   userSavedDistanceRemoveItMethod,
-} from '../../../../../api/trip/to-delete/UserSavedDistanceCollection.methods';
+} from '../../../../../api/saved-commute/to-delete/UserSavedDistanceCollection.methods';
 
 const SavedDistanceItem = (props) => {
   const [editMode, setEditMode] = useState(false);

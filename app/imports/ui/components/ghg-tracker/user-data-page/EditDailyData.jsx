@@ -7,7 +7,7 @@ import { Divider, Form, Icon, Loader, Modal } from 'semantic-ui-react';
 import swal from 'sweetalert';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
 import { AutoForm, BoolField, DateField, ErrorsField, SelectField, SubmitField } from 'uniforms-semantic';
-import { UserSavedDistances } from '../../../../api/trip/to-delete/UserSavedDistanceCollection';
+import { UserSavedDistances } from '../../../../api/saved-commute/to-delete/UserSavedDistanceCollection';
 import { getDateToday, getKilometersTraveled, getMilesTraveled, getModeType } from '../../../utilities/to-delete/DailyCeData';
 import { UserDailyData } from '../../../../api/trip/to-delete/UserDailyDataCollection';
 import { altSelectFieldOptions } from '../../../utilities/to-delete/GlobalVariables';

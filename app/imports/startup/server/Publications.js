@@ -2,13 +2,14 @@ import { Meteor } from 'meteor/meteor';
 import { Roles } from 'meteor/alanning:roles';
 import { Stuffs } from '../../api/stuff/Stuff';
 import { Trips } from '../../api/trip/TripCollection';
-import { SavedTrips } from '../../api/trip/to-delete/SavedTripCollection';
-import { AllVehicles } from '../../api/vehicle/AllVehicleCollection';
+// import { SavedTrips } from '../../api/saved-commute/to-delete/SavedTripCollection';
+// import { AllVehicles } from '../../api/vehicle/AllVehicleCollection';
 import { Users } from '../../api/user/UserCollection';
-import { VehicleMakes } from '../../api/vehicle/VehicleMakeCollection';
-import { UserVehicles } from '../../api/vehicle/UserVehicleCollection';
-import { UserDailyData } from '../../api/trip/to-delete/UserDailyDataCollection';
-import { UserSavedDistances } from '../../api/trip/to-delete/UserSavedDistanceCollection';
+// import { VehicleMakes } from '../../api/vehicle/VehicleMakeCollection';
+// import { UserVehicles } from '../../api/vehicle/UserVehicleCollection';
+// import { UserDailyData } from '../../api/trip/to-delete/UserDailyDataCollection';
+// import { UserSavedDistances } from '../../api/saved-commute/to-delete/UserSavedDistanceCollection';
+import { SavedCommutes } from '../../api/saved-commute/SavedCommute';
 
 // User-level publication.
 // If logged in, then publish documents owned by this user. Otherwise publish nothing.
@@ -29,16 +30,15 @@ Meteor.publish(Stuffs.adminPublicationName, function () {
   return this.ready();
 });
 
-Trips.publish();
-SavedTrips.publish();
-
 const allCollections = [
-  AllVehicles,
-  VehicleMakes,
+  // AllVehicles,
+  // VehicleMakes,
   Users,
-  UserVehicles,
-  UserDailyData,
-  UserSavedDistances,
+  // UserVehicles,
+  // UserDailyData,
+  // UserSavedDistances,
+  Trips,
+  SavedCommutes,
 ];
 
 allCollections.forEach((collection) => collection.publish());

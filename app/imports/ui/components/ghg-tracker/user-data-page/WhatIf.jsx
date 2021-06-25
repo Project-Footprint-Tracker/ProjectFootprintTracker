@@ -12,7 +12,7 @@ import {
 import { Button, Form, Modal, Grid, Image, Divider, Loader } from 'semantic-ui-react';
 import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
-import { UserSavedDistances } from '../../../../api/trip/to-delete/UserSavedDistanceCollection';
+import { UserSavedDistances } from '../../../../api/saved-commute/to-delete/UserSavedDistanceCollection';
 import {
   getMilesTraveled,
   getKilometersTraveled,

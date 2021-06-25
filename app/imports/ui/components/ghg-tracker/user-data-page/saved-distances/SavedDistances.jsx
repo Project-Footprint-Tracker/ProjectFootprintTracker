@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Button, Form, Icon, Loader, Modal, Popup, Table } from 'semantic-ui-react';
 import swal from 'sweetalert';
-import { UserSavedDistances } from '../../../../../api/trip/to-delete/UserSavedDistanceCollection';
+import { UserSavedDistances } from '../../../../../api/saved-commute/to-delete/UserSavedDistanceCollection';
 import { getMilesTraveled } from '../../../../utilities/to-delete/DailyCeData';
-import { userSavedDistanceDefineMethod } from '../../../../../api/trip/to-delete/UserSavedDistanceCollection.methods';
+import { userSavedDistanceDefineMethod } from '../../../../../api/saved-commute/to-delete/UserSavedDistanceCollection.methods';
 import SavedDistanceItem from './SavedDistanceItem';
 
 const SavedDistances = (props) => {
