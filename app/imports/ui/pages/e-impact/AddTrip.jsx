@@ -10,8 +10,8 @@ import PropTypes from 'prop-types';
 import { tripPublications, Trips } from '../../../api/trip/TripCollection';
 import { savedTripPublications, SavedTrips } from '../../../api/saved-commute/to-delete/SavedTripCollection';
 import { Users } from '../../../api/user/UserCollection';
-import SideBar from '../../components/e-impact/SideBar';
-import DeleteSavedModal from '../../components/e-impact/DeleteSavedModal';
+import SideBar from '../../components/to-delete/e-impact/SideBar';
+import DeleteSavedModal from '../../components/to-delete/e-impact/DeleteSavedModal';
 import { tripModes } from '../../../api/utilities/constants';
 
 /* global document */

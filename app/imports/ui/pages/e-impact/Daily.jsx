@@ -4,10 +4,10 @@ import { Meteor } from 'meteor/meteor';
 import { Menu, Button, Table, Grid, Loader, Icon, Statistic } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { _ } from 'meteor/underscore';
-import SideBar from '../../components/e-impact/SideBar';
+import SideBar from '../../components/to-delete/e-impact/SideBar';
 import { Trips, tripPublications } from '../../../api/trip/TripCollection';
 import { Users } from '../../../api/user/UserCollection';
-import TripItem from '../../components/e-impact/TripItem';
+import TripItem from '../../components/to-delete/e-impact/TripItem';
 import { cePerGallonFuel } from '../../../api/utilities/constants';
 
 /* global document */

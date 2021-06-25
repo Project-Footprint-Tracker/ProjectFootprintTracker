@@ -41,14 +41,19 @@ export const lbsToKgFactor = 0.453592;
 // Gallons to Liters Conversion Factor
 export const galToLFactor = 3.78541;
 
+// MPG to KM/L Conversion Factor
+export const mpgToKMLFactor = 0.425144;
+
 export const imperialUnits = {
   distance: 'mi',
+  mpgKML: 'MPG',
   cO2Reduced: 'lbs',
   fuelSaved: 'gal',
 };
 
 export const metricUnits = {
   distance: 'km',
+  mpgKML: 'km/L',
   cO2Reduced: 'kg',
   fuelSaved: 'L',
 };

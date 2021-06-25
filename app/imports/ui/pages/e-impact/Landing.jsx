@@ -1,8 +1,8 @@
 import React from 'react';
 import { Header } from 'semantic-ui-react';
-import LandingNavBar from '../../components/e-impact/LandingNavBar';
+import LandingNavBar from '../../components/to-delete/e-impact/LandingNavBar';
 import Footer from '../../components/Footer';
-import Info1 from '../../components/e-impact/Info1';
+import Info1 from '../../components/to-delete/e-impact/Info1';
 
 /* global document */
 

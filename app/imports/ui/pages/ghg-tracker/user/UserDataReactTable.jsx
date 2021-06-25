@@ -3,15 +3,15 @@ import { Container, Divider, Loader, Header, Input, Grid, Form } from 'semantic-
 import PropTypes from 'prop-types';
 import SmartDataTable from 'react-smart-data-table';
 import { withTracker } from 'meteor/react-meteor-data';
-import AddDailyData from '../../../components/ghg-tracker/user-data-page/AddDailyData';
+import AddDailyData from '../../../components/to-delete/ghg-tracker/user-data-page/AddDailyData';
 import { UserDailyData } from '../../../../api/trip/to-delete/UserDailyDataCollection';
-import WhatIf from '../../../components/ghg-tracker/user-data-page/WhatIf';
+import WhatIf from '../../../components/to-delete/ghg-tracker/user-data-page/WhatIf';
 import 'react-smart-data-table/dist/react-smart-data-table.css';
 import { getDailyCE, getKilometersTraveled } from '../../../utilities/to-delete/DailyCeData';
-import DeleteDailyData from '../../../components/ghg-tracker/user-data-page/DeleteDailyData';
-import EditDailyData from '../../../components/ghg-tracker/user-data-page/EditDailyData';
+import DeleteDailyData from '../../../components/to-delete/ghg-tracker/user-data-page/DeleteDailyData';
+import EditDailyData from '../../../components/to-delete/ghg-tracker/user-data-page/EditDailyData';
 import { UserVehicles } from '../../../../api/vehicle/UserVehicleCollection';
-import SavedDistances from '../../../components/ghg-tracker/user-data-page/saved-distances/SavedDistances';
+import SavedDistances from '../../../components/to-delete/ghg-tracker/user-data-page/saved-distances/SavedDistances';
 
 class UserDataReactTable extends React.Component {
   constructor(props) {

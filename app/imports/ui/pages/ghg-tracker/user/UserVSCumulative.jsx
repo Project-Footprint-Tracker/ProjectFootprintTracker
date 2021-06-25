@@ -6,8 +6,8 @@ import { withTracker } from 'meteor/react-meteor-data';
 import { _ } from 'meteor/underscore';
 import { Users } from '../../../../api/user/UserCollection';
 import { UserDailyData } from '../../../../api/trip/to-delete/UserDailyDataCollection';
-import ComparisonGraph from '../../../components/ghg-tracker/ComparisonGraph';
-import TransportationOptions from '../../../components/ghg-tracker/user-page/TransportationOptions';
+import ComparisonGraph from '../../../components/to-delete/ghg-tracker/ComparisonGraph';
+import TransportationOptions from '../../../components/to-delete/ghg-tracker/user-page/TransportationOptions';
 import { getCumulativeCE } from '../../../utilities/to-delete/CumulativeCeData';
 import { UserVehicles } from '../../../../api/vehicle/UserVehicleCollection';
 

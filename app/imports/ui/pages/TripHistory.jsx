@@ -3,8 +3,9 @@ import { Container, Form, Grid, Header, Loader, Table } from 'semantic-ui-react'
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Trips } from '../../api/trip/TripCollection';
-import TripHistoryRow from '../components/TripHistoryRow';
+import TripHistoryRow from '../components/trips/TripHistoryRow';
 import { imperialUnits, metricUnits } from '../../api/utilities/constants';
+import SavedCommutesModal from '../components/trips/SavedCommutesModal';
 
 const TripHistory = (props) => {
   const [metric, setMetric] = useState(false);
@@ -15,10 +16,12 @@ const TripHistory = (props) => {
 
   if (metric) {
     headerUnits.distance = metricUnits.distance;
+    headerUnits.mpgKMLUnit = metricUnits.mpgKML;
     headerUnits.cO2Reduced = metricUnits.cO2Reduced;
     headerUnits.fuelSaved = metricUnits.fuelSaved;
   } else {
     headerUnits.distance = imperialUnits.distance;
+    headerUnits.mpgKMLUnit = imperialUnits.mpgKML;
     headerUnits.cO2Reduced = imperialUnits.cO2Reduced;
     headerUnits.fuelSaved = imperialUnits.fuelSaved;
   }
@@ -36,13 +39,18 @@ const TripHistory = (props) => {
           />
         </Header.Subheader>
       </Header>
+      <Grid.Row>
+        <Grid.Column>
+          <SavedCommutesModal metric={metric}/>
+        </Grid.Column>
+      </Grid.Row>
       <Table fixed striped compact textAlign='center'>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Date</Table.HeaderCell>
             <Table.HeaderCell>Mode of Transportation</Table.HeaderCell>
             <Table.HeaderCell>Distance Traveled ({headerUnits.distance})</Table.HeaderCell>
-            <Table.HeaderCell>MPG</Table.HeaderCell>
+            <Table.HeaderCell>{headerUnits.mpgKMLUnit}</Table.HeaderCell>
             <Table.HeaderCell>CO2 Reduced ({headerUnits.cO2Reduced})</Table.HeaderCell>
             <Table.HeaderCell>Fuel Saved ({headerUnits.fuelSaved})</Table.HeaderCell>
           </Table.Row>

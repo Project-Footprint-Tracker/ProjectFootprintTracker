@@ -1,4 +1,4 @@
-import { cePerGallonFuel, galToLFactor, lbsToKgFactor, miToKmFactor } from './constants';
+import { cePerGallonFuel, galToLFactor, lbsToKgFactor, miToKmFactor, mpgToKMLFactor } from './constants';
 
 /**
  * Returns an object with attributes equal to climate-related metrics based on the user input data per trip.
@@ -17,10 +17,11 @@ export const getTripCE = (milesTraveled, mpg) => {
   return eImpact;
 };
 
-export const getMetricData = (milesTraveled, cO2ReducedLbs, fuelSavedGal) => {
+export const getMetricData = (milesTraveled, mpg, cO2ReducedLbs, fuelSavedGal) => {
   const metricData = {};
 
   metricData.distance = Number((milesTraveled * miToKmFactor).toFixed(2));
+  metricData.mpgKML = Number((mpg * mpgToKMLFactor).toFixed(2));
   metricData.cO2Reduced = Number((cO2ReducedLbs * lbsToKgFactor).toFixed(2));
   metricData.fuelSaved = Number((fuelSavedGal * galToLFactor).toFixed(2));
 
