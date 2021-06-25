@@ -40,7 +40,7 @@ const Signin = ({ location }) => {
       }
     });
   };
-  const { from } = location.state || { from: { pathname: `/Dashboard/${email}` } };
+  const { from } = location.state || { from: { pathname: '/trips' } };
   // if correct authentication, redirect to page instead of login screen
   if (redirectToReferer) {
     return <Redirect to={from} />;

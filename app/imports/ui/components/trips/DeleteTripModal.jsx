@@ -48,7 +48,7 @@ const DeleteTripModal = (props) => {
           onClick={() => handleDelete()}
         >
           Delete
-          <Icon name='trash alternate outline' />
+          <Icon name='trash alternate outline'/>
         </Button>
         <Button
           icon
@@ -56,7 +56,7 @@ const DeleteTripModal = (props) => {
           onClick={handleModalClose}
         >
           Cancel
-          <Icon name='x' />
+          <Icon name='x'/>
         </Button>
       </Modal.Actions>
     </Modal>
