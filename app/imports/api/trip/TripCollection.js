@@ -69,8 +69,8 @@ class TripCollection extends BaseCollection {
    * @param owner of the document.
    * @returns {String} the docID of the new document.
    */
-  define({ date, milesTraveled, mode, mpg, owner }) {
-    const { ceProduced, ceSaved } = calculateCarbonEmissions(mode, milesTraveled, mpg);
+  define({ date, milesTraveled, mode, mpg, owner, passengers = 0 }) {
+    const { ceProduced, ceSaved } = calculateCarbonEmissions(mode, milesTraveled, mpg, passengers);
     const docID = this._collection.insert({
       date,
       milesTraveled,
@@ -79,12 +79,13 @@ class TripCollection extends BaseCollection {
       owner,
       ceProduced,
       ceSaved,
+      passengers,
     });
     return docID;
   }
 
-  defineWithMessage({ date, milesTraveled, mode, mpg, owner }) {
-    const { ceProduced, ceSaved } = calculateCarbonEmissions(mode, milesTraveled, mpg);
+  defineWithMessage({ date, milesTraveled, mode, mpg, owner, passengers }) {
+    const { ceProduced, ceSaved } = calculateCarbonEmissions(mode, milesTraveled, mpg, passengers);
     const docID = this._collection.insert({
       date,
       milesTraveled,
@@ -93,6 +94,7 @@ class TripCollection extends BaseCollection {
       owner,
       ceProduced,
       ceSaved,
+      passengers,
     },
     (error) => ((error) ?
       swal('Error', error.message, 'error') :
@@ -108,12 +110,13 @@ class TripCollection extends BaseCollection {
    * @param mode the new mode.
    * @param mpg the new mpg.
    */
-  update(docID, { date, milesTraveled, mode, mpg }) {
+  update(docID, { date, milesTraveled, mode, mpg, passengers }) {
     const trip = this.findDoc(docID);
     const updateData = {
       mpg: trip.mpg,
       milesTraveled: trip.milesTraveled,
       mode: trip.mode,
+      passengers: trip.passengers,
     };
     if (date) {
       updateData.date = date;
@@ -127,7 +130,10 @@ class TripCollection extends BaseCollection {
     if (_.isNumber(mpg)) {
       updateData.mpg = mpg;
     }
-    const { ceProduced, ceSaved } = calculateCarbonEmissions(updateData.mode, updateData.milesTraveled, updateData.mpg);
+    if (_.isNumber(passengers)) {
+      updateData.passengers = passengers;
+    }
+    const { ceProduced, ceSaved } = calculateCarbonEmissions(updateData.mode, updateData.milesTraveled, updateData.mpg, updateData.passengers);
     updateData.ceProduced = ceProduced;
     updateData.ceSaved = ceSaved;
     this._collection.update(docID, { $set: updateData }, (error) => (error ?
