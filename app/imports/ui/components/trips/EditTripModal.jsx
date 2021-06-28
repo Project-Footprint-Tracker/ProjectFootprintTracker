@@ -3,7 +3,7 @@ import { Divider, Form, Icon, Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import SimpleSchema from 'simpl-schema';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
-import { AutoForm, BoolField, DateField, ErrorsField, SelectField, SubmitField } from 'uniforms-semantic';
+import { AutoForm, BoolField, DateField, ErrorsField, SubmitField } from 'uniforms-semantic';
 import swal from 'sweetalert';
 import { Trips } from '../../../api/trip/TripCollection';
 import { getDateToday, getMilesTraveled } from '../../../api/utilities/CEData';
@@ -12,24 +12,38 @@ import { updateMethod } from '../../../api/base/BaseCollection.methods';
 
 const EditTripModal = (props) => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [mode, setMode] = useState(props.trip.mode);
   const [distance, setDistance] = useState(props.trip.milesTraveled);
   const [unit, setUnit] = useState('mi');
 
   const handleModalOpen = () => setModalOpen(true);
   const handleModalClose = () => {
     setDistance(props.trip.milesTraveled);
+    setMode(props.trip.mode);
     setUnit('mi');
     setModalOpen(false);
   };
 
   const formSchema = new SimpleSchema({
     date: Date,
-    mode: String,
     roundTrip: {
       type: Boolean,
       optional: true,
     },
   });
+
+  const getModesOfTransportation = () => {
+    const choices = [];
+    tripModesArray.forEach(function (tripMode) {
+      choices.push({
+        key: choices.length + 1,
+        text: tripMode,
+        value: tripMode,
+      });
+    });
+
+    return choices;
+  };
 
   const getSavedCommutes = () => {
     const choices = [];
@@ -50,16 +64,23 @@ const EditTripModal = (props) => {
     return choices;
   };
 
-  const handleSavedCommute = (e, { value }) => {
-    if (value !== 'other') {
-      const savedCommute = props.savedCommutes.find(({ _id }) => _id === value);
-      setDistance(savedCommute.distanceMiles);
+  const handleChange = (e, { name, value }) => {
+    if (name === 'savedCommute') {
+      if (value !== 'other') {
+        const savedCommute = props.savedCommutes.find(({ _id }) => _id === value);
+        setMode(savedCommute.mode);
+        setDistance(savedCommute.distanceMiles);
+      } else {
+        setMode(props.trip.mode);
+      }
+    } else if (name === 'mode') {
+      setMode(value);
+    } else if (name === 'distance') {
+      setDistance(value);
+    } else if (name === 'unit') {
+      setUnit(value);
     }
   };
-
-  const handleDistance = (e, { value }) => setDistance(value);
-
-  const handleUnit = (e, { value }) => setUnit(value);
 
   const bridge = new SimpleSchema2Bridge(formSchema);
 
@@ -72,7 +93,7 @@ const EditTripModal = (props) => {
     if (data.roundTrip) {
       updateData.milesTraveled *= 2;
     }
-    updateData.mode = data.mode;
+    updateData.mode = mode;
     updateData.mpg = averageAutoMPG; // change when vehicles
     const collectionName = Trips.getCollectionName();
     updateMethod.callPromise({ collectionName, updateData })
@@ -83,7 +104,6 @@ const EditTripModal = (props) => {
       .catch((error) => swal('Error', error.message, 'error'));
   };
 
-  // console.log(props.trip);
   return (
     <Modal
       size='tiny'
@@ -105,38 +125,51 @@ const EditTripModal = (props) => {
             name='date'
             max={getDateToday()}
           />
-          <SelectField
-            name='mode'
-            allowedValues={tripModesArray}
-          />
           <Form.Group inline>
             <Form.Select
+              name='savedCommute'
               label='Destination'
               defaultValue='other'
               options={getSavedCommutes()}
-              onChange={handleSavedCommute}
+              onChange={handleChange}
               required
+              width={12}
             />
             <BoolField name='roundTrip' label='roundtrip?'/>
           </Form.Group>
+          <Form.Select
+            name='mode'
+            label='Mode of Transportation'
+            options={getModesOfTransportation()}
+            onChange={handleChange}
+            value={mode}
+            required
+          />
           <Divider/>
           For &apos;<i>Telework</i>&apos;, key in the distance between home and workplace.
           <Form.Group inline>
-            <Form.Input label='Distance traveled'
+            <Form.Input
+              name='distance'
+              label='Distance (one-way)'
               value={distance}
               type='number'
               required
-              onChange={handleDistance}
+              onChange={handleChange}
+              width={12}
             />
-            <Form.Radio label='mi'
+            <Form.Radio
+              name='unit'
+              label='mi'
               value='mi'
               checked={unit === 'mi'}
-              onChange={handleUnit}
+              onChange={handleChange}
             />
-            <Form.Radio label='km'
+            <Form.Radio
+              name='unit'
+              label='km'
               value='km'
               checked={unit === 'km'}
-              onChange={handleUnit}
+              onChange={handleChange}
             />
           </Form.Group>
           <ErrorsField/>

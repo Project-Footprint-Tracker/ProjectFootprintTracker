@@ -2,18 +2,19 @@ import React, { useState } from 'react';
 import SimpleSchema from 'simpl-schema';
 import PropTypes from 'prop-types';
 import { Button, Divider, Form, Modal } from 'semantic-ui-react';
-import { AutoForm, BoolField, DateField, ErrorsField, SelectField, SubmitField } from 'uniforms-semantic';
+import { AutoForm, BoolField, DateField, ErrorsField, SubmitField } from 'uniforms-semantic';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
 import swal from 'sweetalert';
 import { getDateToday, getMilesTraveled } from '../../../api/utilities/CEData';
-import { averageAutoMPG, tripModesArray } from '../../../api/utilities/constants';
+import { averageAutoMPG, tripModes, tripModesArray } from '../../../api/utilities/constants';
 import { Trips } from '../../../api/trip/TripCollection';
 import { defineMethod } from '../../../api/base/BaseCollection.methods';
 
 const AddTripModal = (props) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [formExtend, setFormExtend] = useState(false);
-  const [distance, setDistance] = useState('');
+  const [mode, setMode] = useState(tripModes.GAS_CAR);
+  const [distance, setDistance] = useState(0);
   const [unit, setUnit] = useState('mi');
 
   const handleModalOpen = () => setModalOpen(true);
@@ -21,18 +22,31 @@ const AddTripModal = (props) => {
   const handleModalClose = () => {
     setModalOpen(false);
     setFormExtend(false);
-    setDistance('');
+    setMode(tripModes.GAS_CAR);
+    setDistance(0);
     setUnit('mi');
   };
 
   const formSchema = new SimpleSchema({
     date: Date,
-    mode: String,
     roundTrip: {
       type: Boolean,
       optional: true,
     },
   });
+
+  const getModesOfTransportation = () => {
+    const choices = [];
+    tripModesArray.forEach(function (tripMode) {
+      choices.push({
+        key: choices.length + 1,
+        text: tripMode,
+        value: tripMode,
+      });
+    });
+
+    return choices;
+  };
 
   const getSavedCommutes = () => {
     const choices = [];
@@ -53,38 +67,60 @@ const AddTripModal = (props) => {
     return choices;
   };
 
-  const handleSavedCommute = (e, { value }) => {
-    if (value !== 'other') {
-      const savedCommute = props.savedCommutes.find(({ _id }) => _id === value);
-      setDistance(savedCommute.distanceMiles);
+  const handleChange = (e, { name, value }) => {
+    if (name === 'savedCommute') {
+      if (value !== 'other') {
+        const savedCommute = props.savedCommutes.find(({ _id }) => _id === value);
+        setMode(savedCommute.mode);
+        setDistance(savedCommute.distanceMiles);
+      } else {
+        setMode(tripModes.GAS_CAR);
+      }
+      setFormExtend(true);
+    } else if (name === 'mode') {
+      setMode(value);
+    } else if (name === 'distance') {
+      setDistance(value);
+    } else if (name === 'unit') {
+      setUnit(value);
     }
-    setFormExtend(true);
   };
-
-  const handleDistance = (e, { value }) => setDistance(value);
-
-  const handleUnit = (e, { value }) => setUnit(value);
 
   const handleExtendForm = () => (formExtend ?
     <div>
+      <Form.Select
+        name='mode'
+        label='Mode of Transportation'
+        options={getModesOfTransportation()}
+        onChange={handleChange}
+        value={mode}
+        required
+      />
       <Divider/>
       For &apos;<i>Telework</i>&apos;, key in the distance between home and workplace.
       <Form.Group inline>
-        <Form.Input label='Distance (one-way)'
+        <Form.Input
+          name='distance'
+          label='Distance Traveled (one-way)'
           value={distance}
           type='number'
           required
-          onChange={handleDistance}
+          onChange={handleChange}
+          width={12}
         />
-        <Form.Radio label='mi'
+        <Form.Radio
+          name='unit'
+          label='mi'
           value='mi'
           checked={unit === 'mi'}
-          onChange={handleUnit}
+          onChange={handleChange}
         />
-        <Form.Radio label='km'
+        <Form.Radio
+          name='unit'
+          label='km'
           value='km'
           checked={unit === 'km'}
-          onChange={handleUnit}
+          onChange={handleChange}
         />
       </Form.Group>
     </div> :
@@ -101,7 +137,7 @@ const AddTripModal = (props) => {
     if (data.roundTrip) {
       definitionData.milesTraveled *= 2;
     }
-    definitionData.mode = data.mode;
+    definitionData.mode = mode;
     definitionData.mpg = averageAutoMPG; // change when vehicles
     definitionData.owner = props.owner;
     // CAM we're going to add the ce produced and ce saved to the Trips collection.
@@ -134,17 +170,15 @@ const AddTripModal = (props) => {
             name='date'
             max={getDateToday()}
           />
-          <SelectField
-            name='mode'
-            allowedValues={tripModesArray}
-          />
           <Form.Group inline>
             <Form.Select
+              name='savedCommute'
               label='Destination'
               options={getSavedCommutes()}
-              onChange={handleSavedCommute}
+              onChange={handleChange}
               placeholder='Destination'
               required
+              width={12}
             />
             <BoolField name='roundTrip' label='roundtrip?'/>
           </Form.Group>

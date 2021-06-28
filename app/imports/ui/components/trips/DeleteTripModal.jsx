@@ -17,7 +17,10 @@ const DeleteTripModal = (props) => {
     const collectionName = Trips.getCollectionName();
     const instance = props.trip._id;
     removeItMethod.callPromise({ collectionName, instance })
-      .then(() => handleModalClose())
+      .then(() => {
+        swal('Success', 'Trip deleted successfully', 'success');
+        handleModalClose();
+      })
       .catch(error => swal('Error', error.message, 'error'));
   };
   let distance;
