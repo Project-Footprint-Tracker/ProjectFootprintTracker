@@ -9,7 +9,7 @@ import ListStuff from '../pages/ListStuff';
 import ListStuffAdmin from '../pages/ListStuffAdmin';
 import AddStuff from '../pages/AddStuff';
 import EditStuff from '../pages/EditStuff';
-import AddTrip from '../pages/AddTrip';
+import AddTrip from '../pages/AddTripModal';
 import TripHistory from '../pages/TripHistory';
 import NotFound from '../pages/NotFound';
 import Signin from '../pages/Signin';

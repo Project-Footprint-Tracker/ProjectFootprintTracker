@@ -1,0 +1,37 @@
+[
+  {
+    "date": "2021-06-22",
+    "milesTraveled": "40",
+    "mode": "Telework",
+    "mpg": 25,
+    "owner": "john@foo.com"
+  },
+  {
+    "date": "2021-06-21",
+    "milesTraveled": "30",
+    "mode": "Biking",
+    "mpg": 25,
+    "owner": "john@foo.com"
+  },
+  {
+    "date": "2021-06-20",
+    "milesTraveled": "25",
+    "mode": "Carpool",
+    "mpg": 25,
+    "owner": "john@foo.com"
+  },
+  {
+    "date": "2021-06-19",
+    "milesTraveled": "15",
+    "mode": "EV/Hybrid",
+    "mpg": 25,
+    "owner": "john@foo.com"
+  },
+  {
+    "date": "2021-06-18",
+    "milesTraveled": "40",
+    "mode": "Telework",
+    "mpg": 25,
+    "owner": "john@foo.com"
+  }
+]

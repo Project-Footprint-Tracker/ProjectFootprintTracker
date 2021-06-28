@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Dimmer, Loader } from 'semantic-ui-react';
 import { Trips } from '../../api/trip/TripCollection';
 import { Users } from '../../api/user/UserCollection';
-import DashboardContent from '../components/e-impact/DashboardContent';
+import DashboardContent from '../components/to-delete/e-impact/DashboardContent';
 
 /* global document */
 

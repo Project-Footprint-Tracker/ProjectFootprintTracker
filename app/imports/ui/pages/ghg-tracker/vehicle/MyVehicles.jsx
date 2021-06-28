@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Header } from 'semantic-ui-react';
-import VehicleList from '../../../components/ghg-tracker/vehicle-page/VehicleList';
+import VehicleList from '../../../components/to-delete/ghg-tracker/vehicle-page/VehicleList';
 
 /** Renders a feed containing all of the Vehicle documents. Use <VehicleCard> to render each card. */
 class MyVehicles extends React.Component {

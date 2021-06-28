@@ -5,9 +5,9 @@ import { Menu, Button, Table, Grid, Loader, Icon, Statistic } from 'semantic-ui-
 import PropTypes from 'prop-types';
 import { _ } from 'meteor/underscore';
 import { useParams } from 'react-router-dom';
-import SideBar from '../../components/e-impact/SideBar';
+import SideBar from '../../components/to-delete/e-impact/SideBar';
 import { Trips, tripPublications } from '../../../api/trip/TripCollection';
-import TripItemAdmin from '../../components/e-impact/TripItemAdmin';
+import TripItemAdmin from '../../components/to-delete/e-impact/TripItemAdmin';
 import { Users } from '../../../api/user/UserCollection';
 import { cePerGallonFuel } from '../../../api/utilities/constants';
 

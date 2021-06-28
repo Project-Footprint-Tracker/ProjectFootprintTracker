@@ -1,0 +1,16 @@
+[
+  {
+    "name": "dad's",
+    "distanceMiles": "10",
+    "mode": "Telework",
+    "mpg": 25,
+    "owner" : "john@foo.com"
+  },
+  {
+    "name": "mom's",
+    "distanceMiles": "15",
+    "mode": "Telework",
+    "mpg": 25,
+    "owner" : "john@foo.com"
+  }
+]

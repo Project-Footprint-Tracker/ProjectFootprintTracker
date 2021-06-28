@@ -6,7 +6,7 @@ import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-re
 import 'pure-react-carousel/dist/react-carousel.es.css';
 import { Grid, Header, Image, Card, Divider, Loader } from 'semantic-ui-react';
 import { Users } from '../../../api/user/UserCollection';
-import SideBar from '../../components/e-impact/SideBar';
+import SideBar from '../../components/to-delete/e-impact/SideBar';
 
 /* global document */
 

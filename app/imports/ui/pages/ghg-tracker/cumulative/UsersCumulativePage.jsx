@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Header, Container } from 'semantic-ui-react';
-import CumulativeDataCard from '../../../components/ghg-tracker/cumulative-page/CumulativeDataCard';
-import CumulativeDataChart from '../../../components/ghg-tracker/cumulative-page/CumulativeDataChart';
+import CumulativeDataCard from '../../../components/to-delete/ghg-tracker/cumulative-page/CumulativeDataCard';
+import CumulativeDataChart from '../../../components/to-delete/ghg-tracker/cumulative-page/CumulativeDataChart';
 
 const UsersCumulativePage = () => (
   <div className='background-all'>

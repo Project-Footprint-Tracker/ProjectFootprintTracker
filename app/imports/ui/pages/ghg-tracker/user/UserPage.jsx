@@ -4,13 +4,13 @@ import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { NavLink } from 'react-router-dom';
 import { Users } from '../../../../api/user/UserCollection';
-import { UserDailyData } from '../../../../api/trip/UserDailyDataCollection';
-import ProfileCard from '../../../components/ghg-tracker/user-page/ProfileCard';
-import MyDataChart from '../../../components/ghg-tracker/user-page/MyDataChart';
-import MyNumbers from '../../../components/ghg-tracker/user-page/MyNumbers';
+import { UserDailyData } from '../../../../api/trip/to-delete/UserDailyDataCollection';
+import ProfileCard from '../../../components/to-delete/ghg-tracker/user-page/ProfileCard';
+import MyDataChart from '../../../components/to-delete/ghg-tracker/user-page/MyDataChart';
+import MyNumbers from '../../../components/to-delete/ghg-tracker/user-page/MyNumbers';
 import { UserVehicles } from '../../../../api/vehicle/UserVehicleCollection';
-import AltVehicleCard from '../../../components/ghg-tracker/user-page/AltVehicleCard';
-import LeafWidget from '../../../components/ghg-tracker/user-page/LeafWidget';
+import AltVehicleCard from '../../../components/to-delete/ghg-tracker/user-page/AltVehicleCard';
+import LeafWidget from '../../../components/to-delete/ghg-tracker/user-page/LeafWidget';
 
 const paddingStyle = { padding: 20 };
 /** Renders the Page for displaying the user's data: Their numbers for the day, overview of their carbon footprint, and
