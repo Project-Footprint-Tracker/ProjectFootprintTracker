@@ -368,14 +368,14 @@ class TripCollection extends BaseCollection {
    * @returns {string} the amount of CE that the user produced. It is a string because the function does a .toFixed(2) to round
    * the number to two decimal places.
    */
-  getCEProducedTotal(username, userMPG) {
+  getCEProducedTotal(username) {
     const userTrips = this._collection.find({ owner: username }).fetch();
 
     let ceProduced = 0;
 
     _.forEach(userTrips, function (objects) {
       if (objects.mode === 'Gas Car' || objects.mode === 'Carpool') {
-        ceProduced += ((objects.distance / userMPG) * cePerGallonFuel);
+        ceProduced += ((objects.distance / objects.mpg) * cePerGallonFuel);
       }
     });
 
@@ -389,7 +389,7 @@ class TripCollection extends BaseCollection {
    * @returns {{date: [], ce: []}}
    * An object that contains an array of dates for the trips and an array of CE that they saved for each of the respective date.
    */
-  getCEReducedPerDay(username, userMpg) {
+  getCEReducedPerDay(username) {
     const userTrips = this._collection.find({ owner: username }).fetch();
 
     const date = [];
@@ -405,11 +405,11 @@ class TripCollection extends BaseCollection {
       if (tripMode !== 'Gas Car') {
         if (prevDate.getTime() !== tripDate.getTime()) {
           date.push(tripDate);
-          ce.push(((tripDistance / userMpg) * cePerGallonFuel).toFixed(2));
+          ce.push(((tripDistance / objects.mpg) * cePerGallonFuel).toFixed(2));
           prevDate = tripDate;
         } else {
           let currentCE = parseFloat(ce[ce.length - 1]);
-          currentCE += ((tripDistance / userMpg) * cePerGallonFuel);
+          currentCE += ((tripDistance / objects.mpg) * cePerGallonFuel);
           ce[ce.length - 1] = currentCE.toFixed(2);
         }
       }
@@ -426,7 +426,7 @@ class TripCollection extends BaseCollection {
    * @returns {{date: [], fuel: [], price: []}}
    * An object that contains an array of dates and an array of fuel and dollar saved for the respective date.
    */
-  getFuelSavedPerDay(username, userMPG) {
+  getFuelSavedPerDay(username) {
     const userTrips = this._collection.find({ owner: username }).fetch();
 
     const date = [];
@@ -443,16 +443,16 @@ class TripCollection extends BaseCollection {
       if (tripMode !== 'Gas Car') {
         if (prevDate.getTime() !== tripDate.getTime()) {
           date.push(tripDate);
-          fuel.push((tripDistance / userMPG).toFixed(2));
-          price.push(((tripDistance / userMPG) * fuelCost).toFixed(2));
+          fuel.push((tripDistance / objects.mpg).toFixed(2));
+          price.push(((tripDistance / objects.mpg) * fuelCost).toFixed(2));
           prevDate = tripDate;
         } else {
           let currentFuel = parseFloat(fuel[fuel.length - 1]);
-          currentFuel += (tripDistance / userMPG);
+          currentFuel += (tripDistance / objects.mpg);
           fuel[fuel.length - 1] = currentFuel.toFixed(2);
 
           let currentPrice = parseFloat(price[price.length - 1]);
-          currentPrice += ((tripDistance / userMPG) * fuelCost);
+          currentPrice += ((tripDistance / objects.mpg) * fuelCost);
           price[price.length - 1] = currentPrice.toFixed(2);
         }
       }
@@ -463,6 +463,8 @@ class TripCollection extends BaseCollection {
 
   getMilesAvg(username) {
     const userTrips = this._collection.find({ owner: username }).fetch();
+
+    console.log(userTrips);
 
     let currentYear = '';
     let currentMonth = '';

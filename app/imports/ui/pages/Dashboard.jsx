@@ -101,10 +101,10 @@ export default withTracker(({ match }) => {
 
   const userProfile = Users.getUserProfile(username);
 
-  const ceProducedTotal = Trips.getCEProducedTotal(username, (userSubscribe.ready()) ? userProfile.autoMPG : 1);
-  const ceReducedPerDay = Trips.getCEReducedPerDay(username, (userSubscribe.ready()) ? userProfile.autoMPG : 1);
+  const ceProducedTotal = Trips.getCEProducedTotal(username);
+  const ceReducedPerDay = Trips.getCEReducedPerDay(username);
 
-  const fuelSavedPerDay = Trips.getFuelSavedPerDay(username, (userSubscribe.ready()) ? userProfile.autoMPG : 1);
+  const fuelSavedPerDay = Trips.getFuelSavedPerDay(username);
 
   const milesAvg = Trips.getMilesAvg(username);
   const fuelAvg = Trips.getFuelAvg(username);

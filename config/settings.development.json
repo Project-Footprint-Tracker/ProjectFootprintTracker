@@ -9,5 +9,42 @@
     { "name": "Bicycle", "quantity": 2, "owner": "john@foo.com", "condition": "poor" },
     { "name": "Banana", "quantity": 2, "owner": "admin@foo.com", "condition": "good" },
     { "name": "Boogie Board", "quantity": 2, "owner": "admin@foo.com", "condition": "excellent" }
+  ],
+
+  "defaultVehicle": [
+    { "Owner": "admin@foo.com", "Year":2016, "Make":"BMW", "Model":"i3 BEV", "Mpg":-999 }
+  ],
+
+  "defaultUsers": [
+    { "email": "admin@foo.com", "firstName": "admin", "lastName": "foo", "zipCode": 96795, "goal": "default goal"}
+  ],
+
+  "defaultTrips": [
+    { "date": "2020-03-01", "distance": 40, "mode": "Carpool", "passenger": 2, "mpg": 25, "owner":  "admin@foo.com", "county": "Honolulu" },
+    { "date": "2020-03-04", "distance": 26, "mode": "Telework", "mpg": 25, "owner":  "admin@foo.com", "county": "Honolulu" },
+    { "date": "2020-03-05", "distance": 26, "mode": "Telework", "mpg": 25, "owner":  "admin@foo.com", "county": "Honolulu" },
+    { "date": "2020-03-06", "distance": 26, "mode": "Telework", "mpg": 25, "owner":  "admin@foo.com", "county": "Honolulu" },
+    { "date": "2020-03-10", "distance": 34, "mode": "Biking", "mpg": 25, "owner":  "admin@foo.com", "county": "Honolulu" },
+    { "date": "2020-03-11", "distance": 26, "mode": "Telework", "mpg": 25, "owner":  "admin@foo.com", "county": "Honolulu" },
+    { "date": "2020-03-13", "distance": 26, "mode": "Telework", "mpg": 25, "owner":  "admin@foo.com", "county": "Honolulu" },
+    { "date": "2020-03-16", "distance": 26, "mode": "Telework", "mpg": 25, "owner":  "admin@foo.com", "county": "Honolulu" },
+    { "date": "2020-03-17", "distance": 26, "mode": "Carpool", "passenger": 2, "mpg": 25, "owner":  "admin@foo.com", "county": "Honolulu" },
+    { "date": "2020-03-18", "distance": 26, "mode": "Telework", "mpg": 25, "owner":  "admin@foo.com", "county": "Honolulu" },
+    { "date": "2020-03-19", "distance": 35, "mode": "Carpool", "passenger": 2, "mpg": 25, "owner":  "admin@foo.com", "county": "Honolulu" },
+    { "date": "2020-03-20", "distance": 26, "mode": "Telework", "mpg": 25, "owner":  "admin@foo.com", "county": "Honolulu" },
+    { "date": "2020-03-23", "distance": 26, "mode": "Telework", "mpg": 25, "owner":  "admin@foo.com", "county": "Honolulu" },
+    { "date": "2020-03-24", "distance": 26, "mode": "Telework", "mpg": 25, "owner":  "admin@foo.com", "county": "Honolulu" },
+    { "date": "2020-03-25", "distance": 26, "mode": "Telework", "mpg": 25, "owner":  "admin@foo.com", "county": "Honolulu" },
+    { "date": "2020-03-26", "distance": 26, "mode": "Telework", "mpg": 25, "owner":  "admin@foo.com", "county": "Honolulu" },
+    { "date": "2020-03-27", "distance": 26, "mode": "Telework", "mpg": 25, "owner":  "admin@foo.com", "county": "Honolulu" },
+    { "date": "2020-03-30", "distance": 26, "mode": "Telework", "mpg": 25, "owner":  "admin@foo.com", "county": "Honolulu" },
+    { "date": "2020-03-31", "distance": 26, "mode": "Telework", "mpg": 25, "owner":  "admin@foo.com", "county": "Honolulu" },
+    { "date": "2020-04-01", "distance": 26, "mode": "Telework", "mpg": 25, "owner":  "admin@foo.com", "county": "Honolulu" },
+    { "date": "2020-04-02", "distance": 26, "mode": "Telework", "mpg": 25, "owner":  "admin@foo.com", "county": "Honolulu" },
+    { "date": "2020-04-03", "distance": 26, "mode": "Telework", "mpg": 25, "owner":  "admin@foo.com", "county": "Honolulu" },
+    { "date": "2020-04-06", "distance": 26, "mode": "Telework", "mpg": 25, "owner":  "admin@foo.com", "county": "Honolulu" },
+    { "date": "2020-04-07", "distance": 26, "mode": "Telework", "mpg": 25, "owner":  "admin@foo.com", "county": "Honolulu" },
+    { "date": "2020-04-08", "distance": 26, "mode": "Telework", "mpg": 25, "owner":  "admin@foo.com", "county": "Honolulu" },
+    { "date": "2020-04-09", "distance": 26, "mode": "Telework", "mpg": 25, "owner":  "admin@foo.com", "county": "Honolulu" }
   ]
 }
