@@ -5,6 +5,7 @@ import swal from 'sweetalert';
 import { Trips } from '../../../api/trip/TripCollection';
 import { removeItMethod } from '../../../api/base/BaseCollection.methods';
 import { getMetricData } from '../../../api/utilities/CEData';
+import { imperialUnits, metricUnits } from '../../../api/utilities/constants';
 
 const DeleteTripModal = (props) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -26,7 +27,7 @@ const DeleteTripModal = (props) => {
   } else {
     distance = props.trip.milesTraveled;
   }
-  const label = props.metric ? 'km' : 'mi';
+  const label = props.metric ? metricUnits.distance : imperialUnits.distance;
 
   return (
     <Modal

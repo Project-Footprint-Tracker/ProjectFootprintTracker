@@ -20,17 +20,15 @@ const TripHistory = (props) => {
   if (metric) {
     headerUnits.distance = metricUnits.distance;
     headerUnits.mpgKMLUnit = metricUnits.mpgKML;
-    headerUnits.cO2Reduced = metricUnits.cO2Reduced;
-    headerUnits.fuelSaved = metricUnits.fuelSaved;
+    headerUnits.ce = metricUnits.ce;
   } else {
     headerUnits.distance = imperialUnits.distance;
     headerUnits.mpgKMLUnit = imperialUnits.mpgKML;
-    headerUnits.cO2Reduced = imperialUnits.cO2Reduced;
-    headerUnits.fuelSaved = imperialUnits.fuelSaved;
+    headerUnits.ce = imperialUnits.ce;
   }
 
   return (props.ready ? (
-    <Container style={{ margin: '2rem 1rem', width: 1000 }}>
+    <Container style={{ margin: '2rem 1rem', width: 900 }}>
       <Header as='h1' textAlign='center'>
           MY TRIP HISTORY
         <Header.Subheader>
@@ -59,13 +57,16 @@ const TripHistory = (props) => {
       <Table fixed striped compact textAlign='center'>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell width={2}>Date</Table.HeaderCell>
-            <Table.HeaderCell width={3}>Mode of Transportation</Table.HeaderCell>
-            <Table.HeaderCell width={2}>Distance Traveled ({headerUnits.distance})</Table.HeaderCell>
-            <Table.HeaderCell width={2}>{headerUnits.mpgKMLUnit}</Table.HeaderCell>
-            <Table.HeaderCell width={2}>CO2 Reduced ({headerUnits.cO2Reduced})</Table.HeaderCell>
-            <Table.HeaderCell width={2}>Fuel Saved ({headerUnits.fuelSaved})</Table.HeaderCell>
-            <Table.HeaderCell width={2}/>
+            <Table.HeaderCell width={2} rowSpan={2}>Date</Table.HeaderCell>
+            <Table.HeaderCell width={3} rowSpan={2}>Mode of Transportation</Table.HeaderCell>
+            <Table.HeaderCell width={2} rowSpan={2}>Distance Traveled ({headerUnits.distance})</Table.HeaderCell>
+            <Table.HeaderCell width={2} rowSpan={2}>{headerUnits.mpgKMLUnit}</Table.HeaderCell>
+            <Table.HeaderCell width={3} colSpan={2}>Carbon Emissions ({headerUnits.ce})</Table.HeaderCell>
+            <Table.HeaderCell width={1} rowSpan={2}/>
+          </Table.Row>
+          <Table.Row>
+            <Table.HeaderCell>Saved</Table.HeaderCell>
+            <Table.HeaderCell>Produced</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -93,7 +94,7 @@ export default withTracker(() => {
   // Get access to Trip documents.
   const owner = Meteor.user()?.username;
   const ready = Trips.subscribeTrip().ready() && SavedCommutes.subscribeSavedCommute().ready() && owner !== undefined;
-  const trips = Trips.find({ owner }, { sort: { inputDate: -1 } }).fetch();
+  const trips = Trips.find({ owner }, { sort: { date: -1 } }).fetch();
   const savedCommutes = SavedCommutes.find({}, { sort: { name: 'asc' } }).fetch();
   return {
     trips,
