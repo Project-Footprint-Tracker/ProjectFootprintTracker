@@ -14,6 +14,7 @@ const AddTripModal = (props) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [formExtend, setFormExtend] = useState(false);
   const [mode, setMode] = useState(tripModes.GAS_CAR);
+  const [passengers, setPassengers] = useState(0);
   const [distance, setDistance] = useState(0);
   const [unit, setUnit] = useState('mi');
 
@@ -23,6 +24,7 @@ const AddTripModal = (props) => {
     setModalOpen(false);
     setFormExtend(false);
     setMode(tripModes.GAS_CAR);
+    setPassengers(0);
     setDistance(0);
     setUnit('mi');
   };
@@ -75,16 +77,31 @@ const AddTripModal = (props) => {
         setDistance(savedCommute.distanceMiles);
       } else {
         setMode(tripModes.GAS_CAR);
+        setDistance(0);
       }
+      setPassengers(0);
       setFormExtend(true);
     } else if (name === 'mode') {
       setMode(value);
+    } else if (name === 'passengers') {
+      setPassengers(value);
     } else if (name === 'distance') {
       setDistance(value);
     } else if (name === 'unit') {
       setUnit(value);
     }
   };
+
+  const passengerField = () => (mode === tripModes.CARPOOL ?
+    <Form.Input
+      name='passengers'
+      label='Number of Passengers'
+      value={passengers}
+      type='number'
+      required
+      onChange={handleChange}
+    /> : null
+  );
 
   const handleExtendForm = () => (formExtend ?
     <div>
@@ -96,6 +113,7 @@ const AddTripModal = (props) => {
         value={mode}
         required
       />
+      {passengerField()}
       <Divider/>
       For &apos;<i>Telework</i>&apos;, key in the distance between home and workplace.
       <Form.Group inline>
@@ -138,6 +156,7 @@ const AddTripModal = (props) => {
       definitionData.milesTraveled *= 2;
     }
     definitionData.mode = mode;
+    definitionData.passengers = Number(passengers);
     definitionData.mpg = averageAutoMPG; // change when vehicles
     definitionData.owner = props.owner;
     // CAM we're going to add the ce produced and ce saved to the Trips collection.

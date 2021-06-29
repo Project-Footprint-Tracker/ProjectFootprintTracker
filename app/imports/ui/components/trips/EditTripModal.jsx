@@ -7,12 +7,13 @@ import { AutoForm, BoolField, DateField, ErrorsField, SubmitField } from 'unifor
 import swal from 'sweetalert';
 import { Trips } from '../../../api/trip/TripCollection';
 import { getDateToday, getMilesTraveled } from '../../../api/utilities/CEData';
-import { averageAutoMPG, tripModesArray } from '../../../api/utilities/constants';
+import { averageAutoMPG, tripModes, tripModesArray } from '../../../api/utilities/constants';
 import { updateMethod } from '../../../api/base/BaseCollection.methods';
 
 const EditTripModal = (props) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [mode, setMode] = useState(props.trip.mode);
+  const [passengers, setPassengers] = useState(props.trip.passengers);
   const [distance, setDistance] = useState(props.trip.milesTraveled);
   const [unit, setUnit] = useState('mi');
 
@@ -20,6 +21,7 @@ const EditTripModal = (props) => {
   const handleModalClose = () => {
     setDistance(props.trip.milesTraveled);
     setMode(props.trip.mode);
+    setPassengers(props.trip.passengers);
     setUnit('mi');
     setModalOpen(false);
   };
@@ -75,12 +77,25 @@ const EditTripModal = (props) => {
       }
     } else if (name === 'mode') {
       setMode(value);
+    } else if (name === 'passengers') {
+      setPassengers(value);
     } else if (name === 'distance') {
       setDistance(value);
     } else if (name === 'unit') {
       setUnit(value);
     }
   };
+
+  const passengerField = () => (mode === tripModes.CARPOOL ?
+    <Form.Input
+      name='passengers'
+      label='Number of Passengers'
+      value={passengers}
+      type='number'
+      required
+      onChange={handleChange}
+    /> : null
+  );
 
   const bridge = new SimpleSchema2Bridge(formSchema);
 
@@ -94,6 +109,7 @@ const EditTripModal = (props) => {
       updateData.milesTraveled *= 2;
     }
     updateData.mode = mode;
+    updateData.passengers = Number(passengers);
     updateData.mpg = averageAutoMPG; // change when vehicles
     const collectionName = Trips.getCollectionName();
     updateMethod.callPromise({ collectionName, updateData })
@@ -145,6 +161,7 @@ const EditTripModal = (props) => {
             value={mode}
             required
           />
+          {passengerField()}
           <Divider/>
           For &apos;<i>Telework</i>&apos;, key in the distance between home and workplace.
           <Form.Group inline>

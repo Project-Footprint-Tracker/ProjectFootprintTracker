@@ -10,7 +10,7 @@ export const tripPublications = {
   tripCommunity: 'TripCommunity',
 };
 
-const calculateCarbonEmissions = (mode, miles, mpg, passengers = 0) => {
+const calculateCarbonEmissions = (mode, miles, mpg, passengers) => {
   const ce = (miles / mpg) * cePerGallonFuel;
   switch (mode) {
   case tripModes.GAS_CAR:
@@ -19,7 +19,9 @@ const calculateCarbonEmissions = (mode, miles, mpg, passengers = 0) => {
       ceSaved: 0,
     };
   case tripModes.CARPOOL: {
-    const ceProduced = ce / (passengers + 1); // CAM we might need to add passengers as an optional field to trip.
+    const totalPassengers = passengers + 1;
+    console.log(totalPassengers);
+    const ceProduced = (ce / totalPassengers); // CAM we might need to add passengers as an optional field to trip.
     const ceSaved = ce - ceProduced;
     return {
       ceProduced,
