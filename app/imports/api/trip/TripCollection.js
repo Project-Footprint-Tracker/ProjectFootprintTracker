@@ -1,6 +1,5 @@
 import { Meteor } from 'meteor/meteor';
 import SimpleSchema from 'simpl-schema';
-import swal from 'sweetalert';
 import { _ } from 'meteor/underscore';
 import BaseCollection from '../base/BaseCollection';
 import { cePerGallonFuel, tripModes, tripModesArray } from '../utilities/constants';
@@ -11,7 +10,7 @@ export const tripPublications = {
   tripCommunity: 'TripCommunity',
 };
 
-const calculateCarbonEmissions = (mode, miles, mpg, passengers = 0) => {
+const calculateCarbonEmissions = (mode, miles, mpg, passengers) => {
   const ce = (miles / mpg) * cePerGallonFuel;
   switch (mode) {
   case tripModes.GAS_CAR:
@@ -20,7 +19,9 @@ const calculateCarbonEmissions = (mode, miles, mpg, passengers = 0) => {
       ceSaved: 0,
     };
   case tripModes.CARPOOL: {
-    const ceProduced = ce / (passengers + 1); // CAM we might need to add passengers as an optional field to trip.
+    const totalPassengers = passengers + 1;
+    console.log(totalPassengers);
+    const ceProduced = (ce / totalPassengers); // CAM we might need to add passengers as an optional field to trip.
     const ceSaved = ce - ceProduced;
     return {
       ceProduced,
@@ -42,7 +43,10 @@ class TripCollection extends BaseCollection {
         type: Date,
         defaultValue: new Date(),
       },
-      milesTraveled: Number,
+      milesTraveled: {
+        type: Number,
+        min: 0.1,
+      },
       mode: {
         type: String,
         allowedValues: tripModesArray,
@@ -84,24 +88,6 @@ class TripCollection extends BaseCollection {
     return docID;
   }
 
-  defineWithMessage({ date, milesTraveled, mode, mpg, owner, passengers }) {
-    const { ceProduced, ceSaved } = calculateCarbonEmissions(mode, milesTraveled, mpg, passengers);
-    const docID = this._collection.insert({
-      date,
-      milesTraveled,
-      mode,
-      mpg,
-      owner,
-      ceProduced,
-      ceSaved,
-      passengers,
-    },
-    (error) => ((error) ?
-      swal('Error', error.message, 'error') :
-      swal('Success', 'Trip added successfully', 'success')));
-    return docID;
-  }
-
   /**
    * Updates the existing Trip item/document.
    * @param docID the id of the document to update.
@@ -136,9 +122,7 @@ class TripCollection extends BaseCollection {
     const { ceProduced, ceSaved } = calculateCarbonEmissions(updateData.mode, updateData.milesTraveled, updateData.mpg, updateData.passengers);
     updateData.ceProduced = ceProduced;
     updateData.ceSaved = ceSaved;
-    this._collection.update(docID, { $set: updateData }, (error) => (error ?
-      swal('Error', error.message, 'error') :
-      swal('Success', 'Data edited successfully', 'success')));
+    this._collection.update(docID, { $set: updateData });
   }
 
   /**
@@ -148,9 +132,7 @@ class TripCollection extends BaseCollection {
    */
   removeIt(docID) {
     const doc = this.findDoc(docID);
-    this._collection.remove(doc._id, (error) => ((error) ?
-      swal('Error', error.message, 'error') :
-      swal('Success', 'Trip added successfully', 'success')));
+    this._collection.remove(doc._id);
     return true;
   }
 

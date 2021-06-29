@@ -37,7 +37,7 @@ const SavedCommutesModal = (props) => {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>Name</Table.HeaderCell>
-              {/* <Table.HeaderCell>Default Mode of Transportation</Table.HeaderCell> */}
+              <Table.HeaderCell>Default Mode of Transportation</Table.HeaderCell>
               <Table.HeaderCell>Distance ({distanceUnit})</Table.HeaderCell>
               <Table.HeaderCell>{mpgKMLUnit}</Table.HeaderCell>
             </Table.Row>

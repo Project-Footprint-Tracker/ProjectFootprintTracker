@@ -9,7 +9,7 @@
   {
     "name": "mom's",
     "distanceMiles": "15",
-    "mode": "Telework",
+    "mode": "Carpool",
     "mpg": 25,
     "owner" : "john@foo.com"
   }

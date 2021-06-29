@@ -5,6 +5,7 @@ import swal from 'sweetalert';
 import { Trips } from '../../../api/trip/TripCollection';
 import { removeItMethod } from '../../../api/base/BaseCollection.methods';
 import { getMetricData } from '../../../api/utilities/CEData';
+import { imperialUnits, metricUnits } from '../../../api/utilities/constants';
 
 const DeleteTripModal = (props) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -16,7 +17,10 @@ const DeleteTripModal = (props) => {
     const collectionName = Trips.getCollectionName();
     const instance = props.trip._id;
     removeItMethod.callPromise({ collectionName, instance })
-      .then(() => handleModalClose())
+      .then(() => {
+        swal('Success', 'Trip deleted successfully', 'success');
+        handleModalClose();
+      })
       .catch(error => swal('Error', error.message, 'error'));
   };
   let distance;
@@ -26,7 +30,7 @@ const DeleteTripModal = (props) => {
   } else {
     distance = props.trip.milesTraveled;
   }
-  const label = props.metric ? 'km' : 'mi';
+  const label = props.metric ? metricUnits.distance : imperialUnits.distance;
 
   return (
     <Modal
