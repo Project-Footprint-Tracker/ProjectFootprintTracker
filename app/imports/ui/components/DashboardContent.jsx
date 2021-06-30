@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Card } from 'semantic-ui-react';
-import SideBar from './SideBar';
 import Chart from './Chart';
 import DashboardMilesCard from './DashboardMilesCard';
 import DashboardFuelCard from './DashboardFuelCard';
 import DashboardCeCard from './DashboardCeCard';
 import DashboardTreeCard from './DashboardTreeCard';
-import { cePerGallonFuel, poundsOfCePerTree } from '../../../../api/utilities/constants';
+import { cePerGallonFuel, poundsOfCePerTree } from '../../api/utilities/constants';
+import { getUserMpg } from '../../api/utilities/Utilities';
 
 /* global document */
 
@@ -21,7 +21,6 @@ function DashboardContent(
     modesOfTransport,
     milesPerMode,
     userProfile,
-    userReady,
     ceReducedPerDay,
     fuelSavedPerDay,
     milesSavedAvg,
@@ -57,8 +56,8 @@ function DashboardContent(
     },
   ];
 
-  const fuelSavedTotal = (vehicleMilesSaved / userProfile.autoMPG).toFixed(2);
-  const fuelCostTotal = (vehicleMilesAdded / userProfile.autoMPG).toFixed(2);
+  const fuelSavedTotal = (vehicleMilesSaved / getUserMpg(userProfile.email)).toFixed(2);
+  const fuelCostTotal = (vehicleMilesAdded / getUserMpg(userProfile.email)).toFixed(2);
 
   const fuelSavedPerDayData = {
     x: fuelSavedPerDay.date,
@@ -237,11 +236,6 @@ function DashboardContent(
 
   return (
     <div id='dashboard-container'>
-      <SideBar
-        userReady={userReady}
-        userProfile={userProfile}
-        theme={userProfile.theme}
-      />
       <Card.Group centered stackable itemsPerRow={4}>
         <DashboardMilesCard
           milesSaved={vehicleMilesSaved}

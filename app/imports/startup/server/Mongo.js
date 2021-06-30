@@ -49,16 +49,12 @@ if (Groups.count() === 0) {
   groupInfo.groupMembers.forEach(member => GroupMembers.define(member));
   groupInfo.trips.forEach(trip => Trips.define(trip));
 }
-// Initialize the database with a default data document.
-function addData(data) {
-  // console.log(`  Adding: ${data.name} (${data.owner})`);
-  Stuffs.collection.insert(data);
-}
 
-// Initialize the StuffsCollection if empty.
-if (Stuffs.collection.find().count() === 0) {
-  if (Meteor.settings.defaultData) {
-    // console.log('Creating default data.');
-    Meteor.settings.defaultData.map(data => addData(data));
-  }
+/** Initialize the users collection if empty. */
+if (Users.count() === 0) {
+  getAssetsData('sampleUsers.json').forEach(user => {
+    Users.define(user);
+    createUser(user.email, 'changeme');
+  });
+  console.log(`  UserCollection: ${Users.count()} users`);
 }

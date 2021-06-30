@@ -50,13 +50,11 @@ export const mpgToKMLFactor = 0.425144;
 export const imperialUnits = {
   distance: 'mi',
   mpgKML: 'MPG',
-  cO2Reduced: 'lbs',
-  fuelSaved: 'gal',
+  ce: 'lbs',
 };
 
 export const metricUnits = {
   distance: 'km',
   mpgKML: 'km/L',
-  cO2Reduced: 'kg',
-  fuelSaved: 'L',
+  ce: 'kg',
 };
