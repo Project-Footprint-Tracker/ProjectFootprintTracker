@@ -107,7 +107,7 @@ export default withTracker(({ match }) => {
   const ceAvg = Trips.getCEAvg(username);
   const tripReady = tripSubscribe.ready();
   const userReady = userSubscribe.ready();
-  console.log(tripReady, userReady, username, userProfile);
+  // console.log(tripReady, userReady, username, userProfile);
   return {
     tripReady,
     userReady,

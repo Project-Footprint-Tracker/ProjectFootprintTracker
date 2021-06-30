@@ -97,10 +97,10 @@ class UserCollection extends BaseCollection {
 
       /** This subscription publishes all documents regardless of user, but only if the logged in user is the Admin. */
       Meteor.publish(userPublications.userAdmin, function publish() {
-        if (this.userId && Roles.userIsInRole(this.userId, 'admin')) {
-          return instance._collection.find();
-        }
-        return this.ready();
+        // if (this.userId && Roles.userIsInRole(this.userId, 'admin')) {
+        return instance._collection.find();
+        // }
+        // return this.ready();
       });
     }
   }
