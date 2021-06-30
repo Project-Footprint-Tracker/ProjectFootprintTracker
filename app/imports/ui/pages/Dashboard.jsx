@@ -4,9 +4,7 @@ import PropTypes from 'prop-types';
 import { Dimmer, Loader } from 'semantic-ui-react';
 import { Trips } from '../../api/trip/TripCollection';
 import { Users } from '../../api/user/UserCollection';
-import DashboardContent from '../components/to-delete/e-impact/DashboardContent';
-
-/* global document */
+import DashboardContent from '../components/DashboardContent';
 
 function Dashboard(
   {
@@ -32,8 +30,6 @@ function Dashboard(
   },
 ) {
 
-  this.theme = !document.body.classList.contains('dark');
-
   return ((tripReady && userReady) ?
     <div>
       <DashboardContent
@@ -58,7 +54,7 @@ function Dashboard(
         evCeProducedAvg={evCeProducedAvg}
       />
     </div> :
-    <Dimmer inverted={this.theme} active>
+    <Dimmer active>
       <Loader>Loading Data</Loader>
     </Dimmer>
   );

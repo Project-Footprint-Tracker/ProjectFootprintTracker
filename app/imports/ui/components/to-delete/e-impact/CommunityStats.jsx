@@ -5,7 +5,7 @@ import moment from 'moment';
 import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import { Trips } from '../../../../api/trip/TripCollection';
-import Chart from './Chart';
+import Chart from '../../Chart';
 import { Users } from '../../../../api/user/UserCollection';
 import { getCountyData } from '../../../../api/utilities/Utilities';
 

@@ -1,8 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import SimpleSchema from 'simpl-schema';
-import { _ } from 'meteor/underscore';
+import { _ } from 'lodash';
 import BaseCollection from '../base/BaseCollection';
-import { cePerGallonFuel, tripModes, tripModesArray } from '../utilities/constants';
+import { fuelCost, avgMpge, cePerGallonFuel, tripModes, tripModesArray } from '../utilities/constants';
 import { ROLE } from '../role/Role';
 
 export const tripPublications = {
@@ -20,7 +20,6 @@ const calculateCarbonEmissions = (mode, miles, mpg, passengers) => {
     };
   case tripModes.CARPOOL: {
     const totalPassengers = passengers + 1;
-    console.log(totalPassengers);
     const ceProduced = (ce / totalPassengers); // CAM we might need to add passengers as an optional field to trip.
     const ceSaved = ce - ceProduced;
     return {
@@ -245,7 +244,7 @@ class TripCollection extends BaseCollection {
       const tripMode = objects.mode;
 
       const mode = _.find(modesOfTransport, { mode: tripMode });
-      mode.miles += objects.distance;
+      mode.miles += objects.milesTraveled;
     });
 
     return modesOfTransport;
@@ -265,12 +264,12 @@ class TripCollection extends BaseCollection {
 
     _.forEach(userTrips, function (objects) {
       if (objects.mode === 'Gas Car') {
-        milesAdded += objects.distance;
+        milesAdded += objects.milesTraveled;
       } else if (objects.mode === 'Carpool') {
-        milesAdded += objects.distance;
-        milesSaved += (objects.distance * objects.passenger);
+        milesAdded += objects.milesTraveled;
+        milesSaved += (objects.milesTraveled * objects.passengers);
       } else {
-        milesSaved += objects.distance;
+        milesSaved += objects.milesTraveled;
       }
     });
 
@@ -287,7 +286,7 @@ class TripCollection extends BaseCollection {
 
     let milesSaved = 0;
     _.forEach(userTrips, function (objects) {
-      milesSaved += objects.distance;
+      milesSaved += objects.milesTraveled;
     });
 
     return milesSaved;
@@ -312,7 +311,7 @@ class TripCollection extends BaseCollection {
     _.forEach(userTrips, function (objects) {
 
       const tripDate = objects.date;
-      const tripDistance = objects.distance;
+      const tripDistance = objects.milesTraveled;
       const tripMode = objects.mode;
 
       if (prevDate.getTime() !== tripDate.getTime()) {
@@ -347,7 +346,7 @@ class TripCollection extends BaseCollection {
     _.forEach(userTrips, function (objects) {
 
       const tripDate = objects.date;
-      const tripDistance = objects.distance;
+      const tripDistance = objects.milesTraveled;
       const tripMode = objects.mode;
 
       if (prevDate.getTime() === tripDate.getTime()) {
@@ -410,7 +409,7 @@ class TripCollection extends BaseCollection {
 
     _.forEach(userTrips, function (objects) {
       if (objects.mode === 'Gas Car' || objects.mode === 'Carpool') {
-        ceProduced += ((objects.distance / userMPG) * cePerGallonFuel);
+        ceProduced += ((objects.milesTraveled / userMPG) * cePerGallonFuel);
       }
     });
 
@@ -434,7 +433,7 @@ class TripCollection extends BaseCollection {
 
     _.forEach(userTrips, function (objects) {
       const tripDate = objects.date;
-      const tripDistance = objects.distance;
+      const tripDistance = objects.milesTraveled;
       const tripMode = objects.mode;
 
       if (tripMode !== 'Gas Car') {
@@ -472,7 +471,7 @@ class TripCollection extends BaseCollection {
 
     _.forEach(userTrips, function (objects) {
       const tripDate = objects.date;
-      const tripDistance = objects.distance;
+      const tripDistance = objects.milesTraveled;
       const tripMode = objects.mode;
 
       if (tripMode !== 'Gas Car') {
@@ -522,8 +521,8 @@ class TripCollection extends BaseCollection {
 
       const date = (objects.date.toString()).split(' ');
       const mode = objects.mode;
-      const distance = objects.distance;
-      const numOfPassenger = objects.passenger;
+      const distance = objects.milesTraveled;
+      const numOfPassenger = objects.passengers;
 
       const year = date[3];
       const month = date[1];
@@ -649,8 +648,8 @@ class TripCollection extends BaseCollection {
 
       const date = (objects.date.toString()).split(' ');
       const mode = objects.mode;
-      const distance = objects.distance;
-      const numOfPassenger = objects.passenger;
+      const distance = objects.milesTraveled;
+      const numOfPassenger = objects.passengers;
       const mpg = objects.mpg; // mpg may differ each trip
 
       const year = date[3];
@@ -771,7 +770,7 @@ class TripCollection extends BaseCollection {
 
       const date = (objects.date.toString()).split(' ');
       const mode = objects.mode;
-      const distance = objects.distance;
+      const distance = objects.milesTraveled;
 
       const year = date[3];
       const month = date[1];
