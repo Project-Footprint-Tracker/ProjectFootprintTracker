@@ -419,75 +419,87 @@ class TripCollection extends BaseCollection {
   /**
    * Gets the CE that the user has reduced each day.
    * @param username the username of the user.
-   * @param userMPG the MPG of the user.
    * @returns {{date: [], ce: []}}
    * An object that contains an array of dates for the trips and an array of CE that they saved for each of the respective date.
    */
-  getCEReducedPerDay(username, userMpg) {
-    const userTrips = this._collection.find({ owner: username }).fetch();
+  getCEReducedPerDay(username) {
+    const userTrips = this._collection.find({ owner: username }, { sort: { date: -1 } }).fetch();
 
     const date = [];
     const ce = [];
 
-    let prevDate = new Date();
-
-    _.forEach(userTrips, function (objects) {
-      const tripDate = objects.date;
-      const tripDistance = objects.milesTraveled;
-      const tripMode = objects.mode;
-
-      if (tripMode !== 'Gas Car') {
-        if (prevDate.getTime() !== tripDate.getTime()) {
+    userTrips.forEach((trip) => {
+      const tripDate = trip.date.toISOString().split('T')[0];
+      if (trip.ceSaved !== 0) {
+        if (!date.includes(tripDate)) {
           date.push(tripDate);
-          ce.push(((tripDistance / userMpg) * cePerGallonFuel).toFixed(2));
-          prevDate = tripDate;
+          ce.push(trip.ceSaved.toFixed(2));
         } else {
-          let currentCE = parseFloat(ce[ce.length - 1]);
-          currentCE += ((tripDistance / userMpg) * cePerGallonFuel);
-          ce[ce.length - 1] = currentCE.toFixed(2);
+          const oldCE = Number(ce[date.indexOf(tripDate)]);
+          ce[date.indexOf(tripDate)] = (oldCE + trip.ceSaved).toFixed(2);
         }
       }
-
     });
 
     return { date, ce };
   }
 
   /**
+   * Gets the CE produced by the user per day.
+   * @param username of the user
+   * @returns {{date: *[], ceProduced: *[]}}
+   */
+  getCEProducedPerDay(username) {
+    const userTrips = this._collection.find({ owner: username }, { sort: { date: -1 } }).fetch();
+
+    const date = [];
+    const ceProduced = [];
+
+    userTrips.forEach((trip) => {
+      const tripDate = trip.date.toISOString().split('T')[0];
+      if (trip.ceProduced !== 0) {
+        if (!date.includes(tripDate)) {
+          date.push(tripDate);
+          ceProduced.push(trip.ceProduced.toFixed(2));
+        } else {
+          const oldCE = Number(ceProduced[date.indexOf(tripDate)]);
+          ceProduced[date.indexOf(tripDate)] = (oldCE + trip.ceProduced).toFixed(2);
+        }
+      }
+    });
+
+    return { date, ceProduced };
+  }
+
+  /**
    * Gets the fuel that the user saved per day as well as the dollar saved.
    * @param username the username of the user.
-   * @param userMPG the MPG of the user.
    * @returns {{date: [], fuel: [], price: []}}
    * An object that contains an array of dates and an array of fuel and dollar saved for the respective date.
    */
-  getFuelSavedPerDay(username, userMPG) {
-    const userTrips = this._collection.find({ owner: username }).fetch();
+  getFuelSavedPerDay(username) {
+    const userTrips = this._collection.find({ owner: username }, { sort: { date: -1 } }).fetch();
 
     const date = [];
     const fuel = [];
     const price = [];
 
-    let prevDate = new Date();
+    userTrips.forEach(trip => {
+      const tripDate = trip.date.toISOString().split('T')[0];
+      const fuelSaved = Number(trip.milesTraveled / trip.mpg);
+      const priceSaved = Number(fuelSaved * fuelCost);
 
-    _.forEach(userTrips, function (objects) {
-      const tripDate = objects.date;
-      const tripDistance = objects.milesTraveled;
-      const tripMode = objects.mode;
-
-      if (tripMode !== 'Gas Car') {
-        if (prevDate.getTime() !== tripDate.getTime()) {
+      if (trip.ceSaved !== 0) {
+        if (!date.includes(tripDate)) {
           date.push(tripDate);
-          fuel.push((tripDistance / userMPG).toFixed(2));
-          price.push(((tripDistance / userMPG) * fuelCost).toFixed(2));
-          prevDate = tripDate;
+          fuel[date.indexOf(tripDate)] = fuelSaved.toFixed(2);
+          price[date.indexOf(tripDate)] = priceSaved.toFixed(2);
         } else {
-          let currentFuel = parseFloat(fuel[fuel.length - 1]);
-          currentFuel += (tripDistance / userMPG);
-          fuel[fuel.length - 1] = currentFuel.toFixed(2);
+          const oldFuel = Number(fuel[date.indexOf(tripDate)]);
+          fuel[date.indexOf(tripDate)] = (oldFuel + fuelSaved).toFixed(2);
 
-          let currentPrice = parseFloat(price[price.length - 1]);
-          currentPrice += ((tripDistance / userMPG) * fuelCost);
-          price[price.length - 1] = currentPrice.toFixed(2);
+          const oldPrice = Number(price[date.indexOf(tripDate)]);
+          price[date.indexOf(tripDate)] = (oldPrice + priceSaved).toFixed(2);
         }
       }
     });
