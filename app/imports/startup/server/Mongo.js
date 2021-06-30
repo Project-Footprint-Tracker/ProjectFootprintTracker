@@ -1,4 +1,3 @@
-import { Meteor } from 'meteor/meteor';
 import { Trips } from '../../api/trip/TripCollection';
 import { SavedCommutes } from '../../api/saved-commute/SavedCommute';
 import { Users } from '../../api/user/UserCollection';
@@ -17,15 +16,8 @@ if (SavedCommutes.count() === 0) {
   console.log(`  SavedCommuteCollection: ${SavedCommutes.count()} commutes`);
 }
 
-function addUserData(data) {
-  console.log(`  Adding: user ${data.firstName} ${data.lastName} (${data.email})`);
-  Users.define(data);
-}
-
 /** Initialize the users collection if empty. */
-if (Users.find().count() === 0) {
-  if (Meteor.settings.defaultUsers) {
-    console.log('Creating default users.');
-    Meteor.settings.defaultUsers.map(data => addUserData(data));
-  }
+if (Users.count() === 0) {
+  getAssetsData('sampleUsers.json').map(user => Users.define(user));
+  console.log(`  UserCollection: ${Users.count()} users`);
 }

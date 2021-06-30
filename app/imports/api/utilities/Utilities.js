@@ -510,8 +510,13 @@ export const getStateData = () => {
 export const getUserMpg = (owner) => {
   const userVehicles = AllVehicles.find({ Owner: owner }).fetch();
 
-  if (userVehicles) {
-    return 1;
+  if (userVehicles.length) {
+    let avgMpg = 0;
+    _.forEach(userVehicles, function (vehicles) {
+      avgMpg += vehicles.Mpg;
+    });
+
+    return avgMpg / userVehicles.length;
   }
 
   return averageAutoMPG;
