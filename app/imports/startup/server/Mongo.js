@@ -1,9 +1,31 @@
 import { Meteor } from 'meteor/meteor';
+import { Accounts } from 'meteor/accounts-base';
+import { Roles } from 'meteor/alanning:roles';
 import { Stuffs } from '../../api/stuff/Stuff.js';
 import { Trips } from '../../api/trip/TripCollection';
 import { SavedCommutes } from '../../api/saved-commute/SavedCommute';
+import { Groups } from '../../api/group/GroupCollection';
+import { Users } from '../../api/user/UserCollection';
+import { ROLE } from '../../api/role/Role';
+import { GroupMembers } from '../../api/group/GroupMemberCollection';
 
 /* eslint-disable no-console */
+
+function createUser(email, password, role) {
+  console.log(`  Creating user ${email} with role ${role}.`);
+  const userID = Accounts.createUser({
+    username: email,
+    email: email,
+    password: password,
+  });
+  if (role === ROLE.ADMIN) {
+    Roles.createRole(role, { unlessExists: true });
+    Roles.addUsersToRoles(userID, ROLE.ADMIN);
+  } else {
+    Roles.createRole(ROLE.USER, { unlessExists: true });
+    Roles.addUsersToRoles(userID, ROLE.USER);
+  }
+}
 
 const getAssetsData = (filename) => JSON.parse(Assets.getText(filename));
 
@@ -17,6 +39,16 @@ if (SavedCommutes.count() === 0) {
   console.log(`  SavedCommuteCollection: ${SavedCommutes.count()} commutes`);
 }
 
+if (Groups.count() === 0) {
+  const groupInfo = getAssetsData('sampleGroups.json');
+  groupInfo.users.forEach(user => {
+    Users.define(user);
+    createUser(user.email, 'changeme', ROLE.USER);
+  });
+  groupInfo.groups.forEach(group => Groups.define(group));
+  groupInfo.groupMembers.forEach(member => GroupMembers.define(member));
+  groupInfo.trips.forEach(trip => Trips.define(trip));
+}
 // Initialize the database with a default data document.
 function addData(data) {
   // console.log(`  Adding: ${data.name} (${data.owner})`);

@@ -1,0 +1,258 @@
+{
+  "users": [
+    {
+      "email": "cam@foo.com",
+      "firstName": "Cam",
+      "lastName": "Moore",
+      "zipCode": "96734",
+      "goal": "Reduce my carbon footprint"
+    },
+    {
+      "email": "abi@foo.com",
+      "firstName": "Abigail",
+      "lastName": "Kealoha",
+      "zipCode": "96822",
+      "goal": "Save money on transportation"
+    },
+    {
+      "email": "betty@foo.com",
+      "firstName": "Betty",
+      "lastName": "Keanu",
+      "zipCode": "96821",
+      "goal": "Slow global warming"
+    },
+    {
+      "email": "charley@foo.com",
+      "firstName": "Charley",
+      "lastName": "Sherry",
+      "zipCode": "96821",
+      "goal": "Be more civic minded"
+    },
+    {
+      "email": "dora@foo.com",
+      "firstName": "Dora",
+      "lastName": "Velasquez",
+      "zipCode": "96738",
+      "goal": "Save the environment"
+    }
+  ],
+  "groups": [
+    {
+      "name": "HEI",
+      "description": "Accelerating a Sustainable Future for Hawaii, Enhancing the Lives of Our Communities and Creating Value for Our Shareholders. At HEI, our family of Hawaii-based companies provides the energy and financial infrastructure that empowers much of the economic and community activity of our state."
+    },
+    {
+      "name": "Hawaiian Airlines",
+      "description": "Hawaiian Airlines, Hawaii's largest and longest-serving airline. Our 7,000+ employees are honored to serve our guests and community with a passion for air travel, a commitment to world-class service and the unique desire to introduce Hawaiian hospitality to the rest of the world."
+    },
+    {
+      "name": "University of Hawaii, Manoa",
+      "description": "UH Manoa, is a major teaching and research university, providing affordable, quality higher education to the people of Hawaiʻi and beyond."
+    }
+  ],
+  "groupMembers": [
+    {
+      "group": "University of Hawaii, Manoa",
+      "member": "cam@foo.com"
+    },
+    {
+      "group": "Hawaiian Airlines",
+      "member": "abi@foo.com"
+    },
+    {
+      "group": "HEI",
+      "member": "betty@foo.com"
+    },
+    {
+      "group": "University of Hawaii, Manoa",
+      "member": "charley@foo.com"
+    },
+    {
+      "group": "Hawaiian Airlines",
+      "member": "dora@foo.com"
+    }
+  ],
+  "trips": [
+    {
+      "date": "2021-06-29",
+      "milesTraveled": "26",
+      "mode": "Gas Vehicle",
+      "mpg": 29,
+      "owner": "cam@foo.com"
+    },
+    {
+      "date": "2021-06-28",
+      "milesTraveled": "26",
+      "mode": "Public Transportation",
+      "mpg": 29,
+      "owner": "cam@foo.com"
+    },
+    {
+      "date": "2021-06-27",
+      "milesTraveled": "26",
+      "mode": "Public Transportation",
+      "mpg": 29,
+      "owner": "cam@foo.com"
+    },
+    {
+      "date": "2021-06-26",
+      "milesTraveled": "32",
+      "mode": "Carpool",
+      "mpg": 29,
+      "passengers": 2,
+      "owner": "cam@foo.com"
+    },
+    {
+      "date": "2021-06-24",
+      "milesTraveled": "32",
+      "mode": "Carpool",
+      "mpg": 29,
+      "passengers": 2,
+      "owner": "cam@foo.com"
+    },
+    {
+      "date": "2021-06-29",
+      "milesTraveled": "34",
+      "mode": "Gas Vehicle",
+      "mpg": 22,
+      "owner": "abi@foo.com"
+    },
+    {
+      "date": "2021-06-28",
+      "milesTraveled": "26",
+      "mode": "Gas Vehicle",
+      "mpg": 22,
+      "owner": "abi@foo.com"
+    },
+    {
+      "date": "2021-06-27",
+      "milesTraveled": "26",
+      "mode": "Gas Vehicle",
+      "mpg": 22,
+      "owner": "abi@foo.com"
+    },
+    {
+      "date": "2021-06-26",
+      "milesTraveled": "32",
+      "mode": "Gas Vehicle",
+      "mpg": 22,
+      "owner": "abi@foo.com"
+    },
+    {
+      "date": "2021-06-24",
+      "milesTraveled": "32",
+      "mode": "Gas Vehicle",
+      "mpg": 22,
+      "passengers": 2,
+      "owner": "abi@foo.com"
+    },
+    {
+      "date": "2021-06-29",
+      "milesTraveled": "34",
+      "mode": "Public Transportation",
+      "mpg": 22,
+      "owner": "betty@foo.com"
+    },
+    {
+      "date": "2021-06-28",
+      "milesTraveled": "26",
+      "mode": "Public Transportation",
+      "mpg": 22,
+      "owner": "betty@foo.com"
+    },
+    {
+      "date": "2021-06-27",
+      "milesTraveled": "26",
+      "mode": "Public Transportation",
+      "mpg": 22,
+      "owner": "betty@foo.com"
+    },
+    {
+      "date": "2021-06-26",
+      "milesTraveled": "32",
+      "mode": "Public Transportation",
+      "mpg": 22,
+      "owner": "betty@foo.com"
+    },
+    {
+      "date": "2021-06-24",
+      "milesTraveled": "32",
+      "mode": "Public Transportation",
+      "mpg": 22,
+      "passengers": 2,
+      "owner": "betty@foo.com"
+    },
+    {
+      "date": "2021-06-29",
+      "milesTraveled": "14",
+      "mode": "EV/Hybrid",
+      "mpg": 32,
+      "owner": "charley@foo.com"
+    },
+    {
+      "date": "2021-06-28",
+      "milesTraveled": "14",
+      "mode": "EV/Hybrid",
+      "mpg": 32,
+      "owner": "charley@foo.com"
+    },
+    {
+      "date": "2021-06-27",
+      "milesTraveled": "14",
+      "mode": "EV/Hybrid",
+      "mpg": 32,
+      "owner": "charley@foo.com"
+    },
+    {
+      "date": "2021-06-26",
+      "milesTraveled": "35",
+      "mode": "EV/Hybrid",
+      "mpg": 32,
+      "owner": "charley@foo.com"
+    },
+    {
+      "date": "2021-06-24",
+      "milesTraveled": "32",
+      "mode": "EV/Hybrid",
+      "mpg": 32,
+      "passengers": 2,
+      "owner": "charley@foo.com"
+    },
+    {
+      "date": "2021-06-29",
+      "milesTraveled": "14",
+      "mode": "Gas Vehicle",
+      "mpg": 32,
+      "owner": "dora@foo.com"
+    },
+    {
+      "date": "2021-06-28",
+      "milesTraveled": "14",
+      "mode": "Telework",
+      "mpg": 32,
+      "owner": "dora@foo.com"
+    },
+    {
+      "date": "2021-06-27",
+      "milesTraveled": "14",
+      "mode": "Gas Vehicle",
+      "mpg": 32,
+      "owner": "dora@foo.com"
+    },
+    {
+      "date": "2021-06-26",
+      "milesTraveled": "35",
+      "mode": "Gas Vehicle",
+      "mpg": 32,
+      "owner": "dora@foo.com"
+    },
+    {
+      "date": "2021-06-24",
+      "milesTraveled": "32",
+      "mode": "Telework",
+      "mpg": 32,
+      "passengers": 2,
+      "owner": "dora@foo.com"
+    }
+  ]
+}

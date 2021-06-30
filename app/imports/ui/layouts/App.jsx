@@ -18,6 +18,7 @@ import Signout from '../pages/Signout';
 import QuickAccess from '../pages/e-impact/QuickAccess';
 import Dashboard from '../pages/Dashboard';
 import TripHistory from '../pages/TripHistory';
+import GroupCompare from '../pages/GroupCompare';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
 class App extends React.Component {
@@ -34,6 +35,7 @@ class App extends React.Component {
             <Route path="/signout" component={Signout}/>
             <ProtectedRoute path="/Dashboard/:_id" component={Dashboard} />
             <ProtectedRoute path="/trips" component={TripHistory}/>
+            <ProtectedRoute path="/group-compare" component={GroupCompare} />
             <ProtectedRoute path="/list" component={ListStuff}/>
             <ProtectedRoute path="/add" component={AddStuff}/>
             <ProtectedRoute path="/edit/:_id" component={EditStuff}/>

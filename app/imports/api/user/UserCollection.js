@@ -23,6 +23,11 @@ class UserCollection extends BaseCollection {
   }
 
   define({ email, firstName, lastName, zipCode, goal }) {
+    // if the user is already defined then don't create a duplicate
+    const doc = this.findOne({ email });
+    if (doc) {
+      return doc._id;
+    }
     const docID = this._collection.insert({
       email,
       firstName,
