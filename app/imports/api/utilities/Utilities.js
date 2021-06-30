@@ -2,7 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import { _ } from 'lodash';
 import moment from 'moment';
 import { Trips } from '../trip/TripCollection';
-import { cePerGallonFuel, tripModes } from './constants';
+import { AllVehicles } from '../vehicle/AllVehicleCollection';
+import { cePerGallonFuel, tripModes, averageAutoMPG } from './constants';
 
 export const getCountyData = (county) => {
   const nonCarArr = Trips.find({ county: county, mode: { $not: tripModes.GAS_CAR } }).fetch().map(function (element) {
@@ -504,4 +505,19 @@ export const getStateData = () => {
     vmtReduced, vmtProduced, vmtData, fuelData, ceData, vmtReducedCounties, vmtProducedCounties, fuelSavedCounties,
     fuelUsedCounties, ceSavedCounties, ceProducedCounties, dataReduced, dataProduced,
   };
+};
+
+export const getUserMpg = (owner) => {
+  const userVehicles = AllVehicles.find({ Owner: owner }).fetch();
+
+  if (userVehicles.length) {
+    let avgMpg = 0;
+    _.forEach(userVehicles, function (vehicles) {
+      avgMpg += vehicles.Mpg;
+    });
+
+    return avgMpg / userVehicles.length;
+  }
+
+  return averageAutoMPG;
 };
