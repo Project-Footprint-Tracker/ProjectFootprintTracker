@@ -105,9 +105,12 @@ export default withTracker(({ match }) => {
   const milesAvg = Trips.getMilesAvg(username);
   const fuelAvg = Trips.getFuelAvg(username);
   const ceAvg = Trips.getCEAvg(username);
+  const tripReady = tripSubscribe.ready();
+  const userReady = userSubscribe.ready();
+  console.log(tripReady, userReady, username, userProfile);
   return {
-    tripReady: tripSubscribe.ready(),
-    userReady: userSubscribe.ready(),
+    tripReady,
+    userReady,
     vehicleMilesTraveled,
     milesTotal,
     milesSavedPerDay: milesPerDay.milesSaved,

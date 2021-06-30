@@ -1,7 +1,5 @@
-import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import { Roles } from 'meteor/alanning:roles';
-import { Stuffs } from '../../api/stuff/Stuff.js';
 import { Trips } from '../../api/trip/TripCollection';
 import { SavedCommutes } from '../../api/saved-commute/SavedCommute';
 import { Groups } from '../../api/group/GroupCollection';
@@ -29,6 +27,14 @@ function createUser(email, password, role) {
 
 const getAssetsData = (filename) => JSON.parse(Assets.getText(filename));
 
+/* Initialize the users collection if empty. */
+if (Users.count() === 0) {
+  getAssetsData('sampleUsers.json').forEach(user => {
+    Users.define(user);
+  });
+  console.log(`  UserCollection: ${Users.count()} users`);
+}
+
 if (Trips.count() === 0) {
   getAssetsData('sampleTrips.json').map(trip => Trips.define(trip));
   console.log(`  TripCollection: ${Trips.count()} trips`);
@@ -48,13 +54,4 @@ if (Groups.count() === 0) {
   groupInfo.groups.forEach(group => Groups.define(group));
   groupInfo.groupMembers.forEach(member => GroupMembers.define(member));
   groupInfo.trips.forEach(trip => Trips.define(trip));
-}
-
-/** Initialize the users collection if empty. */
-if (Users.count() === 0) {
-  getAssetsData('sampleUsers.json').forEach(user => {
-    Users.define(user);
-    createUser(user.email, 'changeme');
-  });
-  console.log(`  UserCollection: ${Users.count()} users`);
 }
