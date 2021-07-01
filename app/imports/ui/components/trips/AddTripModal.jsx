@@ -176,7 +176,7 @@ const AddTripModal = (props) => {
       open={modalOpen}
       onClose={handleModalClose}
       onOpen={handleModalOpen}
-      trigger={<Button color='black'>Add Trip</Button>}
+      trigger={<Button size='tiny' color='black'>Add Trip</Button>}
       style = {{ fontSize: '13px' }}
     >
       <Modal.Header>Add Trip</Modal.Header>
