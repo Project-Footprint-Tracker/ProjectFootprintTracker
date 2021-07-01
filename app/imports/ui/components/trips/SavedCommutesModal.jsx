@@ -29,7 +29,7 @@ const SavedCommutesModal = (props) => {
       open={modalOpen}
       onClose={handleModalClose}
       onOpen={handleModalOpen}
-      trigger={<Button color='black'>Saved Commutes</Button>}
+      trigger={<Button size='tiny' color='black'>Saved Commutes</Button>}
     >
       <Modal.Header content='Saved Commutes'/>
       <Modal.Content>

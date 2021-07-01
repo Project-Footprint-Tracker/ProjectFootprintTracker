@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Meteor } from 'meteor/meteor';
-import { Container, Form, Grid, Header, Loader, Table } from 'semantic-ui-react';
+import { Container, Form, Grid, Header, Loader, Pagination, Table } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Trips } from '../../api/trip/TripCollection';
@@ -14,6 +14,9 @@ import CEDataChart from '../components/charts/CEDataChart';
 
 const TripHistory = (props) => {
   const [metric, setMetric] = useState(false);
+  const [page, setPage] = useState(1);
+  const maxRow = 20;
+  const maxPage = Math.ceil(props.trips.length / maxRow);
 
   const handleChangeUnit = (prevState) => setMetric(!prevState);
 
@@ -33,8 +36,16 @@ const TripHistory = (props) => {
     headerUnits.ce = imperialUnits.ce;
   }
 
+  const handleTripRows = () => {
+    const start = (page * maxRow) - maxRow;
+    const end = (page === maxPage) ? props.numTrips : (page * maxRow);
+    return props.trips.slice(start, end);
+  };
+
+  const handlePaginationChange = (e, { activePage }) => setPage(activePage);
+
   return (props.ready ? (
-    <Container style={{ width: 900 }}>
+    <Container style={{ width: 900, paddingBottom: 50 }}>
       <Grid id='overview' container centered>
         <Grid.Row>
           <Header as='h1' textAlign='center'>
@@ -50,20 +61,15 @@ const TripHistory = (props) => {
             </Header.Subheader>
           </Header>
         </Grid.Row>
+
         <Grid.Row columns={2}>
-          <Grid.Column
-            width={7}
-            floated='left'
-          >
+          <Grid.Column width={7} floated='left'>
             <ModesChart
               modesData={props.modesData}
               chartStyle={chartStyle}
             />
           </Grid.Column>
-          <Grid.Column
-            width={9}
-            floated='right'
-          >
+          <Grid.Column width={9} floated='right'>
             <CEDataChart
               ceSaved={props.dailyCESaved}
               ceProduced={props.dailyCEProduced}
@@ -72,6 +78,7 @@ const TripHistory = (props) => {
             />
           </Grid.Column>
         </Grid.Row>
+
         <Grid.Row>
           <Grid.Column>
             <AddTripModal
@@ -86,8 +93,9 @@ const TripHistory = (props) => {
             />
           </Grid.Column>
         </Grid.Row>
+
         <Grid.Row>
-          <Grid.Column>
+          <Grid.Column textAlign='center'>
             <Table fixed striped compact textAlign='center'>
               <Table.Header>
                 <Table.Row>
@@ -104,7 +112,7 @@ const TripHistory = (props) => {
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {props.trips.map((trip) => <TripHistoryRow
+                {handleTripRows().map((trip) => <TripHistoryRow
                   key={trip._id}
                   trip={trip}
                   savedCommutes={props.savedCommutes}
@@ -112,6 +120,11 @@ const TripHistory = (props) => {
                 />)}
               </Table.Body>
             </Table>
+            <Pagination
+              activePage={page}
+              onPageChange={handlePaginationChange}
+              totalPages={maxPage}
+            />
           </Grid.Column>
         </Grid.Row>
       </Grid>
@@ -122,6 +135,7 @@ const TripHistory = (props) => {
 
 TripHistory.propTypes = {
   trips: PropTypes.array.isRequired,
+  numTrips: PropTypes.number.isRequired,
   modesData: PropTypes.object.isRequired,
   dailyCESaved: PropTypes.object.isRequired,
   dailyCEProduced: PropTypes.object.isRequired,
@@ -136,6 +150,7 @@ export default withTracker(() => {
   const owner = Meteor.user()?.username;
   const ready = Trips.subscribeTrip().ready() && SavedCommutes.subscribeSavedCommute().ready() && owner !== undefined;
   const trips = Trips.find({ owner }, { sort: { date: -1 } }).fetch();
+  const numTrips = Trips.count();
   const modesData = Trips.getModesOfTransport(owner);
   const dailyCESaved = Trips.getCEReducedPerDay(owner);
   const dailyCEProduced = Trips.getCEProducedPerDay(owner);
@@ -143,6 +158,7 @@ export default withTracker(() => {
   const savedCommutes = SavedCommutes.find({}, { sort: { name: 'asc' } }).fetch();
   return {
     trips,
+    numTrips,
     modesData,
     dailyCESaved,
     dailyCEProduced,
