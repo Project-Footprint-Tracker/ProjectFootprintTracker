@@ -10,6 +10,7 @@ import SavedCommutesModal from '../components/trips/SavedCommutesModal';
 import { SavedCommutes } from '../../api/saved-commute/SavedCommute';
 import AddTripModal from '../components/trips/AddTripModal';
 import ModesChart from '../components/charts/ModesChart';
+import CEDataChart from '../components/charts/CEDataChart';
 
 const TripHistory = (props) => {
   const [metric, setMetric] = useState(false);
@@ -54,15 +55,22 @@ const TripHistory = (props) => {
             width={7}
             floated='left'
           >
-            <ModesChart modesData={props.modesData} chartStyle={chartStyle}/>
+            <ModesChart
+              modesData={props.modesData}
+              chartStyle={chartStyle}
+            />
           </Grid.Column>
           <Grid.Column
             width={9}
             floated='right'
-            style={{
-              border: '0.1rem solid gray',
-            }}
-          />
+          >
+            <CEDataChart
+              ceSaved={props.dailyCESaved}
+              ceProduced={props.dailyCEProduced}
+              fuelSaved={props.dailyFuelSaved}
+              chartStyle={chartStyle}
+            />
+          </Grid.Column>
         </Grid.Row>
         <Grid.Row>
           <Grid.Column>

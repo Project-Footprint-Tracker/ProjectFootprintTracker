@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Card } from 'semantic-ui-react';
 import Chart from '../Chart';
 
 const ModesChart = (props) => {
   const chartData = [{
     values: props.modesData.value,
     labels: props.modesData.label,
-    hoverinfo: 'label+value+percent',
+    hoverinfo: 'label+value',
     hole: 0.3,
     type: 'pie',
   }];
@@ -18,12 +19,18 @@ const ModesChart = (props) => {
       xanchor: 'center',
     },
     margin: {
-      t: 80,
-      b: 20,
+      t: 40,
+      b: 0,
     },
+    height: 380,
   };
 
-  return <Chart chartData={chartData} chartLayout={chartLayout} chartStyle={props.chartStyle}/>;
+  return (
+    <Card fluid>
+      <Card.Content textAlign='center' style={props.chartStyle}>
+        <Chart chartData={chartData} chartLayout={chartLayout}/>
+      </Card.Content>
+    </Card>);
 };
 
 ModesChart.propTypes = {
