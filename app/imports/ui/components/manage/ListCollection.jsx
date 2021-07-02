@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import CollectionAccordion from './CollectionAccordion';
 
 const ListCollection = ({ collection, items, descriptionPairs, handleDelete, handleOpenUpdate, itemTitle }) => {
-  const count = collection.count();
+  const count = items.length;
   const collectionName = collection.getCollectionName();
 
   return (

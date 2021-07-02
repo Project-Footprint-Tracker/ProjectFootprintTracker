@@ -20,6 +20,7 @@ import Dashboard from '../pages/Dashboard';
 import TripHistory from '../pages/TripHistory';
 import ManageGroups from '../pages/manage/Groups';
 import { ROLE } from '../../api/role/Role';
+import ManageGroupMembers from '../pages/manage/GroupMembers';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
 class App extends React.Component {
@@ -41,6 +42,7 @@ class App extends React.Component {
             <ProtectedRoute path="/edit/:_id" component={EditStuff}/>
             <AdminProtectedRoute path="/admin" component={ListStuffAdmin}/>
             <AdminProtectedRoute path="/manage/groups" component={ManageGroups} />
+            <AdminProtectedRoute path="/manage/group-members" component={ManageGroupMembers} />
             <Route component={NotFound}/>
           </Switch>
           <Footer/>
