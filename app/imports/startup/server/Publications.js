@@ -10,6 +10,8 @@ import { Users } from '../../api/user/UserCollection';
 // import { UserDailyData } from '../../api/trip/to-delete/UserDailyDataCollection';
 // import { UserSavedDistances } from '../../api/saved-commute/to-delete/UserSavedDistanceCollection';
 import { SavedCommutes } from '../../api/saved-commute/SavedCommute';
+import { Groups } from '../../api/group/GroupCollection';
+import { GroupMembers } from '../../api/group/GroupMemberCollection';
 
 // User-level publication.
 // If logged in, then publish documents owned by this user. Otherwise publish nothing.
@@ -31,6 +33,8 @@ Meteor.publish(Stuffs.adminPublicationName, function () {
 });
 
 const allCollections = [
+  Groups,
+  GroupMembers,
   // AllVehicles,
   // VehicleMakes,
   Users,
