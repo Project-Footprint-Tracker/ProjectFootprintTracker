@@ -2,7 +2,6 @@ import { Meteor } from 'meteor/meteor';
 import SimpleSchema from 'simpl-schema';
 import { check } from 'meteor/check';
 import { _ } from 'meteor/underscore';
-import { Roles } from 'meteor/alanning:roles';
 import swal from 'sweetalert';
 import BaseCollection from '../base/BaseCollection';
 
@@ -23,6 +22,11 @@ class UserCollection extends BaseCollection {
   }
 
   define({ email, firstName, lastName, zipCode, goal }) {
+    // if the user is already defined then don't create a duplicate
+    const doc = this.findOne({ email });
+    if (doc) {
+      return doc._id;
+    }
     const docID = this._collection.insert({
       email,
       firstName,
@@ -92,10 +96,10 @@ class UserCollection extends BaseCollection {
 
       /** This subscription publishes all documents regardless of user, but only if the logged in user is the Admin. */
       Meteor.publish(userPublications.userAdmin, function publish() {
-        if (this.userId && Roles.userIsInRole(this.userId, 'admin')) {
-          return instance._collection.find();
-        }
-        return this.ready();
+        // if (this.userId && Roles.userIsInRole(this.userId, 'admin')) {
+        return instance._collection.find();
+        // }
+        // return this.ready();
       });
     }
   }

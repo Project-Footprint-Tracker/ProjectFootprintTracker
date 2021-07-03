@@ -1,4 +1,6 @@
 [
-  { "email": "admin@foo.com", "firstName": "admin", "lastName": "foo", "zipCode": 96795, "goal": "default goal"},
+  { "email": "admin@foo.com", "firstName": "admin", "lastName": "foo", "zipCode": 96795, "goal": "default goal",
+    "role": "ADMIN"
+  },
   { "email": "john@foo.com", "firstName": "john", "lastName": "baz", "zipCode": 96817, "goal": "default goal"}
 ]

@@ -5,7 +5,7 @@ import { ROLE } from '../../api/role/Role';
 
 /* eslint-disable no-console */
 
-function createUser(email, password, role) {
+export function createUser(email, password, role) {
   console.log(`  Creating user ${email} with role ${role}.`);
   const userID = Accounts.createUser({
     username: email,

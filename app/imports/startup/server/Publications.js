@@ -9,7 +9,7 @@ import { Users } from '../../api/user/UserCollection';
 // import { UserVehicles } from '../../api/vehicle/UserVehicleCollection';
 // import { UserDailyData } from '../../api/trip/to-delete/UserDailyDataCollection';
 // import { UserSavedDistances } from '../../api/saved-commute/to-delete/UserSavedDistanceCollection';
-import { SavedCommutes } from '../../api/saved-commute/SavedCommute';
+import { SavedCommutes } from '../../api/saved-commute/SavedCommuteCollection';
 import { Groups } from '../../api/group/GroupCollection';
 import { GroupMembers } from '../../api/group/GroupMemberCollection';
 
@@ -37,6 +37,8 @@ const allCollections = [
   GroupMembers,
   // AllVehicles,
   // VehicleMakes,
+  Groups,
+  GroupMembers,
   Users,
   // UserVehicles,
   // UserDailyData,

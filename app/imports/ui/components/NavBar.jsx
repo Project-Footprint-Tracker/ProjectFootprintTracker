@@ -7,7 +7,7 @@ import { Menu, Dropdown, Header } from 'semantic-ui-react';
 import { Roles } from 'meteor/alanning:roles';
 import { ROLE } from '../../api/role/Role';
 
-/** The NavBar appears at the top of every page. Rendered by the App Layout component. */
+/* The NavBar appears at the top of every page. Rendered by the App Layout component. */
 class NavBar extends React.Component {
   render() {
     const menuStyle = { marginBottom: '10px' };
@@ -30,6 +30,7 @@ class NavBar extends React.Component {
             <Menu.Item as={NavLink} activeClassName='active' exact to={`/Dashboard/${this.props.currentUser}`}
               key='dashboard'>Dashboard</Menu.Item>,
             <Menu.Item as={NavLink} activeClassName="active" exact to="/trips" key='trips'>Trips</Menu.Item>,
+            <Menu.Item as={NavLink} activeClassName="active" exact to="/group-compare" key='group-compare'>Compare</Menu.Item>,
           ]
         ) : ''}
         {Roles.userIsInRole(Meteor.userId(), ROLE.ADMIN) ? (
