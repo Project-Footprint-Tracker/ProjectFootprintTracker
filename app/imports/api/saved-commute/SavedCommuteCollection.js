@@ -1,8 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 import SimpleSchema from 'simpl-schema';
-import swal from 'sweetalert';
 import { _ } from 'meteor/underscore';
 import BaseCollection from '../base/BaseCollection';
+import { tripModes, tripModesArray } from '../utilities/constants';
+import { ROLE } from '../role/Role';
 
 export const savedCommutePublications = {
   savedCommute: 'SavedCommute',
@@ -12,9 +13,18 @@ export const savedCommutePublications = {
 class SavedCommuteCollection extends BaseCollection {
   constructor() {
     super('SavedCommute', new SimpleSchema({
-      name: String,
-      distanceMiles: Number,
-      mode: String,
+      name: {
+        type: String,
+      },
+      distanceMiles: {
+        type: Number,
+        min: 0.1,
+      },
+      mode: {
+        type: String,
+        allowedValues: tripModesArray,
+        defaultValue: tripModes.GAS_CAR,
+      },
       mpg: Number,
       owner: String,
     }));
@@ -40,24 +50,6 @@ class SavedCommuteCollection extends BaseCollection {
     return docID;
   }
 
-  defineWithMessage({ name, distanceMiles, mode, mpg, owner }) {
-    const docID = this._collection.insert({
-      name,
-      distanceMiles,
-      mode,
-      mpg,
-      owner,
-    },
-    (error) => {
-      if (error) {
-        swal('Error', error.message, 'error');
-      } else {
-        swal('Success', 'SavedTrip added successfully', 'success');
-      }
-    });
-    return docID;
-  }
-
   update(docID, { name, distanceMiles, mode, mpg }) {
     const updateData = {};
     if (name) {
@@ -69,7 +61,7 @@ class SavedCommuteCollection extends BaseCollection {
     if (mode) {
       updateData.mode = mode;
     }
-    if (_.isNumber(mode)) {
+    if (_.isNumber(mpg)) {
       updateData.mpg = mpg;
     }
     this._collection.update(docID, { $set: updateData });
@@ -86,6 +78,20 @@ class SavedCommuteCollection extends BaseCollection {
     return true;
   }
 
+  /**
+   * Asserts that userId is logged in as an Admin or User.
+   * This is used in the define, update, and removeIt Meteor methods associated with each class.
+   * @param userId The userId of the logged in user. Can be null or undefined
+   * @throws { Meteor.Error } If there is no logged in user, or the user is not an Admin or Advisor.
+   */
+  assertValidRoleForMethod(userId) {
+    this.assertRole(userId, [ROLE.ADMIN, ROLE.USER]);
+  }
+
+  /**
+   * Default publication method for entities.
+   * It publishes the entire collection for admin and just the trip associated to an owner.
+   */
   publish() {
     if (Meteor.isServer) {
       const instance = this;

@@ -7,7 +7,7 @@ import { AutoForm, BoolField, DateField, ErrorsField, SubmitField } from 'unifor
 import swal from 'sweetalert';
 import { Trips } from '../../../api/trip/TripCollection';
 import { getDateToday, getMilesTraveled } from '../../../api/utilities/CEData';
-import { averageAutoMPG, tripModes, tripModesArray } from '../../../api/utilities/constants';
+import { averageAutoMPG, imperialUnits, tripModes, tripModesArray } from '../../../api/utilities/constants';
 import { updateMethod } from '../../../api/base/BaseCollection.methods';
 
 const EditTripModal = (props) => {
@@ -15,14 +15,14 @@ const EditTripModal = (props) => {
   const [mode, setMode] = useState(props.trip.mode);
   const [passengers, setPassengers] = useState(props.trip.passengers);
   const [distance, setDistance] = useState(props.trip.milesTraveled);
-  const [unit, setUnit] = useState('mi');
+  const [unit, setUnit] = useState(imperialUnits.distance);
 
   const handleModalOpen = () => setModalOpen(true);
   const handleModalClose = () => {
     setDistance(props.trip.milesTraveled);
     setMode(props.trip.mode);
     setPassengers(props.trip.passengers);
-    setUnit('mi');
+    setUnit(imperialUnits.distance);
     setModalOpen(false);
   };
 
@@ -103,7 +103,7 @@ const EditTripModal = (props) => {
     const updateData = {};
     updateData.id = props.trip._id;
     updateData.date = data.date;
-    updateData.milesTraveled = (unit === 'mi') ? Number(distance) :
+    updateData.milesTraveled = (unit === imperialUnits.distance) ? Number(distance) :
       getMilesTraveled(distance);
     if (data.roundTrip) {
       updateData.milesTraveled *= 2;

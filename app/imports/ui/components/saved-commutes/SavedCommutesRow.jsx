@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'semantic-ui-react';
 import { getMetricData } from '../../../api/utilities/CEData';
+import EditSavedCommuteModal from './EditSavedCommuteModal';
+import DeleteSavedCommuteModal from './DeleteSavedCommuteModal';
 
 const SavedCommutesRow = (props) => {
   const distanceMiles = props.savedCommute.distanceMiles;
@@ -25,6 +27,10 @@ const SavedCommutesRow = (props) => {
       <Table.Cell>{props.savedCommute.mode}</Table.Cell>
       <Table.Cell>{distance.toFixed(2)}</Table.Cell>
       <Table.Cell>{mpgKML.toFixed(2)}</Table.Cell>
+      <Table.Cell>
+        <EditSavedCommuteModal savedCommute={props.savedCommute}/>
+        <DeleteSavedCommuteModal savedCommute={props.savedCommute} metric={props.metric}/>
+      </Table.Cell>
     </Table.Row>
   );
 };

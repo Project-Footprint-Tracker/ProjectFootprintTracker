@@ -9,7 +9,7 @@ import { Users } from '../../api/user/UserCollection';
 // import { UserVehicles } from '../../api/vehicle/UserVehicleCollection';
 // import { UserDailyData } from '../../api/trip/to-delete/UserDailyDataCollection';
 // import { UserSavedDistances } from '../../api/saved-commute/to-delete/UserSavedDistanceCollection';
-import { SavedCommutes } from '../../api/saved-commute/SavedCommute';
+import { SavedCommutes } from '../../api/saved-commute/SavedCommuteCollection';
 
 // User-level publication.
 // If logged in, then publish documents owned by this user. Otherwise publish nothing.
