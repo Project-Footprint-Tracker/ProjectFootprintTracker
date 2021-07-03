@@ -17,6 +17,7 @@ function Dashboard(
     modesOfTransport,
     milesPerMode,
     userProfile,
+    ceSavedTotal,
     ceProducedTotal,
     ceReducedPerDay,
     fuelSavedPerDay,
@@ -42,6 +43,7 @@ function Dashboard(
         milesPerMode={milesPerMode}
         userProfile={userProfile}
         userReady={userReady}
+        ceSavedTotal={ceSavedTotal}
         ceProducedTotal={ceProducedTotal}
         ceReducedPerDay={ceReducedPerDay}
         fuelSavedPerDay={fuelSavedPerDay}
@@ -68,6 +70,7 @@ Dashboard.propTypes = {
   modesOfTransport: PropTypes.object,
   milesPerMode: PropTypes.array,
   userProfile: PropTypes.any,
+  ceSavedTotal: PropTypes.number,
   ceProducedTotal: PropTypes.string,
   ceReducedPerDay: PropTypes.object,
   evCeProducedAvg: PropTypes.object,
@@ -97,6 +100,7 @@ export default withTracker(({ match }) => {
 
   const userProfile = Users.getUserProfile(username);
 
+  const ceSavedTotal = Trips.getCESavedTotal(username);
   const ceProducedTotal = Trips.getCEProducedTotal(username);
   const ceReducedPerDay = Trips.getCEReducedPerDay(username);
 
@@ -118,6 +122,7 @@ export default withTracker(({ match }) => {
     modesOfTransport,
     milesPerMode,
     userProfile,
+    ceSavedTotal,
     ceProducedTotal,
     ceReducedPerDay,
     fuelSavedPerDay,
