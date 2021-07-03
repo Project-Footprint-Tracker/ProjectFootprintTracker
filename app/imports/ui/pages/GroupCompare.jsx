@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Meteor } from 'meteor/meteor';
-import { Container, Form, Grid, Header, Loader, Table } from 'semantic-ui-react';
+import { Header, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Trips } from '../../api/trip/TripCollection';
@@ -18,7 +18,7 @@ import {
 import { Users } from '../../api/user/UserCollection';
 
 const GroupCompare = ({ groups, groupMembers, trips, ready, username, myGroups }) => {
-  const [metric, setMetric] = useState(false);
+  // const [metric, setMetric] = useState(false);
 
   const groupData = {};
   // eslint-disable-next-line no-return-assign
