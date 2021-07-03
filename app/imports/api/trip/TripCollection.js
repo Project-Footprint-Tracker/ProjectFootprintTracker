@@ -840,6 +840,11 @@ class TripCollection extends BaseCollection {
       },
     };
   }
+
+  getCESavedTotal(username) {
+    const userTrips = this._collection.find({ owner: username }).fetch();
+    return userTrips.map(trip => trip.ceSaved).reduce((a, b) => a + b, 0);
+  }
 }
 
 /**

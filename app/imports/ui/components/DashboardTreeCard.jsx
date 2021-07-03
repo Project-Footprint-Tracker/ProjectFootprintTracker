@@ -16,7 +16,7 @@ function DashboardTreeCard(
       cardHeader='Tree per CE'
       topContent={
         <Grid>
-          <Grid.Column className='tree-icon' width={6}>
+          <Grid.Column className='tree-icon' width={6} verticalAlign='middle'>
             <Image src='/images/TreeIconGood.png'/>
           </Grid.Column>
           <Grid.Column width={10} textAlign='center' style={{ paddingLeft: '0.4rem' }}>
@@ -32,7 +32,7 @@ function DashboardTreeCard(
       popupTop='One tree absorbs 48 pounds of CE each year. Based on the amount of CE you reduced, this number represents your contribution in reducing CE in terms of trees.'
       bottomContent={
         <Grid>
-          <Grid.Column className='tree-icon' width={6}>
+          <Grid.Column className='tree-icon' width={6} verticalAlign='middle'>
             <Image src='/images/TreeIconBad.png'/>
           </Grid.Column>
           <Grid.Column width={10} textAlign='center' style={{ paddingLeft: '0.4rem' }}>

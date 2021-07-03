@@ -12,7 +12,7 @@ export const getMetricData = (milesTraveled, mpg, ceSavedLbs, ceProducedLbs) => 
   return metricData;
 };
 
-export const getMilesTraveled = (distanceTraveled) => Number(distanceTraveled * kmToMiFactor);
+export const getMilesTraveled = (distanceTraveled) => Number((distanceTraveled * kmToMiFactor).toFixed(2));
 
 /**
  * Returns today's date, used in add/edit daily data forms

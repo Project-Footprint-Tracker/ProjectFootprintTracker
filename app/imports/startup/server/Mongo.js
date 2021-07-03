@@ -1,5 +1,5 @@
 import { Trips } from '../../api/trip/TripCollection';
-import { SavedCommutes } from '../../api/saved-commute/SavedCommute';
+import { SavedCommutes } from '../../api/saved-commute/SavedCommuteCollection';
 import { Users } from '../../api/user/UserCollection';
 
 /* eslint-disable no-console */
