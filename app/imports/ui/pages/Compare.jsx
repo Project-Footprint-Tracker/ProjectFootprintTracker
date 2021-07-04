@@ -5,31 +5,11 @@ import PropTypes from 'prop-types';
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
 import { Grid, Header, Image, Card, Divider, Loader } from 'semantic-ui-react';
-import { Users } from '../../../api/user/UserCollection';
-import SideBar from '../../components/to-delete/e-impact/SideBar';
-
-/* global document */
+import { Users } from '../../api/user/UserCollection';
+import { AllVehicles } from '../../api/vehicle/AllVehicleCollection';
 
 function SliderHandler() {
-  const [evData, setEVData] = useState([]);
-
-  useEffect(() => {
-    Meteor.call('getEVData', function (error, result) {
-      if (!error) {
-        setEVData(result);
-      }
-    });
-  }, [setEVData]);
-
-  const [totalMiles, setTotalMiles] = useState(0);
-
-  useEffect(() => {
-    Meteor.call('getMilesTotal', function (error, result) {
-      if (!error) {
-        setTotalMiles(result);
-      }
-    });
-  }, [totalMiles]);
+  const evData = JSON.parse(Assets.getText('evdata.json'));
 
   const testMPG = 25;
   const avgGasPrice = 3.52;
@@ -77,32 +57,11 @@ function SliderHandler() {
 }
 
 function Compare(props) {
-  const [evData, setEVData] = useState([]);
-
-  useEffect(() => {
-    Meteor.call('getEVData', function (error, result) {
-      if (!error) {
-        setEVData(result);
-      }
-    });
-  }, [setEVData]);
-
-  if (props.userReady) {
-    if (props.userProfile.theme === 'dark') {
-      document.body.classList.add('dark');
-    } else {
-      document.body.classList.remove('dark');
-    }
-  }
+  const evData = JSON.parse(Assets.getText('evdata.json'));
 
   return (!props.userReady) ? <Loader active>Loading data</Loader> :
     (<div>
       <div id='compare-container'>
-        <SideBar
-          userReady={props.userReady}
-          userProfile={props.userProfile}
-          theme={props.userProfile.theme}
-        />
         <CarouselProvider
           isIntrinsicHeight={true}
           totalSlides={evData.length}
@@ -135,6 +94,8 @@ Compare.propTypes = {
 export default withTracker(({ match }) => {
   const username = match.params._id;
   const userSubscribe = Users.subscribeUser();
+  const vehicleSubscribe = AllVehicles.subscribeAllVehicle();
+
   const userProfile = Users.getUserProfile(username);
   return {
     userReady: userSubscribe.ready(),
