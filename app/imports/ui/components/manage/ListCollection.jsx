@@ -1,12 +1,18 @@
 import React from 'react';
 import { Grid, Header, Segment } from 'semantic-ui-react';
-import _ from 'lodash';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import CollectionAccordion from './CollectionAccordion';
+import { useStickyState } from '../../utilities/StickyState';
+import DataModelPagination from './DataModelPagination';
 
 const ListCollection = ({ collection, items, descriptionPairs, handleDelete, handleOpenUpdate, itemTitle }) => {
   const count = items.length;
   const collectionName = collection.getCollectionName();
+  const [startIndex] = useStickyState(`Pagination.${collectionName}.index`, 0);
+  const [showCount] = useStickyState(`Pagination.${collectionName}.count`, 25);
+  const endIndex = startIndex + showCount;
+  const itemsToShow = _.slice(items, startIndex, endIndex);
 
   return (
     <Segment padded>
@@ -14,7 +20,8 @@ const ListCollection = ({ collection, items, descriptionPairs, handleDelete, han
         {collectionName} ({count})
       </Header>
       <Grid>
-        {items.map(item => (
+        <DataModelPagination collection={collection} />
+        {itemsToShow.map(item => (
           <CollectionAccordion key={item._id} id={item._id} title={itemTitle(item)}
             descriptionPairs={descriptionPairs(item)}
             updateDisabled={false}

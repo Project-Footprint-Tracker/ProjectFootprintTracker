@@ -33,8 +33,6 @@ Meteor.publish(Stuffs.adminPublicationName, function () {
 });
 
 const allCollections = [
-  Groups,
-  GroupMembers,
   // AllVehicles,
   // VehicleMakes,
   Groups,
