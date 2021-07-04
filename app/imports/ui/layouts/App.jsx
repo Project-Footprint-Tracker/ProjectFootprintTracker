@@ -19,6 +19,9 @@ import GroupCompare from '../pages/GroupCompare';
 import ManageGroups from '../pages/manage/Groups';
 import ManageGroupMembers from '../pages/manage/GroupMembers';
 import { ROLE } from '../../api/role/Role';
+import ManageSavedCommutes from '../pages/manage/SavedCommutes';
+import ManageTrips from '../pages/manage/Trips';
+import ManageUsers from '../pages/manage/Users';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
 class App extends React.Component {
@@ -39,6 +42,9 @@ class App extends React.Component {
             <AdminProtectedRoute path="/admin" component={ListStuffAdmin}/>
             <AdminProtectedRoute path="/manage/groups" component={ManageGroups} />
             <AdminProtectedRoute path="/manage/group-members" component={ManageGroupMembers} />
+            <AdminProtectedRoute path="/manage/saved-commutes" component={ManageSavedCommutes} />
+            <AdminProtectedRoute path="/manage/trips" component={ManageTrips} />
+            <AdminProtectedRoute path="/manage/users" component={ManageUsers} />
             <Route component={NotFound}/>
           </Switch>
           <Footer/>
