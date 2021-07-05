@@ -12,8 +12,10 @@ import {
 } from '../../components/manage/utilities';
 import { updateMethod } from '../../../api/base/BaseCollection.methods';
 import { Trips } from '../../../api/trip/TripCollection';
+import TripAddForm from '../../components/manage/TripAddForm';
+import { Users } from '../../../api/user/UserCollection';
 
-const ManageTrips = ({ items, ready }) => {
+const ManageTrips = ({ items, ready, users }) => {
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const [confirmOpenState, setConfirmOpen] = useState(false);
   const [idState, setId] = useState('');
@@ -69,6 +71,7 @@ const ManageTrips = ({ items, ready }) => {
   return (ready ? (
     <Segment>
       <Header dividing>Manage Saved Commutes</Header>
+      {showUpdateForm ? '' : <TripAddForm users={users} />}
       <ListCollection items={items} descriptionPairs={descriptionPairs} handleDelete={handleDelete} handleOpenUpdate={handleOpenUpdate} itemTitle={itemTitle} collection={Trips} />
       <Confirm open={confirmOpenState} onCancel={handleCancel} onConfirm={handleConfirmDelete} header="Delete Trip?" />
 
@@ -81,13 +84,16 @@ const ManageTrips = ({ items, ready }) => {
 ManageTrips.propTypes = {
   items: PropTypes.array.isRequired,
   ready: PropTypes.bool.isRequired,
+  users: PropTypes.array.isRequired,
 };
 
 export default withTracker(() => {
-  const ready = Trips.subscribeTripCommunity().ready();
+  const ready = Trips.subscribeTripCommunity().ready() && Users.subscribeUserAdmin().ready();
   const items = Trips.find({}, { sort: { owner: 1, date: 1 } }).fetch();
+  const users = Users.find({}, { sort: { email: 1 } }).fetch();
   return {
     ready,
     items,
+    users,
   };
 })(ManageTrips);
