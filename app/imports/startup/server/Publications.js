@@ -6,7 +6,7 @@ import { Trips } from '../../api/trip/TripCollection';
 // import { AllVehicles } from '../../api/vehicle/AllVehicleCollection';
 import { Users } from '../../api/user/UserCollection';
 // import { VehicleMakes } from '../../api/vehicle/VehicleMakeCollection';
-// import { UserVehicles } from '../../api/vehicle/UserVehicleCollection';
+import { UserVehicles } from '../../api/vehicle/UserVehicleCollection';
 // import { UserDailyData } from '../../api/trip/to-delete/UserDailyDataCollection';
 // import { UserSavedDistances } from '../../api/saved-commute/to-delete/UserSavedDistanceCollection';
 import { SavedCommutes } from '../../api/saved-commute/SavedCommuteCollection';
@@ -38,11 +38,11 @@ const allCollections = [
   Groups,
   GroupMembers,
   Users,
-  // UserVehicles,
+  SavedCommutes,
   // UserDailyData,
   // UserSavedDistances,
   Trips,
-  SavedCommutes,
+  UserVehicles,
 ];
 
 allCollections.forEach((collection) => collection.publish());

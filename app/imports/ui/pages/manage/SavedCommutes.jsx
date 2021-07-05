@@ -12,8 +12,11 @@ import {
 } from '../../components/manage/utilities';
 import { updateMethod } from '../../../api/base/BaseCollection.methods';
 import { SavedCommutes } from '../../../api/saved-commute/SavedCommuteCollection';
+import SavedCommuteAddForm from '../../components/manage/SavedCommuteAddForm';
+import SavedCommuteUpdateForm from '../../components/manage/SavedCommuteUpdateForm';
+import { Users } from '../../../api/user/UserCollection';
 
-const ManageSavedCommutes = ({ items, ready }) => {
+const ManageSavedCommutes = ({ items, ready, users }) => {
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const [confirmOpenState, setConfirmOpen] = useState(false);
   const [idState, setId] = useState('');
@@ -38,7 +41,6 @@ const ManageSavedCommutes = ({ items, ready }) => {
   </React.Fragment>);
 
   const handleUpdate = (doc) => {
-    console.log('handleUpdate', doc);
     const collectionName = SavedCommutes.getCollectionName();
     const updateData = {};
     updateData.id = doc._id;
@@ -69,6 +71,7 @@ const ManageSavedCommutes = ({ items, ready }) => {
   return (ready ? (
     <Segment>
       <Header dividing>Manage Saved Commutes</Header>
+      {showUpdateForm ? <SavedCommuteUpdateForm id={idState} handleCancel={handleCancel} itemTitle={itemTitle} collection={SavedCommutes} handleUpdate={handleUpdate} users={users}/> : (<SavedCommuteAddForm users={users} />)}
       <ListCollection items={items} descriptionPairs={descriptionPairs} handleDelete={handleDelete} handleOpenUpdate={handleOpenUpdate} itemTitle={itemTitle} collection={SavedCommutes} />
       <Confirm open={confirmOpenState} onCancel={handleCancel} onConfirm={handleConfirmDelete} header="Delete Saved Commute?" />
 
@@ -80,14 +83,17 @@ const ManageSavedCommutes = ({ items, ready }) => {
 
 ManageSavedCommutes.propTypes = {
   items: PropTypes.array.isRequired,
+  users: PropTypes.array.isRequired,
   ready: PropTypes.bool.isRequired,
 };
 
 export default withTracker(() => {
-  const ready = SavedCommutes.subscribeSavedCommuteCommunity().ready();
+  const ready = SavedCommutes.subscribeSavedCommuteCommunity().ready() && Users.subscribeUserAdmin().ready();
   const items = SavedCommutes.find({}, { sort: { owner: 1 } }).fetch();
+  const users = Users.find({}, { sort: { email: 1 } }).fetch();
   return {
     ready,
     items,
+    users,
   };
 })(ManageSavedCommutes);
