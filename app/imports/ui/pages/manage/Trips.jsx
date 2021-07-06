@@ -13,6 +13,7 @@ import {
 import { updateMethod } from '../../../api/base/BaseCollection.methods';
 import { Trips } from '../../../api/trip/TripCollection';
 import TripAddForm from '../../components/manage/TripAddForm';
+import TripUpdateForm from '../../components/manage/TripUpdateForm';
 import { Users } from '../../../api/user/UserCollection';
 
 const ManageTrips = ({ items, ready, users }) => {
@@ -25,14 +26,18 @@ const ManageTrips = ({ items, ready, users }) => {
   const handleDelete = handleDeleteWrapper(setConfirmOpen, setId);
   const handleOpenUpdate = handleOpenUpdateWrapper(setShowUpdateForm, setId);
 
-  const descriptionPairs = (commute) => [
-    { label: 'Owner', value: commute.owner },
-    { label: 'Name', value: commute.name },
-    { label: 'Distance', value: commute.distanceMiles },
-    { label: 'Mode', value: commute.mode },
-    { label: 'Mpg', value: commute.mpg },
-  ];
-
+  const descriptionPairs = (trip) =>
+    // console.log(trip);
+    [
+      { label: 'Date', value: moment(trip.date).format('MM/DD/YYYY') },
+      { label: 'Owner', value: trip.owner },
+      { label: 'Distance', value: trip.milesTraveled },
+      { label: 'Mode', value: trip.mode },
+      { label: 'Mpg', value: trip.mpg },
+      { label: 'Passengers', value: trip.passengers },
+      { label: 'CE Saved', value: Number(trip.ceSaved).toFixed(2) },
+      { label: 'CE Produced', value: Number(trip.ceProduced).toFixed(2) },
+    ];
   const itemTitle = (trip) => (<React.Fragment>
     {trip.retired ? <Icon name="eye slash" /> : ''}
     <Icon nam="dropdown" />
@@ -40,13 +45,10 @@ const ManageTrips = ({ items, ready, users }) => {
   </React.Fragment>);
 
   const handleUpdate = (doc) => {
-    console.log('handleUpdate', doc);
+    // console.log('handleUpdate', doc);
     const collectionName = Trips.getCollectionName();
     const updateData = {};
     updateData.id = doc._id;
-    if (doc.owner) {
-      updateData.owner = doc.owner;
-    }
     if (doc.date) {
       updateData.date = doc.date;
     }
@@ -59,6 +61,9 @@ const ManageTrips = ({ items, ready, users }) => {
     if (doc.mpg) {
       updateData.mpg = doc.mpg;
     }
+    if (doc.passengers) {
+      updateData.passengers = doc.passengers;
+    }
     updateMethod.callPromise({ collectionName, updateData })
       .catch(error => swal('Error Updating', error.message, 'error'))
       .then(() => {
@@ -70,8 +75,8 @@ const ManageTrips = ({ items, ready, users }) => {
 
   return (ready ? (
     <Segment>
-      <Header dividing>Manage Saved Commutes</Header>
-      {showUpdateForm ? '' : <TripAddForm users={users} />}
+      <Header dividing>Manage Trips</Header>
+      {showUpdateForm ? <TripUpdateForm id={idState} handleCancel={handleCancel} users={users} collection={Trips} handleUpdate={handleUpdate} itemTitle={itemTitle} /> : <TripAddForm users={users} />}
       <ListCollection items={items} descriptionPairs={descriptionPairs} handleDelete={handleDelete} handleOpenUpdate={handleOpenUpdate} itemTitle={itemTitle} collection={Trips} />
       <Confirm open={confirmOpenState} onCancel={handleCancel} onConfirm={handleConfirmDelete} header="Delete Trip?" />
 
