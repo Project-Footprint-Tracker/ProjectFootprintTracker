@@ -3,6 +3,7 @@ import SimpleSchema from 'simpl-schema';
 import { _ } from 'meteor/underscore';
 import BaseCollection from '../base/BaseCollection';
 import { VehicleMakes } from './VehicleMakeCollection';
+import { tripModes } from '../utilities/constants';
 
 export const userVehiclePublications = {
   userVehicle: 'UserVehicle',
@@ -23,14 +24,17 @@ class UserVehicleCollection extends BaseCollection {
       fuelSpending: Number,
       type: {
         type: String,
-        allowedValues: ['Gas', 'EV/Hybrid'],
+        allowedValues: [tripModes.GAS_CAR, tripModes.ELECTRIC_VEHICLE],
       },
     }));
   }
 
   define({ name, make, model, owner, price, year, MPG, fuelSpending }) {
-    const logo = VehicleMakes.findOne({ make: make }).logo;
-    const type = MPG < 0 ? 'EV/Hybrid' : 'Gas';
+    let logo = VehicleMakes.findOne({ make: make })?.logo;
+    if (!logo) {
+      logo = 'None';
+    }
+    const type = MPG < 0 ? tripModes.ELECTRIC_VEHICLE : tripModes.GAS_CAR;
     const docID = this._collection.insert({
       name,
       make,
@@ -48,8 +52,8 @@ class UserVehicleCollection extends BaseCollection {
 
   update(docID, { name, make, model, price, year, MPG, fuelSpending }) {
     const updateData = {};
-    updateData.logo = VehicleMakes.findOne({ make: make }).logo;
-    updateData.type = MPG < 0 ? 'EV/Hybrid' : 'Gas';
+    updateData.logo = VehicleMakes.findOne({ make: make })?.logo;
+    updateData.type = MPG < 0 ? tripModes.ELECTRIC_VEHICLE : tripModes.GAS_CAR;
     if (name) {
       updateData.name = name;
     }

@@ -4,6 +4,7 @@ import { GroupMembers } from '../group/GroupMemberCollection';
 import { Trips } from '../trip/TripCollection';
 import { SavedCommutes } from '../saved-commute/SavedCommuteCollection';
 import { Users } from '../user/UserCollection';
+import { UserVehicles } from '../vehicle/UserVehicleCollection';
 
 class CeTrackerClass {
   collections;
@@ -20,6 +21,7 @@ class CeTrackerClass {
       SavedCommutes,
       Trips,
       Users,
+      UserVehicles,
     ];
     /**
      * A list of collection class instances in the order required for them to be sequentially loaded from a file.

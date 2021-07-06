@@ -22,6 +22,7 @@ import { ROLE } from '../../api/role/Role';
 import ManageSavedCommutes from '../pages/manage/SavedCommutes';
 import ManageTrips from '../pages/manage/Trips';
 import ManageUsers from '../pages/manage/Users';
+import ManageUserVehicles from '../pages/manage/UserVehicles';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
 class App extends React.Component {
@@ -45,6 +46,7 @@ class App extends React.Component {
             <AdminProtectedRoute path="/manage/saved-commutes" component={ManageSavedCommutes} />
             <AdminProtectedRoute path="/manage/trips" component={ManageTrips} />
             <AdminProtectedRoute path="/manage/users" component={ManageUsers} />
+            <AdminProtectedRoute path="/manage/user-vehicles" component={ManageUserVehicles} />
             <Route component={NotFound}/>
           </Switch>
           <Footer/>
