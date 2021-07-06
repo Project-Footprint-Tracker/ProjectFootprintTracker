@@ -26,18 +26,16 @@ const ManageTrips = ({ items, ready, users }) => {
   const handleDelete = handleDeleteWrapper(setConfirmOpen, setId);
   const handleOpenUpdate = handleOpenUpdateWrapper(setShowUpdateForm, setId);
 
-  const descriptionPairs = (trip) =>
-    // console.log(trip);
-    [
-      { label: 'Date', value: moment(trip.date).format('MM/DD/YYYY') },
-      { label: 'Owner', value: trip.owner },
-      { label: 'Distance', value: trip.milesTraveled },
-      { label: 'Mode', value: trip.mode },
-      { label: 'Mpg', value: trip.mpg },
-      { label: 'Passengers', value: trip.passengers },
-      { label: 'CE Saved', value: Number(trip.ceSaved).toFixed(2) },
-      { label: 'CE Produced', value: Number(trip.ceProduced).toFixed(2) },
-    ];
+  const descriptionPairs = (trip) => [
+    { label: 'Date', value: moment(trip.date).format('MM/DD/YYYY') },
+    { label: 'Owner', value: trip.owner },
+    { label: 'Distance', value: trip.milesTraveled },
+    { label: 'Mode', value: trip.mode },
+    { label: 'Mpg', value: trip.mpg },
+    { label: 'Passengers', value: trip.passengers },
+    { label: 'CE Saved', value: Number(trip.ceSaved).toFixed(2) },
+    { label: 'CE Produced', value: Number(trip.ceProduced).toFixed(2) },
+  ];
   const itemTitle = (trip) => (<React.Fragment>
     {trip.retired ? <Icon name="eye slash" /> : ''}
     <Icon nam="dropdown" />

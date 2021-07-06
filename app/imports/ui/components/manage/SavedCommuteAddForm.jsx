@@ -13,7 +13,7 @@ import swal from 'sweetalert';
 import PropTypes from 'prop-types';
 import { defineMethod } from '../../../api/base/BaseCollection.methods';
 import { SavedCommutes } from '../../../api/saved-commute/SavedCommuteCollection';
-import { tripModes, tripModesArray } from '../../../api/utilities/constants';
+import { tripModesArray } from '../../../api/utilities/constants';
 
 const SavedCommuteAddForm = ({ users }) => {
   const usernames = users.map(u => u.email);

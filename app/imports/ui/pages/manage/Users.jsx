@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Confirm, Dimmer, Header, Icon, Loader, Segment } from 'semantic-ui-react';
 import swal from 'sweetalert';
-import moment from 'moment';
 import ListCollection from '../../components/manage/ListCollection';
 import {
   handleCancelWrapper,
@@ -12,6 +11,8 @@ import {
 } from '../../components/manage/utilities';
 import { updateMethod } from '../../../api/base/BaseCollection.methods';
 import { Users } from '../../../api/user/UserCollection';
+import UserAddForm from '../../components/manage/UserAddForm';
+import UserUpdateForm from '../../components/manage/UserUpdateForm';
 
 const ManageUsers = ({ items, ready }) => {
   const [showUpdateForm, setShowUpdateForm] = useState(false);
@@ -38,24 +39,24 @@ const ManageUsers = ({ items, ready }) => {
   </React.Fragment>);
 
   const handleUpdate = (doc) => {
-    console.log('handleUpdate', doc);
+    // console.log('handleUpdate', doc);
     const collectionName = Users.getCollectionName();
     const updateData = {};
     updateData.id = doc._id;
-    if (doc.owner) {
-      updateData.owner = doc.owner;
+    if (doc.email) {
+      updateData.email = doc.email;
     }
-    if (doc.date) {
-      updateData.date = doc.date;
+    if (doc.firstName) {
+      updateData.firstName = doc.firstName;
     }
-    if (doc.milesTraveled) {
-      updateData.milesTraveled = doc.milesTraveled;
+    if (doc.lastName) {
+      updateData.lastName = doc.lastName;
     }
-    if (doc.mode) {
-      updateData.mode = doc.mode;
+    if (doc.zipCode) {
+      updateData.zipCode = doc.zipCode;
     }
-    if (doc.mpg) {
-      updateData.mpg = doc.mpg;
+    if (doc.goal) {
+      updateData.goal = doc.goal;
     }
     updateMethod.callPromise({ collectionName, updateData })
       .catch(error => swal('Error Updating', error.message, 'error'))
@@ -68,7 +69,8 @@ const ManageUsers = ({ items, ready }) => {
 
   return (ready ? (
     <Segment>
-      <Header dividing>Manage Saved Commutes</Header>
+      <Header dividing>Manage Users</Header>
+      {showUpdateForm ? (<UserUpdateForm collection={Users} id={idState} handleUpdate={handleUpdate} itemTitle={itemTitle} handleCancel={handleCancel} />) : (<UserAddForm />) }
       <ListCollection items={items} descriptionPairs={descriptionPairs} handleDelete={handleDelete} handleOpenUpdate={handleOpenUpdate} itemTitle={itemTitle} collection={Users} />
       <Confirm open={confirmOpenState} onCancel={handleCancel} onConfirm={handleConfirmDelete} header="Delete User?" />
 
