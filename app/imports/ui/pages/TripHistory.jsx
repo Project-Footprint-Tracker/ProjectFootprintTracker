@@ -121,7 +121,7 @@ const TripHistory = (props) => {
 
   return (props.ready ? (
     <Container style={{ width: 900, paddingBottom: 50 }}>
-      <Grid id='overview' container centered>
+      <Grid container centered>
         <Grid.Row>
           <Header as='h1' textAlign='center'>
             MY TRIP HISTORY
@@ -195,7 +195,9 @@ TripHistory.propTypes = {
 export default withTracker(() => {
   // Get access to Trip documents.
   const owner = Meteor.user()?.username;
-  const ready = Trips.subscribeTrip().ready() && SavedCommutes.subscribeSavedCommute().ready() && owner !== undefined;
+  const ready = Trips.subscribeTrip().ready()
+      && SavedCommutes.subscribeSavedCommute().ready()
+      && owner !== undefined;
   const trips = Trips.find({ owner }, { sort: { date: -1 } }).fetch();
   const numTrips = Trips.count();
   const modesData = Trips.getModesOfTransport(owner);
