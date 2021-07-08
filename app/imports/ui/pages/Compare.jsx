@@ -9,7 +9,7 @@ import { Users } from '../../api/user/UserCollection';
 import { AllVehicles } from '../../api/vehicle/AllVehicleCollection';
 
 function SliderHandler() {
-  const evData = JSON.parse(Assets.getText('evdata.json'));
+  const evData = () => JSON.parse(Assets.getText('evdata.json'));
 
   const testMPG = 25;
   const avgGasPrice = 3.52;
@@ -18,7 +18,7 @@ function SliderHandler() {
 
   return (
     <Slider className='compare-slider'>
-      {evData.map((value, index) => <Slide index={index} key={index}>
+      {evData().map((value, index) => <Slide index={index} key={index}>
         <Grid centered columns={2} divided>
           <Grid.Column width={6}>
             <Image className='compare-logo' src={value.brandLogo}/>
@@ -57,14 +57,14 @@ function SliderHandler() {
 }
 
 function Compare(props) {
-  const evData = JSON.parse(Assets.getText('evdata.json'));
+  const evData = () => JSON.parse(Assets.getText('evdata.json'));
 
   return (!props.userReady) ? <Loader active>Loading data</Loader> :
     (<div>
       <div id='compare-container'>
         <CarouselProvider
           isIntrinsicHeight={true}
-          totalSlides={evData.length}
+          totalSlides={evData().length}
           infinite={true}
         >
           <Grid>

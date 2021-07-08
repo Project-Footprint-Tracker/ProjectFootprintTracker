@@ -1,6 +1,7 @@
 import { Trips } from '../../api/trip/TripCollection';
 import { SavedCommutes } from '../../api/saved-commute/SavedCommute';
 import { Users } from '../../api/user/UserCollection';
+import { AllVehicles } from '../../api/vehicle/AllVehicleCollection';
 
 /* eslint-disable no-console */
 
@@ -20,4 +21,8 @@ if (SavedCommutes.count() === 0) {
 if (Users.count() === 0) {
   getAssetsData('sampleUsers.json').map(user => Users.define(user));
   console.log(`  UserCollection: ${Users.count()} users`);
+}
+
+if (AllVehicles.count() === 0) {
+  getAssetsData('')
 }
