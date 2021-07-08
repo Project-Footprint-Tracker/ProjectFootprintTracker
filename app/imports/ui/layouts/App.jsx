@@ -7,10 +7,7 @@ import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import NavBar from '../components/NavBar';
 import Footer from '../components/Footer';
 import Landing from '../pages/Landing';
-import ListStuff from '../pages/ListStuff';
 import ListStuffAdmin from '../pages/ListStuffAdmin';
-import AddStuff from '../pages/AddStuff';
-import EditStuff from '../pages/EditStuff';
 import NotFound from '../pages/NotFound';
 import Signin from '../pages/Signin';
 import Signup from '../pages/Signup';
@@ -19,6 +16,14 @@ import QuickAccess from '../pages/e-impact/QuickAccess';
 import Dashboard from '../pages/Dashboard';
 import TripHistory from '../pages/TripHistory';
 import Compare from '../pages/Compare';
+import GroupCompare from '../pages/GroupCompare';
+import ManageGroups from '../pages/manage/Groups';
+import ManageGroupMembers from '../pages/manage/GroupMembers';
+import { ROLE } from '../../api/role/Role';
+import ManageSavedCommutes from '../pages/manage/SavedCommutes';
+import ManageTrips from '../pages/manage/Trips';
+import ManageUsers from '../pages/manage/Users';
+import ManageUserVehicles from '../pages/manage/UserVehicles';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
 class App extends React.Component {
@@ -36,10 +41,14 @@ class App extends React.Component {
             <Route path='/compare' component={Compare}/>
             <ProtectedRoute path="/Dashboard/:_id" component={Dashboard} />
             <ProtectedRoute path="/trips" component={TripHistory}/>
-            <ProtectedRoute path="/list" component={ListStuff}/>
-            <ProtectedRoute path="/add" component={AddStuff}/>
-            <ProtectedRoute path="/edit/:_id" component={EditStuff}/>
+            <ProtectedRoute path="/group-compare" component={GroupCompare} />
             <AdminProtectedRoute path="/admin" component={ListStuffAdmin}/>
+            <AdminProtectedRoute path="/manage/groups" component={ManageGroups} />
+            <AdminProtectedRoute path="/manage/group-members" component={ManageGroupMembers} />
+            <AdminProtectedRoute path="/manage/saved-commutes" component={ManageSavedCommutes} />
+            <AdminProtectedRoute path="/manage/trips" component={ManageTrips} />
+            <AdminProtectedRoute path="/manage/users" component={ManageUsers} />
+            <AdminProtectedRoute path="/manage/user-vehicles" component={ManageUserVehicles} />
             <Route component={NotFound}/>
           </Switch>
           <Footer/>
@@ -77,7 +86,7 @@ const AdminProtectedRoute = ({ component: Component, ...rest }) => (
     {...rest}
     render={(props) => {
       const isLogged = Meteor.userId() !== null;
-      const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
+      const isAdmin = Roles.userIsInRole(Meteor.userId(), ROLE.ADMIN);
       return (isLogged && isAdmin) ?
         (<Component {...props} />) :
         (<Redirect to={{ pathname: '/signin', state: { from: props.location } }}/>

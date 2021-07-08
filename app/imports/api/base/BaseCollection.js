@@ -168,8 +168,9 @@ class BaseCollection {
    */
   subscribe() {
     if (Meteor.isClient) {
-      Meteor.subscribe(this._collectionName);
+      return Meteor.subscribe(this._collectionName);
     }
+    return undefined;
   }
 
   assertRole(userId, roles) {

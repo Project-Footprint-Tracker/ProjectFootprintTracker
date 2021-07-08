@@ -6,8 +6,9 @@ import DashboardMilesCard from './DashboardMilesCard';
 import DashboardFuelCard from './DashboardFuelCard';
 import DashboardCeCard from './DashboardCeCard';
 import DashboardTreeCard from './DashboardTreeCard';
-import { cePerGallonFuel, poundsOfCePerTree } from '../../../api/utilities/constants';
-import { getUserMpg } from '../../../api/utilities/Utilities';
+import { cePerGallonFuel, poundsOfCePerTree } from '../../api/utilities/constants';
+import { getUserMpg } from '../../api/utilities/Utilities';
+import DashboardLeafCard from './DashboardLeafCard';
 
 /* global document */
 
@@ -21,6 +22,7 @@ function DashboardContent(
     modesOfTransport,
     milesPerMode,
     userProfile,
+    ceSavedTotal,
     ceReducedPerDay,
     fuelSavedPerDay,
     milesSavedAvg,
@@ -88,8 +90,8 @@ function DashboardContent(
 
   // 100,000 trees = 2,400 tons of CO2 or 4,800,000 pounds of CO2
   // 1 tree = 48 pounds of CO2
-  const treesPerCeProduced = (ceProducedTotal / poundsOfCePerTree).toFixed(0);
-  const treesPerCeReduced = (ceReducedTotal / poundsOfCePerTree).toFixed(0);
+  const treesPerCeProduced = Math.ceil(ceProducedTotal / poundsOfCePerTree);
+  const treesPerCeReduced = Math.ceil(ceReducedTotal / poundsOfCePerTree);
 
   const modesOfTransportData = [{
     values: modesOfTransport.value,
@@ -236,7 +238,7 @@ function DashboardContent(
 
   return (
     <div id='dashboard-container'>
-      <Card.Group centered stackable itemsPerRow={4}>
+      <Card.Group centered stackable itemsPerRow={5}>
         <DashboardMilesCard
           milesSaved={vehicleMilesSaved}
           milesAdded={vehicleMilesAdded}
@@ -272,6 +274,10 @@ function DashboardContent(
           treesPerCeProduced={treesPerCeProduced}
           treesPerCeReduced={treesPerCeReduced}
           userProfile={userProfile}
+        />
+        <DashboardLeafCard
+          treesPerCeReduced={treesPerCeReduced}
+          ceSavedTotal={ceSavedTotal}
         />
       </Card.Group>
       <Grid style={{ marginTop: '10px' }} stackable>
@@ -335,6 +341,7 @@ DashboardContent.propTypes = {
   milesPerMode: PropTypes.array,
   userProfile: PropTypes.object,
   userReady: PropTypes.bool,
+  ceSavedTotal: PropTypes.number,
   ceProducedTotal: PropTypes.string,
   ceReducedPerDay: PropTypes.object,
   fuelSavedPerDay: PropTypes.object,

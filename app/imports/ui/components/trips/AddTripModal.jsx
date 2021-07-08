@@ -6,7 +6,13 @@ import { AutoForm, BoolField, DateField, ErrorsField, SubmitField } from 'unifor
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
 import swal from 'sweetalert';
 import { getDateToday, getMilesTraveled } from '../../../api/utilities/CEData';
-import { averageAutoMPG, tripModes, tripModesArray } from '../../../api/utilities/constants';
+import {
+  averageAutoMPG,
+  imperialUnits,
+  metricUnits,
+  tripModes,
+  tripModesArray,
+} from '../../../api/utilities/constants';
 import { Trips } from '../../../api/trip/TripCollection';
 import { defineMethod } from '../../../api/base/BaseCollection.methods';
 
@@ -16,7 +22,7 @@ const AddTripModal = (props) => {
   const [mode, setMode] = useState(tripModes.GAS_CAR);
   const [passengers, setPassengers] = useState(0);
   const [distance, setDistance] = useState(0);
-  const [unit, setUnit] = useState('mi');
+  const [unit, setUnit] = useState(props.metric ? metricUnits.distance : imperialUnits.distance);
 
   const handleModalOpen = () => setModalOpen(true);
 
@@ -26,7 +32,7 @@ const AddTripModal = (props) => {
     setMode(tripModes.GAS_CAR);
     setPassengers(0);
     setDistance(0);
-    setUnit('mi');
+    setUnit(props.metric ? metricUnits.distance : imperialUnits.distance);
   };
 
   const formSchema = new SimpleSchema({
@@ -150,14 +156,14 @@ const AddTripModal = (props) => {
   const handleSubmit = (data) => {
     const definitionData = {};
     definitionData.date = data.date;
-    definitionData.milesTraveled = (unit === 'mi') ? distance :
+    definitionData.milesTraveled = (unit === imperialUnits.distance) ? distance :
       getMilesTraveled(distance);
     if (data.roundTrip) {
       definitionData.milesTraveled *= 2;
     }
     definitionData.mode = mode;
     definitionData.passengers = Number(passengers);
-    definitionData.mpg = averageAutoMPG; // change when vehicles
+    definitionData.mpg = averageAutoMPG; // change when vehicles are done
     definitionData.owner = props.owner;
     // CAM we're going to add the ce produced and ce saved to the Trips collection.
     const collectionName = Trips.getCollectionName();
@@ -176,7 +182,7 @@ const AddTripModal = (props) => {
       open={modalOpen}
       onClose={handleModalClose}
       onOpen={handleModalOpen}
-      trigger={<Button color='black'>Add Trip</Button>}
+      trigger={<Button size='tiny' color='black'>Add Trip</Button>}
       style = {{ fontSize: '13px' }}
     >
       <Modal.Header>Add Trip</Modal.Header>
