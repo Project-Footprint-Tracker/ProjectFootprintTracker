@@ -6,6 +6,7 @@ import { Groups } from '../../api/group/GroupCollection';
 import { Users } from '../../api/user/UserCollection';
 import { ROLE } from '../../api/role/Role';
 import { GroupMembers } from '../../api/group/GroupMemberCollection';
+import { AllVehicles } from '../../api/vehicle/AllVehicleCollection';
 
 /* eslint-disable no-console */
 
@@ -57,5 +58,6 @@ if (Groups.count() === 0) {
 }
 
 if (AllVehicles.count() === 0) {
-  getAssetsData('')
+  getAssetsData('sampleEvVehicles.json').map(vehicle => AllVehicles.define(vehicle));
+  console.log(`  AllVehicleCollection: ${AllVehicles.count()} vehicles`);
 }

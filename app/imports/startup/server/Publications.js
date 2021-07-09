@@ -3,7 +3,7 @@ import { Roles } from 'meteor/alanning:roles';
 import { Stuffs } from '../../api/stuff/Stuff';
 import { Trips } from '../../api/trip/TripCollection';
 // import { SavedTrips } from '../../api/saved-commute/to-delete/SavedTripCollection';
-// import { AllVehicles } from '../../api/vehicle/AllVehicleCollection';
+import { AllVehicles } from '../../api/vehicle/AllVehicleCollection';
 import { Users } from '../../api/user/UserCollection';
 // import { VehicleMakes } from '../../api/vehicle/VehicleMakeCollection';
 import { UserVehicles } from '../../api/vehicle/UserVehicleCollection';
@@ -33,7 +33,7 @@ Meteor.publish(Stuffs.adminPublicationName, function () {
 });
 
 const allCollections = [
-  // AllVehicles,
+  AllVehicles,
   // VehicleMakes,
   Groups,
   GroupMembers,

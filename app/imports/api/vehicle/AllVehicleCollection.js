@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import SimpleSchema from 'simpl-schema';
-import { _ } from 'meteor/underscore';
+import { _ } from 'lodash';
 import BaseCollection from '../base/BaseCollection';
 
 class AllVehicleCollection extends BaseCollection {
@@ -18,7 +18,8 @@ class AllVehicleCollection extends BaseCollection {
     }));
   }
 
-  define({ Owner, Year, Make, Model, Mpg }) {
+  define({ email, Year, Make, Model, Mpg }) {
+    const Owner = email || 'admin@foo.com';
     const Type = Mpg > 0 ? 'Gas' : 'EV/Hybrid';
     const docID = this._collection.insert({
       Owner,
@@ -70,10 +71,15 @@ class AllVehicleCollection extends BaseCollection {
 
   getEvVehicles() {
     const vehicles = this._collection.find({}).fetch();
-
     const evVehicles = [];
 
+    vehicles.forEach(vehicle => {
+      if (vehicle.Type === 'EV/Hybrid') {
+        evVehicles.push(vehicle);
+      }
+    });
 
+    return _.uniq(evVehicles);
   }
 }
 
