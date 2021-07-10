@@ -38,7 +38,7 @@ class App extends React.Component {
             <Route path="/signin" component={Signin}/>
             <Route path="/signup" component={Signup}/>
             <Route path="/signout" component={Signout}/>
-            <Route path='/compare' component={Compare}/>
+            <Route path='/compare/:_id' component={Compare}/>
             <ProtectedRoute path="/Dashboard/:_id" component={Dashboard} />
             <ProtectedRoute path="/trips" component={TripHistory}/>
             <ProtectedRoute path="/group-compare" component={GroupCompare} />

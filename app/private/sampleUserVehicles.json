@@ -1,0 +1,9 @@
+[
+  {
+    "Owner": "john@foo.com",
+    "Year": 2020,
+    "Make": "Toyota",
+    "Model": "Corolla",
+    "Mpg": 31
+  }
+]

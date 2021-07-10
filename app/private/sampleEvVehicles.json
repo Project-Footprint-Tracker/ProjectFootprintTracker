@@ -3,18 +3,18 @@
     "Year": 2020,
     "Make": "Tesla",
     "Model": "Model Y",
-    "Mpg": 0
+    "Mpge": 121
   },
   {
     "Year": 2021,
     "Make": "Hyundai",
     "Model": "Kona EV",
-    "Mpg": 0
+    "Mpge": 120
   },
   {
     "Year": 2020,
     "Make": "Chevrolet",
     "Model": "Bolt EV",
-    "Mpg": 0
+    "Mpge": 118
   }
 ]

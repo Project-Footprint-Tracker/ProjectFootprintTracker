@@ -18,8 +18,7 @@ class AllVehicleCollection extends BaseCollection {
     }));
   }
 
-  define({ email, Year, Make, Model, Mpg }) {
-    const Owner = email || 'admin@foo.com';
+  define({ Owner, Year, Make, Model, Mpg }) {
     const Type = Mpg > 0 ? 'Gas' : 'EV/Hybrid';
     const docID = this._collection.insert({
       Owner,
@@ -69,6 +68,10 @@ class AllVehicleCollection extends BaseCollection {
     return null;
   }
 
+  getAllVehicles() {
+    return this._collection.find({}).fetch();
+  }
+
   getEvVehicles() {
     const vehicles = this._collection.find({}).fetch();
     const evVehicles = [];
@@ -80,6 +83,10 @@ class AllVehicleCollection extends BaseCollection {
     });
 
     return _.uniq(evVehicles);
+  }
+
+  getUserVehicles(email) {
+    return this._collection.find({ Owner: email }).fetch();
   }
 }
 
