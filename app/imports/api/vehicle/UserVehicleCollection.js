@@ -13,12 +13,16 @@ export const userVehiclePublications = {
 class UserVehicleCollection extends BaseCollection {
   constructor() {
     super('UserVehicle', new SimpleSchema({
-      Owner: String,
-      Year: Number,
-      Make: String,
-      Model: String,
-      Mpg: Number,
-      Type: {
+      name: String,
+      make: String,
+      model: String,
+      owner: String,
+      logo: String,
+      price: Number,
+      year: Number,
+      MPG: Number,
+      fuelSpending: Number,
+      type: {
         type: String,
         allowedValues: [tripModes.GAS_CAR, tripModes.ELECTRIC_VEHICLE],
       },
@@ -32,31 +36,41 @@ class UserVehicleCollection extends BaseCollection {
     }
     const type = MPG < 0 ? tripModes.ELECTRIC_VEHICLE : tripModes.GAS_CAR;
     const docID = this._collection.insert({
-      Owner,
-      Year,
-      Make,
-      Model,
-      Mpg,
-      Type,
+      name,
+      make,
+      model,
+      owner,
+      logo,
+      price,
+      year,
+      MPG,
+      fuelSpending,
+      type,
     });
     return docID;
   }
 
-  update(docID, { Year, Make, Model, Mpg }) {
+  update(docID, { name, make, model, price, year, MPG, fuelSpending }) {
     const updateData = {};
     updateData.logo = VehicleMakes.findOne({ make: make })?.logo;
     updateData.type = MPG < 0 ? tripModes.ELECTRIC_VEHICLE : tripModes.GAS_CAR;
     if (name) {
       updateData.name = name;
     }
-    if (Model) {
-      updateData.Model = Model;
+    if (model) {
+      updateData.model = model;
     }
-    if (_.isNumber(Year)) {
-      updateData.Year = Year;
+    if (_.isNumber(year)) {
+      updateData.Year = year;
     }
-    if (_.isNumber(Mpg)) {
-      updateData.Mpg = Mpg;
+    if (_.isNumber(MPG)) {
+      updateData.MPG = MPG;
+    }
+    if (_.isNumber(price)) {
+      updateData.price = price;
+    }
+    if (_.isNumber(fuelSpending)) {
+      updateData.fuelSpending = fuelSpending;
     }
     this._collection.update(docID, { $set: updateData });
   }

@@ -3,8 +3,8 @@ import SimpleSchema from 'simpl-schema';
 import { _ } from 'lodash';
 import BaseCollection from '../base/BaseCollection';
 import { fuelCost, avgMpge, cePerGallonFuel, tripModes, tripModesArray } from '../utilities/constants';
+import { AllVehicles } from '../vehicle/AllVehicleCollection';
 import { ROLE } from '../role/Role';
-import { getUserMpg } from '../utilities/Utilities';
 
 export const tripPublications = {
   trip: 'Trip',
@@ -405,7 +405,7 @@ class TripCollection extends BaseCollection {
    */
   getCEProducedTotal(username) {
     const userTrips = this._collection.find({ owner: username }).fetch();
-    const userMpg = getUserMpg(username);
+    const userMpg = AllVehicles.getUserMpg(username);
 
     let ceProduced = 0;
 
