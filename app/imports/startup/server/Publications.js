@@ -3,7 +3,7 @@ import { Roles } from 'meteor/alanning:roles';
 import { Stuffs } from '../../api/stuff/Stuff';
 import { Trips } from '../../api/trip/TripCollection';
 // import { SavedTrips } from '../../api/saved-commute/to-delete/SavedTripCollection';
-// import { AllVehicles } from '../../api/vehicle/AllVehicleCollection';
+import { AllVehicles } from '../../api/vehicle/AllVehicleCollection';
 import { Users } from '../../api/user/UserCollection';
 // import { VehicleMakes } from '../../api/vehicle/VehicleMakeCollection';
 import { UserVehicles } from '../../api/vehicle/UserVehicleCollection';
@@ -12,6 +12,7 @@ import { UserVehicles } from '../../api/vehicle/UserVehicleCollection';
 import { SavedCommutes } from '../../api/saved-commute/SavedCommuteCollection';
 import { Groups } from '../../api/group/GroupCollection';
 import { GroupMembers } from '../../api/group/GroupMemberCollection';
+import { EvVehicles } from '../../api/vehicle/EvVehicleCollection';
 
 // User-level publication.
 // If logged in, then publish documents owned by this user. Otherwise publish nothing.
@@ -33,8 +34,9 @@ Meteor.publish(Stuffs.adminPublicationName, function () {
 });
 
 const allCollections = [
-  // AllVehicles,
+  AllVehicles,
   // VehicleMakes,
+  EvVehicles,
   Groups,
   GroupMembers,
   Users,

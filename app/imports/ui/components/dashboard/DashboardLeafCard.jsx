@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Divider } from 'semantic-ui-react';
-import { poundsOfCePerTree } from '../../api/utilities/constants';
+import { poundsOfCePerTree } from '../../../api/utilities/constants';
 
 const DashboardLeafCard = ({ ceSavedTotal }) => {
   const [percent, setPercent] = useState(0);

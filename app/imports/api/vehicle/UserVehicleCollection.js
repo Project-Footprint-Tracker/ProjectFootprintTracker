@@ -13,16 +13,12 @@ export const userVehiclePublications = {
 class UserVehicleCollection extends BaseCollection {
   constructor() {
     super('UserVehicle', new SimpleSchema({
-      name: String,
-      make: String,
-      model: String,
-      owner: String,
-      logo: String,
-      price: Number,
-      year: Number,
-      MPG: Number,
-      fuelSpending: Number,
-      type: {
+      Owner: String,
+      Year: Number,
+      Make: String,
+      Model: String,
+      Mpg: Number,
+      Type: {
         type: String,
         allowedValues: [tripModes.GAS_CAR, tripModes.ELECTRIC_VEHICLE],
       },
@@ -36,44 +32,31 @@ class UserVehicleCollection extends BaseCollection {
     }
     const type = MPG < 0 ? tripModes.ELECTRIC_VEHICLE : tripModes.GAS_CAR;
     const docID = this._collection.insert({
-      name,
-      make,
-      model,
-      owner,
-      logo,
-      price,
-      year,
-      MPG,
-      fuelSpending,
-      type,
+      Owner,
+      Year,
+      Make,
+      Model,
+      Mpg,
+      Type,
     });
     return docID;
   }
 
-  update(docID, { name, make, model, price, year, MPG, fuelSpending }) {
+  update(docID, { Year, Make, Model, Mpg }) {
     const updateData = {};
     updateData.logo = VehicleMakes.findOne({ make: make })?.logo;
     updateData.type = MPG < 0 ? tripModes.ELECTRIC_VEHICLE : tripModes.GAS_CAR;
     if (name) {
       updateData.name = name;
     }
-    if (make) {
-      updateData.make = make;
+    if (Model) {
+      updateData.Model = Model;
     }
-    if (model) {
-      updateData.model = model;
+    if (_.isNumber(Year)) {
+      updateData.Year = Year;
     }
-    if (_.isNumber(year)) {
-      updateData.year = year;
-    }
-    if (_.isNumber(price)) {
-      updateData.price = price;
-    }
-    if (_.isNumber(MPG)) {
-      updateData.MPG = MPG;
-    }
-    if (_.isNumber(fuelSpending)) {
-      updateData.fuelSpending = fuelSpending;
+    if (_.isNumber(Mpg)) {
+      updateData.Mpg = Mpg;
     }
     this._collection.update(docID, { $set: updateData });
   }
@@ -84,7 +67,7 @@ class UserVehicleCollection extends BaseCollection {
       Meteor.publish(userVehiclePublications.userVehicle, function publish() {
         if (this.userId) {
           const username = Meteor.users.findOne(this.userId).username;
-          return instance._collection.find({ owner: username });
+          return instance._collection.find({ Owner: username });
         }
         return this.ready();
       });

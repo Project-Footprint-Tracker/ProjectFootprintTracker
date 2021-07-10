@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Card } from 'semantic-ui-react';
-import Chart from './Chart';
+import Chart from '../Chart';
 import DashboardMilesCard from './DashboardMilesCard';
 import DashboardFuelCard from './DashboardFuelCard';
 import DashboardCeCard from './DashboardCeCard';
 import DashboardTreeCard from './DashboardTreeCard';
-import { cePerGallonFuel, poundsOfCePerTree } from '../../api/utilities/constants';
-import { getUserMpg } from '../../api/utilities/Utilities';
+import { cePerGallonFuel, poundsOfCePerTree } from '../../../api/utilities/constants';
+import { getUserMpg } from '../../../api/utilities/Utilities';
 import DashboardLeafCard from './DashboardLeafCard';
 
 /* global document */

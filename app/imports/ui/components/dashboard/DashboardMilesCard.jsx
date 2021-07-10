@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Statistic, Grid, Table, Header } from 'semantic-ui-react';
 import _ from 'lodash';
 import DashboardStatisticsCard from './DashboardStatisticsCard';
-import { tripModes } from '../../api/utilities/constants';
+import { tripModes } from '../../../api/utilities/constants';
 
 function DashboardMilesCard(
   {
