@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import { Dimmer, Loader } from 'semantic-ui-react';
 import { Trips } from '../../api/trip/TripCollection';
 import { Users } from '../../api/user/UserCollection';
-import DashboardContent from '../components/DashboardContent';
+import DashboardContent from '../components/dashboard/DashboardContent';
+import { AllVehicles } from '../../api/vehicle/AllVehicleCollection';
 
 function Dashboard(
   {
@@ -28,6 +29,7 @@ function Dashboard(
     ceReducedAvg,
     ceProducedAvg,
     evCeProducedAvg,
+    userMpg,
   },
 ) {
 
@@ -54,6 +56,7 @@ function Dashboard(
         ceReducedAvg={ceReducedAvg}
         ceProducedAvg={ceProducedAvg}
         evCeProducedAvg={evCeProducedAvg}
+        userMpg={userMpg}
       />
     </div> :
     <Dimmer active>
@@ -81,6 +84,7 @@ Dashboard.propTypes = {
   fuelSpentAvg: PropTypes.object,
   ceReducedAvg: PropTypes.object,
   ceProducedAvg: PropTypes.object,
+  userMpg: PropTypes.number,
   tripReady: PropTypes.bool.isRequired,
   userReady: PropTypes.bool.isRequired,
 };
@@ -88,6 +92,7 @@ Dashboard.propTypes = {
 export default withTracker(({ match }) => {
   const tripSubscribe = Trips.subscribeTrip();
   const userSubscribe = Users.subscribeUser();
+  const allVehicleSubscribe = AllVehicles.subscribeAllVehicle();
 
   const username = match.params._id;
 
@@ -109,12 +114,17 @@ export default withTracker(({ match }) => {
   const milesAvg = Trips.getMilesAvg(username);
   const fuelAvg = Trips.getFuelAvg(username);
   const ceAvg = Trips.getCEAvg(username);
+
+  const userMpg = AllVehicles.getUserMpg(username);
+
   const tripReady = tripSubscribe.ready();
   const userReady = userSubscribe.ready();
-  // console.log(tripReady, userReady, username, userProfile);
+  const allVehicleReady = allVehicleSubscribe.ready();
+
   return {
     tripReady,
     userReady,
+    allVehicleReady,
     vehicleMilesTraveled,
     milesTotal,
     milesSavedPerDay: milesPerDay.milesSaved,
@@ -133,5 +143,6 @@ export default withTracker(({ match }) => {
     ceReducedAvg: ceAvg.ceReducedAvg,
     ceProducedAvg: ceAvg.ceProducedAvg,
     evCeProducedAvg: ceAvg.evCeProducedAvg,
+    userMpg,
   };
 })(Dashboard);

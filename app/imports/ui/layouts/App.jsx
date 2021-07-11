@@ -15,6 +15,7 @@ import Signout from '../pages/Signout';
 import QuickAccess from '../pages/e-impact/QuickAccess';
 import Dashboard from '../pages/Dashboard';
 import TripHistory from '../pages/TripHistory';
+import Compare from '../pages/Compare';
 import GroupCompare from '../pages/GroupCompare';
 import ManageGroups from '../pages/manage/Groups';
 import ManageGroupMembers from '../pages/manage/GroupMembers';
@@ -38,6 +39,7 @@ class App extends React.Component {
             <Route path="/signin" component={Signin}/>
             <Route path="/signup" component={Signup}/>
             <Route path="/signout" component={Signout}/>
+            <Route path='/compare/:_id' component={Compare}/>
             <ProtectedRoute path="/Dashboard/:_id" component={Dashboard} />
             <ProtectedRoute path="/trips" component={TripHistory}/>
             <ProtectedRoute path="/profile" component={UserProfile}/>

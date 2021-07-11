@@ -57,20 +57,17 @@ class UserVehicleCollection extends BaseCollection {
     if (name) {
       updateData.name = name;
     }
-    if (make) {
-      updateData.make = make;
-    }
     if (model) {
       updateData.model = model;
     }
     if (_.isNumber(year)) {
-      updateData.year = year;
-    }
-    if (_.isNumber(price)) {
-      updateData.price = price;
+      updateData.Year = year;
     }
     if (_.isNumber(MPG)) {
       updateData.MPG = MPG;
+    }
+    if (_.isNumber(price)) {
+      updateData.price = price;
     }
     if (_.isNumber(fuelSpending)) {
       updateData.fuelSpending = fuelSpending;
@@ -84,7 +81,7 @@ class UserVehicleCollection extends BaseCollection {
       Meteor.publish(userVehiclePublications.userVehicle, function publish() {
         if (this.userId) {
           const username = Meteor.users.findOne(this.userId).username;
-          return instance._collection.find({ owner: username });
+          return instance._collection.find({ Owner: username });
         }
         return this.ready();
       });

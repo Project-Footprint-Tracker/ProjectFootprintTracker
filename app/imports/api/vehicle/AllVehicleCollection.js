@@ -1,7 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import SimpleSchema from 'simpl-schema';
-import { _ } from 'meteor/underscore';
+import { _ } from 'lodash';
 import BaseCollection from '../base/BaseCollection';
+import { averageAutoMPG } from '../utilities/constants';
 
 class AllVehicleCollection extends BaseCollection {
   constructor() {
@@ -11,22 +12,29 @@ class AllVehicleCollection extends BaseCollection {
       Make: String,
       Model: String,
       Mpg: Number,
+      Type: {
+        type: String,
+        allowedValues: ['Gas', 'EV/Hybrid'],
+      },
     }));
   }
 
   define({ Owner, Year, Make, Model, Mpg }) {
+    const Type = Mpg > 0 ? 'Gas' : 'EV/Hybrid';
     const docID = this._collection.insert({
       Owner,
       Year,
       Make,
       Model,
       Mpg,
+      Type,
     });
     return docID;
   }
 
   update(docID, { Year, Make, Model, Mpg }) {
     const updateData = {};
+    updateData.Type = Mpg > 0 ? 'Gas' : 'EV/Hybrid';
     if (_.isNumber(Year)) {
       updateData.Year = Year;
     }
@@ -60,6 +68,42 @@ class AllVehicleCollection extends BaseCollection {
     }
     return null;
   }
+
+  getAllVehicles() {
+    return this._collection.find({}).fetch();
+  }
+
+  getEvVehicles() {
+    const vehicles = this._collection.find({}).fetch();
+    const evVehicles = [];
+
+    vehicles.forEach(vehicle => {
+      if (vehicle.Type === 'EV/Hybrid') {
+        evVehicles.push(vehicle);
+      }
+    });
+
+    return _.uniq(evVehicles);
+  }
+
+  getUserVehicles(email) {
+    return this._collection.find({ Owner: email }).fetch();
+  }
+
+  getUserMpg = (owner) => {
+    const userVehicles = this._collection.find({ Owner: owner }).fetch();
+
+    if (userVehicles.length) {
+      let avgMpg = 0;
+      _.forEach(userVehicles, function (vehicles) {
+        avgMpg += vehicles.Mpg;
+      });
+
+      return avgMpg / userVehicles.length;
+    }
+
+    return averageAutoMPG;
+  };
 }
 
 export const AllVehicles = new AllVehicleCollection();

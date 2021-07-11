@@ -3,6 +3,7 @@ import SimpleSchema from 'simpl-schema';
 import { _ } from 'lodash';
 import BaseCollection from '../base/BaseCollection';
 import { fuelCost, avgMpge, cePerGallonFuel, tripModes, tripModesArray } from '../utilities/constants';
+import { AllVehicles } from '../vehicle/AllVehicleCollection';
 import { ROLE } from '../role/Role';
 
 export const tripPublications = {
@@ -402,14 +403,15 @@ class TripCollection extends BaseCollection {
    * @returns {string} the amount of CE that the user produced. It is a string because the function does a .toFixed(2) to round
    * the number to two decimal places.
    */
-  getCEProducedTotal(username, userMPG) {
+  getCEProducedTotal(username) {
     const userTrips = this._collection.find({ owner: username }).fetch();
+    const userMpg = AllVehicles.getUserMpg(username);
 
     let ceProduced = 0;
 
     _.forEach(userTrips, function (objects) {
       if (objects.mode === 'Gas Car' || objects.mode === 'Carpool') {
-        ceProduced += ((objects.milesTraveled / userMPG) * cePerGallonFuel);
+        ceProduced += ((objects.milesTraveled / userMpg) * cePerGallonFuel);
       }
     });
 

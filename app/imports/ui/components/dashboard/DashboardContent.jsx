@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Card } from 'semantic-ui-react';
-import Chart from './Chart';
+import Chart from '../Chart';
 import DashboardMilesCard from './DashboardMilesCard';
 import DashboardFuelCard from './DashboardFuelCard';
 import DashboardCeCard from './DashboardCeCard';
 import DashboardTreeCard from './DashboardTreeCard';
-import { cePerGallonFuel, poundsOfCePerTree } from '../../api/utilities/constants';
-import { getUserMpg } from '../../api/utilities/Utilities';
+import { cePerGallonFuel, poundsOfCePerTree } from '../../../api/utilities/constants';
 import DashboardLeafCard from './DashboardLeafCard';
 
 /* global document */
@@ -32,6 +31,7 @@ function DashboardContent(
     ceReducedAvg,
     ceProducedAvg,
     evCeProducedAvg,
+    userMpg,
   },
 ) {
 
@@ -58,8 +58,8 @@ function DashboardContent(
     },
   ];
 
-  const fuelSavedTotal = (vehicleMilesSaved / getUserMpg(userProfile.email)).toFixed(2);
-  const fuelCostTotal = (vehicleMilesAdded / getUserMpg(userProfile.email)).toFixed(2);
+  const fuelSavedTotal = (vehicleMilesSaved / userMpg).toFixed(2);
+  const fuelCostTotal = (vehicleMilesAdded / userMpg).toFixed(2);
 
   const fuelSavedPerDayData = {
     x: fuelSavedPerDay.date,
@@ -352,6 +352,7 @@ DashboardContent.propTypes = {
   ceReducedAvg: PropTypes.object,
   ceProducedAvg: PropTypes.object,
   evCeProducedAvg: PropTypes.object,
+  userMpg: PropTypes.number,
 };
 
 export default DashboardContent;
