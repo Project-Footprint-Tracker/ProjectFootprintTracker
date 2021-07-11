@@ -4,6 +4,7 @@ import { check } from 'meteor/check';
 import { _ } from 'meteor/underscore';
 import swal from 'sweetalert';
 import BaseCollection from '../base/BaseCollection';
+import { zipCodes } from '../utilities/ZipCodes';
 
 export const userPublications = {
   user: 'User',
@@ -121,6 +122,13 @@ class UserCollection extends BaseCollection {
   getUserProfile(email) {
     const user = this._collection.findOne({ email: email });
     return user;
+  }
+
+  getUserCounty(email) {
+    const user = this._collection.findOne({ email: email });
+    return (user !== undefined ?
+      zipCodes.filter(({ zipCode }) => zipCode === user.zipCode)[0].county :
+      '');
   }
 }
 
