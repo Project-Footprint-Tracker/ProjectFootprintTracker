@@ -1,47 +1,47 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Card, Divider, Image, List } from 'semantic-ui-react';
+import { Card, Divider, Image, List } from 'semantic-ui-react';
+import EditProfileModal from './EditProfileModal';
 
-const ProfileCard = ({ profile, countyName, groups }) => {
+const ProfileCard = (props) => {
   const getUpperCase = (string) => string[0].toUpperCase() + string.slice(1);
 
-  const getGroups = groups.length === 0 ?
+  const groups = props.groups.length === 0 ?
     <i>No groups added yet</i> :
-    groups.join(', ');
+    props.groups.join(', ');
 
   return (
     <Card fluid>
       <Card.Content>
         <Image
           circular
-          src='/images/default/default-pfp.png'
+          src={props.profile.image}
           floated='right'
           size='tiny'
         />
-        <Divider hidden/>
-        <Card.Header>
-          {getUpperCase(profile.firstName)} {getUpperCase(profile.lastName)}
+        <Card.Header style={{ marginTop: 4 }}>
+          {getUpperCase(props.profile.firstName)} {getUpperCase(props.profile.lastName)}
         </Card.Header>
-        <Card.Meta>{profile.email}</Card.Meta>
+        <Card.Meta>{props.profile.email}</Card.Meta>
         <Divider hidden/>
         <List>
           <List.Item>
             <List.Icon name='point'/>
-            <List.Content>{countyName}, HI {profile.zipCode}</List.Content>
+            <List.Content>{props.countyName}, HI {props.profile.zipCode}</List.Content>
           </List.Item>
           <List.Item>
             <List.Icon name='group'/>
-            <List.Content>{getGroups}</List.Content>
+            <List.Content>{groups}</List.Content>
           </List.Item>
           <List.Item>
-            <List.Icon name='target'/>
-            <List.Content>{profile.goal}</List.Content>
+            <List.Icon name='trophy'/>
+            <List.Content>{props.profile.goal}</List.Content>
           </List.Item>
         </List>
       </Card.Content>
 
       <Card.Content extra>
-        <Button size='tiny' content='Edit Profile'/>
+        <EditProfileModal profile={props.profile}/>
       </Card.Content>
     </Card>
   );
@@ -54,6 +54,7 @@ ProfileCard.propTypes = {
     lastName: PropTypes.string,
     goal: PropTypes.string,
     zipCode: PropTypes.number,
+    image: PropTypes.string,
     _id: PropTypes.string,
   }).isRequired,
   countyName: PropTypes.string.isRequired,

@@ -5,7 +5,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import { Card, Container, Grid, Header, Loader } from 'semantic-ui-react';
 import { Users } from '../../api/user/UserCollection';
 import { UserVehicles } from '../../api/vehicle/UserVehicleCollection';
-import ProfileCard from '../components/profile-page/ProfileCard';
+import ProfileCard from '../components/profile/ProfileCard';
 import { GroupMembers } from '../../api/group/GroupMemberCollection';
 
 const UserProfile = ({
