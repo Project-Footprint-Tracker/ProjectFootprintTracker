@@ -7,7 +7,7 @@ import { Users } from '../../api/user/UserCollection';
 import { ROLE } from '../../api/role/Role';
 import { GroupMembers } from '../../api/group/GroupMemberCollection';
 import { EvVehicles } from '../../api/vehicle/EvVehicleCollection';
-import { AllVehicles } from '../../api/vehicle/AllVehicleCollection';
+import { UserVehicles } from '../../api/vehicle/UserVehicleCollection';
 
 /* eslint-disable no-console */
 
@@ -58,12 +58,12 @@ if (Groups.count() === 0) {
   groupInfo.trips.forEach(trip => Trips.define(trip));
 }
 
+if (UserVehicles.count() === 0) {
+  getAssetsData('sampleUserVehicles.json').map(vehicle => UserVehicles.define(vehicle));
+  console.log(`  UserVehicleCollection: ${UserVehicles.count()} vehicles`);
+}
+
 if (EvVehicles.count() === 0) {
   getAssetsData('sampleEvVehicles.json').map(vehicle => EvVehicles.define(vehicle));
   console.log(`  EvVehicleCollection: ${EvVehicles.count()} vehicles`);
-}
-
-if (AllVehicles.count() === 0) {
-  getAssetsData('sampleUserVehicles.json').map(vehicle => AllVehicles.define(vehicle));
-  console.log(`  AllVehicleCollection: ${AllVehicles.count()} vehicles`);
 }

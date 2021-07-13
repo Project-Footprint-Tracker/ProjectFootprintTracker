@@ -32,21 +32,19 @@ class UserVehicleCollection extends BaseCollection {
 
   define({ name, make, model, owner, price, year, MPG, fuelSpending }) {
     const logoArray = vehicleMakes.filter(makeLogo => makeLogo.make === make);
-    const logo = logoArray.length === 0 ? '/images/default/default-pfp.png' :
+    const inputData = {};
+    inputData.name = (name || `${year} ${make} ${model}`);
+    inputData.make = make;
+    inputData.model = model;
+    inputData.owner = owner;
+    inputData.logo = logoArray.length === 0 ? '/images/default/default-pfp.png' :
       logoArray[0].logo;
-    const type = MPG <= 0 ? tripModes.ELECTRIC_VEHICLE : tripModes.GAS_CAR;
-    const docID = this._collection.insert({
-      name,
-      make,
-      model,
-      owner,
-      logo,
-      price,
-      year,
-      MPG,
-      fuelSpending,
-      type,
-    });
+    inputData.price = price || 0;
+    inputData.year = year;
+    inputData.MPG = MPG;
+    inputData.fuelSpending = fuelSpending || 0;
+    inputData.type = MPG <= 0 ? tripModes.ELECTRIC_VEHICLE : tripModes.GAS_CAR;
+    const docID = this._collection.insert(inputData);
     return docID;
   }
 
@@ -55,7 +53,7 @@ class UserVehicleCollection extends BaseCollection {
     const logoArray = vehicleMakes.filter(makeLogo => makeLogo.make === make);
     updateData.logo = logoArray.length === 0 ? '/images/default/default-pfp.png' :
       logoArray[0].logo;
-    updateData.type = MPG < 0 ? tripModes.ELECTRIC_VEHICLE : tripModes.GAS_CAR;
+    updateData.type = MPG <= 0 ? tripModes.ELECTRIC_VEHICLE : tripModes.GAS_CAR;
     if (name) {
       updateData.name = name;
     }
@@ -119,7 +117,7 @@ class UserVehicleCollection extends BaseCollection {
     const evVehicles = [];
 
     vehicles.forEach(vehicle => {
-      if (vehicle.Type === 'EV/Hybrid') {
+      if (vehicle.type === tripModes.ELECTRIC_VEHICLE) {
         evVehicles.push(vehicle);
       }
     });
@@ -128,16 +126,16 @@ class UserVehicleCollection extends BaseCollection {
   }
 
   getUserVehicles(email) {
-    return this._collection.find({ Owner: email }).fetch();
+    return this._collection.find({ owner: email }).fetch();
   }
 
   getUserMpg = (owner) => {
-    const userVehicles = this._collection.find({ Owner: owner }).fetch();
+    const userVehicles = this._collection.find({ owner: owner }).fetch();
 
     if (userVehicles.length) {
       let avgMpg = 0;
       _.forEach(userVehicles, function (vehicles) {
-        avgMpg += vehicles.Mpg;
+        avgMpg += vehicles.mpg;
       });
 
       return avgMpg / userVehicles.length;

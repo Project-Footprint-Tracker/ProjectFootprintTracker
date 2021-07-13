@@ -9,8 +9,8 @@ function CompareSlider({ vehicleData }) {
     <Slider className='compare-slider'>
       {vehicleData.map((value, index) => <Slide index={index} key={index}>
         <Card>
-          <Card.Header>{value.Year} {value.Make} {value.Model}</Card.Header>
-          <Card.Content>{'Mpge' in value ? `${value.Mpge} Mpge` : `${value.Mpg} Mpg`}</Card.Content>
+          <Card.Header>{value.year} {value.make} {value.model}</Card.Header>
+          <Card.Content>{'mpge' in value ? `${value.mpge} Mpge` : `${value.MPG} Mpg`}</Card.Content>
         </Card>
       </Slide>)}
     </Slider>
