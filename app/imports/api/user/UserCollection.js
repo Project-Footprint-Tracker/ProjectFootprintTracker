@@ -144,9 +144,10 @@ class UserCollection extends BaseCollection {
 
   getUserCounty(email) {
     const user = this._collection.findOne({ email: email });
-    return (user !== undefined ?
+    const county = (user !== undefined ?
       zipCodes.filter(({ zipCode }) => zipCode === user.zipCode)[0].county :
       '');
+    return (county !== undefined ? county : '');
   }
 }
 

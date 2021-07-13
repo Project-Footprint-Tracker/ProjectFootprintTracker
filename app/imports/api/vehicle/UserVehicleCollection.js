@@ -2,8 +2,9 @@ import { Meteor } from 'meteor/meteor';
 import SimpleSchema from 'simpl-schema';
 import { _ } from 'meteor/underscore';
 import BaseCollection from '../base/BaseCollection';
-import { VehicleMakes } from './VehicleMakeCollection';
-import { tripModes } from '../utilities/constants';
+import { averageAutoMPG, tripModes } from '../utilities/constants';
+import { vehicleMakes } from '../utilities/VehicleMakes';
+import { ROLE } from '../role/Role';
 
 export const userVehiclePublications = {
   userVehicle: 'UserVehicle',
@@ -30,11 +31,10 @@ class UserVehicleCollection extends BaseCollection {
   }
 
   define({ name, make, model, owner, price, year, MPG, fuelSpending }) {
-    let logo = VehicleMakes.findOne({ make: make })?.logo;
-    if (!logo) {
-      logo = 'None';
-    }
-    const type = MPG < 0 ? tripModes.ELECTRIC_VEHICLE : tripModes.GAS_CAR;
+    const logoArray = vehicleMakes.filter(makeLogo => makeLogo.make === make);
+    const logo = logoArray.length === 0 ? '/images/default/default-pfp.png' :
+      logoArray[0].logo;
+    const type = MPG <= 0 ? tripModes.ELECTRIC_VEHICLE : tripModes.GAS_CAR;
     const docID = this._collection.insert({
       name,
       make,
@@ -52,7 +52,9 @@ class UserVehicleCollection extends BaseCollection {
 
   update(docID, { name, make, model, price, year, MPG, fuelSpending }) {
     const updateData = {};
-    updateData.logo = VehicleMakes.findOne({ make: make })?.logo;
+    const logoArray = vehicleMakes.filter(makeLogo => makeLogo.make === make);
+    updateData.logo = logoArray.length === 0 ? '/images/default/default-pfp.png' :
+      logoArray[0].logo;
     updateData.type = MPG < 0 ? tripModes.ELECTRIC_VEHICLE : tripModes.GAS_CAR;
     if (name) {
       updateData.name = name;
@@ -73,6 +75,10 @@ class UserVehicleCollection extends BaseCollection {
       updateData.fuelSpending = fuelSpending;
     }
     this._collection.update(docID, { $set: updateData });
+  }
+
+  assertValidRoleForMethod(userId) {
+    this.assertRole(userId, [ROLE.ADMIN, ROLE.USER]);
   }
 
   publish() {
@@ -103,6 +109,42 @@ class UserVehicleCollection extends BaseCollection {
     }
     return null;
   }
+
+  getAllVehicles() {
+    return this._collection.find({}).fetch();
+  }
+
+  getEvVehicles() {
+    const vehicles = this._collection.find({}).fetch();
+    const evVehicles = [];
+
+    vehicles.forEach(vehicle => {
+      if (vehicle.Type === 'EV/Hybrid') {
+        evVehicles.push(vehicle);
+      }
+    });
+
+    return _.uniq(evVehicles);
+  }
+
+  getUserVehicles(email) {
+    return this._collection.find({ Owner: email }).fetch();
+  }
+
+  getUserMpg = (owner) => {
+    const userVehicles = this._collection.find({ Owner: owner }).fetch();
+
+    if (userVehicles.length) {
+      let avgMpg = 0;
+      _.forEach(userVehicles, function (vehicles) {
+        avgMpg += vehicles.Mpg;
+      });
+
+      return avgMpg / userVehicles.length;
+    }
+
+    return averageAutoMPG;
+  };
 }
 
 export const UserVehicles = new UserVehicleCollection();

@@ -9,8 +9,8 @@ import {
   getVehicleYearsList,
   getVehicle,
 } from '../../../../utilities/to-delete/vehicleDropdown';
-import { userVehicleRemoveItMethod } from '../../../../../api/vehicle/UserVehicleCollection.methods';
-import { VehicleMakes } from '../../../../../api/vehicle/VehicleMakeCollection';
+import { userVehicleRemoveItMethod } from '../../../../../api/vehicle/to-delete/UserVehicleCollection.methods';
+import { VehicleMakes } from '../../../../../api/vehicle/to-delete/VehicleMakeCollection';
 
 /** Renders a single vehicle card. */
 const VehicleCard = ({ vehicle, allEVHybridVehicles, vehicleMakes }) => {

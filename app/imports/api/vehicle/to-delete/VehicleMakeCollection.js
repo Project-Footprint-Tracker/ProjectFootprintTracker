@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import SimpleSchema from 'simpl-schema';
-import BaseCollection from '../base/BaseCollection';
+import BaseCollection from '../../base/BaseCollection';
 
 class VehicleMakeCollection extends BaseCollection {
   constructor() {

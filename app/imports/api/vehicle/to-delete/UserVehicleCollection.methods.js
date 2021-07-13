@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { CallPromiseMixin } from 'meteor/didericis:callpromise-mixin';
-import { UserVehicles } from './UserVehicleCollection';
+import { UserVehicles } from '../UserVehicleCollection';
 
 export const userVehicleDefineMethod = new ValidatedMethod({
   name: 'UserVehicleCollection.define',
