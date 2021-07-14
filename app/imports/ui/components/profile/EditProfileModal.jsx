@@ -58,7 +58,7 @@ const EditProfileModal = ({ profile }) => {
       open={modalOpen}
       onClose={handleModalClose}
       onOpen={handleModalOpen}
-      trigger={<Button size='tiny' content='Edit Profile'/>}
+      trigger={<Button size='tiny' content='Edit Profile' color='black'/>}
       style={{ fontSize: '13px' }}
     >
       <Modal.Header>Edit Profile</Modal.Header>

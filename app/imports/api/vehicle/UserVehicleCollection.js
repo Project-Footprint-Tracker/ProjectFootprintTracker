@@ -85,12 +85,17 @@ class UserVehicleCollection extends BaseCollection {
       Meteor.publish(userVehiclePublications.userVehicle, function publish() {
         if (this.userId) {
           const username = Meteor.users.findOne(this.userId).username;
-          return instance._collection.find({ Owner: username });
+          return instance._collection.find({ owner: username });
         }
         return this.ready();
       });
 
-      Meteor.publish(userVehiclePublications.userVehicleCumulative, () => instance._collection.find());
+      Meteor.publish(userVehiclePublications.userVehicleCumulative, function publish() {
+        if (this.userId) {
+          return instance._collection.find();
+        }
+        return this.ready();
+      });
     }
   }
 

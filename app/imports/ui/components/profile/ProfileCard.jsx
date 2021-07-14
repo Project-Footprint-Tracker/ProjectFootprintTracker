@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Divider, Image, List } from 'semantic-ui-react';
+import { Card, Image, List } from 'semantic-ui-react';
 import EditProfileModal from './EditProfileModal';
 
 const ProfileCard = (props) => {
@@ -11,19 +11,19 @@ const ProfileCard = (props) => {
     props.groups.join(', ');
 
   return (
-    <Card fluid>
-      <Card.Content>
+    <Card fluid style={{ height: 320 }} >
+      <Card.Content textAlign='center'>
         <Image
           circular
           src={props.profile.image}
-          floated='right'
-          size='tiny'
+          style={{ width: 85, marginBottom: 10 }}
         />
-        <Card.Header style={{ marginTop: 4 }}>
+        <Card.Header>
           {getUpperCase(props.profile.firstName)} {getUpperCase(props.profile.lastName)}
         </Card.Header>
         <Card.Meta>{props.profile.email}</Card.Meta>
-        <Divider hidden/>
+      </Card.Content>
+      <Card.Content>
         <List>
           <List.Item>
             <List.Icon name='point'/>
