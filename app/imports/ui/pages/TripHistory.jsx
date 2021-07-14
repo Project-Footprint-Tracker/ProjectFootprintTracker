@@ -12,6 +12,7 @@ import ModesChart from '../components/charts/ModesChart';
 import CEDataChart from '../components/charts/CEDataChart';
 import SavedCommutesRow from '../components/saved-commutes/SavedCommutesRow';
 import AddSavedCommuteModal from '../components/saved-commutes/AddSavedCommuteModal';
+import { UserVehicles } from '../../api/vehicle/UserVehicleCollection';
 
 const TripHistory = (props) => {
   const [tab, setTab] = useState(0);
@@ -54,6 +55,7 @@ const TripHistory = (props) => {
         owner={props.owner}
         savedCommutes={props.savedCommutes}
         metric={metric}
+        userMPG={props.userMPG}
       />
       <Table fixed striped compact textAlign='center'>
         <Table.Header>
@@ -76,6 +78,7 @@ const TripHistory = (props) => {
             trip={trip}
             savedCommutes={props.savedCommutes}
             metric={metric}
+            userMPG={props.userMPG}
           />)}
         </Table.Body>
       </Table>
@@ -188,6 +191,7 @@ TripHistory.propTypes = {
   dailyFuelSaved: PropTypes.object.isRequired,
   savedCommutes: PropTypes.array.isRequired,
   numCommutes: PropTypes.number.isRequired,
+  userMPG: PropTypes.number,
   owner: PropTypes.string,
   ready: PropTypes.bool.isRequired,
 };
@@ -197,6 +201,7 @@ export default withTracker(() => {
   const owner = Meteor.user()?.username;
   const ready = Trips.subscribeTrip().ready()
       && SavedCommutes.subscribeSavedCommute().ready()
+      && UserVehicles.subscribeUserVehicleCumulative().ready()
       && owner !== undefined;
   const trips = Trips.find({ owner }, { sort: { date: -1 } }).fetch();
   const numTrips = Trips.count();
@@ -206,6 +211,7 @@ export default withTracker(() => {
   const dailyFuelSaved = Trips.getFuelSavedPerDay(owner);
   const savedCommutes = SavedCommutes.find({}, { sort: [['name', 'asc']] }).fetch();
   const numCommutes = SavedCommutes.count();
+  const userMPG = Number(UserVehicles.getUserMpg(owner));
   return {
     trips,
     numTrips,
@@ -215,6 +221,7 @@ export default withTracker(() => {
     dailyFuelSaved,
     savedCommutes,
     numCommutes,
+    userMPG,
     owner,
     ready,
   };

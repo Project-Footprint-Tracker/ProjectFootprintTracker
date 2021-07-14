@@ -135,7 +135,9 @@ class UserVehicleCollection extends BaseCollection {
     if (userVehicles.length) {
       let avgMpg = 0;
       _.forEach(userVehicles, function (vehicles) {
-        avgMpg += vehicles.mpg;
+        if (vehicles.type === tripModes.GAS_CAR) {
+          avgMpg += vehicles.MPG;
+        }
       });
 
       return avgMpg / userVehicles.length;
