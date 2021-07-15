@@ -11,7 +11,7 @@ const ProfileCard = (props) => {
     props.groups.join(', ');
 
   return (
-    <Card fluid style={{ height: 320 }} >
+    <Card fluid style={{ height: 340 }} >
       <Card.Content textAlign='center'>
         <Image
           circular
