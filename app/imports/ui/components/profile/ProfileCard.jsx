@@ -11,12 +11,12 @@ const ProfileCard = (props) => {
     props.groups.join(', ');
 
   return (
-    <Card fluid style={{ height: 340 }} >
-      <Card.Content textAlign='center'>
+    <Card fluid style={{ height: 370 }} >
+      <Card.Content textAlign='center' style={{ maxHeight: 200 }}>
         <Image
           circular
           src={props.profile.image}
-          style={{ width: 85, marginBottom: 10 }}
+          style={{ width: 120, marginBottom: 10 }}
         />
         <Card.Header>
           {getUpperCase(props.profile.firstName)} {getUpperCase(props.profile.lastName)}

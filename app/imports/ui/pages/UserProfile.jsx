@@ -10,6 +10,7 @@ import { GroupMembers } from '../../api/group/GroupMemberCollection';
 import VehicleCard from '../components/vehicle/VehicleCard';
 
 const UserProfile = ({
+  owner,
   profile,
   county,
   userGroups,
@@ -34,6 +35,7 @@ const UserProfile = ({
         </Grid.Column>
         <Grid.Column width={9}>
           <VehicleCard
+            owner={owner}
             userMPG={userMPG}
             userVehicles={vehicles}
           />
@@ -45,6 +47,7 @@ const UserProfile = ({
   <Loader active>Getting Trip Data</Loader>);
 
 UserProfile.propTypes = {
+  owner: PropTypes.string,
   profile: PropTypes.object,
   county: PropTypes.string,
   userGroups: PropTypes.array,
@@ -65,6 +68,7 @@ export default withTracker(() => {
   const userMPG = UserVehicles.getUserMpg(owner);
   const userGroups = GroupMembers.find({ member: owner }).fetch().map(doc => doc.group);
   return {
+    owner,
     profile,
     county,
     vehicles,

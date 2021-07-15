@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Card, Divider, Grid, Header, Image, List } from 'semantic-ui-react';
+import { Button, Card, Grid, Header, Image, List } from 'semantic-ui-react';
 import { averageAutoMPG } from '../../../api/utilities/constants';
+import AddVehicleModal from './AddVehicleModal';
 
 const VehicleCard = (props) => {
   const [display, setDisplay] = useState(0);
@@ -17,12 +18,12 @@ const VehicleCard = (props) => {
   const getVehicle = props.userVehicles[display];
 
   return (
-    <Card fluid style={{ height: 340 }}>
+    <Card fluid style={{ height: 370 }}>
       <Card.Content textAlign='center'>
         <Card.Header>My Average MPG: {props.userMPG}</Card.Header>
         <Card.Meta>US Average: {averageAutoMPG}</Card.Meta>
       </Card.Content>
-      <Card.Content>
+      <Card.Content style={{ height: 250 }}>
         <Grid>
           <Grid.Row columns={3}>
             <Grid.Column textAlign='center' width={2}>
@@ -33,8 +34,8 @@ const VehicleCard = (props) => {
                 onClick={() => handleNext()}
               />
             </Grid.Column>
-            <Grid.Column textAlign='center' verticalAlign='middle' width={12}>
-              <Header as='h3' content={getVehicle.name}/>
+            <Grid.Column textAlign='center' width={12} style={{ overflowX: 'auto' }}>
+              <Header as='h3' content={getVehicle.name} subheader={getVehicle.type}/>
             </Grid.Column>
             <Grid.Column textAlign='center' width={2}>
               <Button
@@ -47,9 +48,9 @@ const VehicleCard = (props) => {
           </Grid.Row>
           <Grid.Row columns={3}>
             <Grid.Column textAlign='center' width={6}>
-              <Image src={getVehicle.logo}/>
+              <Image src={getVehicle.logo} style={{ maxHeight: 125 }}/>
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} style={{ maxHeight: 125, overflow: 'auto' }}>
               <List>
                 <List.Item>
                   <List.Header>Year</List.Header>
@@ -65,7 +66,7 @@ const VehicleCard = (props) => {
                 </List.Item>
               </List>
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={4} style={{ maxHeight: 125, overflow: 'auto' }}>
               <List>
                 <List.Item>
                   <List.Header>MPG</List.Header>
@@ -75,13 +76,13 @@ const VehicleCard = (props) => {
                   <List.Header>Price</List.Header>
                   {getVehicle.price === 0 ?
                     <i>Not defined</i> :
-                    `${getVehicle.price}`}
+                    `$${getVehicle.price}`}
                 </List.Item>
                 <List.Item>
                   <List.Header>Yearly Fuel Spending</List.Header>
                   {getVehicle.fuelSpending === 0 ?
                     <i>Not defined</i> :
-                    `${getVehicle.fuelSpending}`}
+                    `$${getVehicle.fuelSpending}`}
                 </List.Item>
               </List>
             </Grid.Column>
@@ -95,7 +96,7 @@ const VehicleCard = (props) => {
               <Button size='tiny' content='Edit Vehicle' color='black'/>
             </Grid.Column>
             <Grid.Column textAlign='right' width={7}>
-              <Button size='tiny' content='Add Vehicle' color='black'/>
+              <AddVehicleModal owner={props.owner}/>
             </Grid.Column>
           </Grid.Row>
         </Grid>
@@ -105,6 +106,7 @@ const VehicleCard = (props) => {
 };
 
 VehicleCard.propTypes = {
+  owner: PropTypes.string.isRequired,
   userVehicles: PropTypes.array.isRequired,
   userMPG: PropTypes.number.isRequired,
 };
