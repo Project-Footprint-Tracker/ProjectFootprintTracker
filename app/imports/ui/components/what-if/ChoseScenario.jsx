@@ -6,7 +6,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import swal from 'sweetalert';
 import { Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { cePerGallonFuel, tripModes } from '../../../../api/utilities/constants';
+import { cePerGallonFuel, tripModes } from '../../../api/utilities/constants';
 
 /* global window */
 

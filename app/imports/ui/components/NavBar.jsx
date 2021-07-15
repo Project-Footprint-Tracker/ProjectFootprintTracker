@@ -31,6 +31,7 @@ class NavBar extends React.Component {
               key='dashboard'>Dashboard</Menu.Item>,
             <Menu.Item as={NavLink} activeClassName="active" exact to="/trips" key='trips'>Trips</Menu.Item>,
             <Menu.Item as={NavLink} activeClassName='active' exact to={`/compare/${this.props.currentUser}`} key='compare'>Compare Vehicles</Menu.Item>,
+            <Menu.Item as={NavLink} activeClassName='active' exact to={`/whatif/${this.props.currentUser}`} key='whatif'>What if?</Menu.Item>,
             <Menu.Item as={NavLink} activeClassName="active" exact to="/add" key='add'>Add Stuff</Menu.Item>,
             <Menu.Item as={NavLink} activeClassName="active" exact to="/list" key='list'>List Stuff</Menu.Item>,
             <Menu.Item as={NavLink} activeClassName="active" exact to="/group-compare" key='group-compare'>Compare</Menu.Item>,

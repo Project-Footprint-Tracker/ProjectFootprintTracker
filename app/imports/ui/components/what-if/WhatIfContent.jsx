@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Card, Statistic } from 'semantic-ui-react';
-import SideBar from './SideBar';
-import Chart from '../../Chart';
-import { cePerGallonFuel } from '../../../../api/utilities/constants';
+import SideBar from '../to-delete/e-impact/SideBar';
+import Chart from '../Chart';
+import { cePerGallonFuel } from '../../../api/utilities/constants';
 
 /* global document */
 
@@ -231,11 +231,6 @@ function WhatIfContent(
 
   return (
     <div id='whatif-container'>
-      <SideBar
-        userProfile={userProfile}
-        userReady={userReady}
-        theme={userProfile.theme}
-      />
       <Card.Group centered stackable itemsPerRow={4}>
         <Card className='whatif-card'>
           <Card.Header className='card-header'>

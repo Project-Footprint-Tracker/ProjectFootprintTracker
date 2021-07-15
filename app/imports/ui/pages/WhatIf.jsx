@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import { Dimmer, Loader } from 'semantic-ui-react';
 import { Trips } from '../../api/trip/TripCollection';
 import { Users } from '../../api/user/UserCollection';
-import ChoseScenario from '../components/ChoseScenario';
-import WhatIfContent from '../components/WhatIfContent';
+import ChoseScenario from '../components/what-if/ChoseScenario';
+import WhatIfContent from '../components/what-if/WhatIfContent';
 
 // This page contains the graphs that will visualize the user's data in a more meaningful way.
 // The page waits for the data to load first and shows a loading page. Then once the collection is ready, we show the dashboard.
