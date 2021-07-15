@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { GroupMembers } from '../../api/group/GroupMemberCollection';
 import { Trips } from '../../api/trip/TripCollection';
 import { Users } from '../../api/user/UserCollection';
+import { fuelCost, tripModes } from '../../api/utilities/constants';
 
 /**
  * Returns the number of trips per mode of transportation.
@@ -9,6 +10,32 @@ import { Users } from '../../api/user/UserCollection';
  * @return {Dictionary<number>}
  */
 export const getModeCounts = (trips) => _.countBy(trips, 'mode');
+
+export const getModeChartCounts = (trips) => {
+  const modesOfTransport = [
+    { mode: tripModes.TELEWORK, value: 0 },
+    { mode: tripModes.PUBLIC_TRANSPORTATION, value: 0 },
+    { mode: tripModes.BIKE, value: 0 },
+    { mode: tripModes.WALK, value: 0 },
+    { mode: tripModes.CARPOOL, value: 0 },
+    { mode: tripModes.ELECTRIC_VEHICLE, value: 0 },
+    { mode: tripModes.GAS_CAR, value: 0 },
+  ];
+  trips.forEach((t) => {
+    const mode = _.find(modesOfTransport, ['mode', t.mode]);
+    mode.value += 1;
+  });
+  const modesOfTransportValue = [];
+  const modesOfTransportLabel = [];
+  // create the formatted data value and label for the charts.
+  modesOfTransport.forEach((m) => {
+    if (m.value !== 0) {
+      modesOfTransportValue.push(m.value);
+      modesOfTransportLabel.push(m.mode);
+    }
+  });
+  return { value: modesOfTransportValue, label: modesOfTransportLabel };
+};
 
 /**
  * Returns the total carbon saved and the total carbon produced for the given trips.
@@ -41,7 +68,7 @@ export const getCeAverages = (trips) => {
 /**
  * Returns the trips associated with the given group.
  * @param group the group.
- * @return {*[]}
+ * @return {trip[]}
  */
 export const getGroupTrips = (group) => {
   const members = GroupMembers.find({ group }).fetch().map(doc => doc.member);
@@ -97,10 +124,83 @@ export const counties = {
   Maui: 'Maui',
 };
 
+/**
+ * Returns the trips for the given county.
+ * @param county the county.
+ * @return {trip[]}
+ */
 export const getCountyTrips = (county) => {
   const trips = Trips.find({}, {}).fetch();
   return trips.filter(t => {
     const ownerZip = Users.findDoc({ email: t.owner }).zipCode;
     return countyZipcodes[county].includes(ownerZip);
   });
+};
+
+export const getCEReducedPerDay = (trips) => {
+  const date = [];
+  const ce = [];
+
+  trips.forEach((trip) => {
+    const tripDate = trip.date.toISOString().split('T')[0];
+    if (trip.ceSaved !== 0) {
+      if (!date.includes(tripDate)) {
+        date.push(tripDate);
+        ce.push(trip.ceSaved.toFixed(2));
+      } else {
+        const oldCE = Number(ce[date.indexOf(tripDate)]);
+        ce[date.indexOf(tripDate)] = (oldCE + trip.ceSaved).toFixed(2);
+      }
+    }
+  });
+
+  return { date, ce };
+};
+
+export const getCEProducedPerDay = (trips) => {
+  const date = [];
+  const ceProduced = [];
+
+  trips.forEach((trip) => {
+    const tripDate = trip.date.toISOString().split('T')[0];
+    if (trip.ceProduced !== 0) {
+      if (!date.includes(tripDate)) {
+        date.push(tripDate);
+        ceProduced.push(trip.ceProduced.toFixed(2));
+      } else {
+        const oldCE = Number(ceProduced[date.indexOf(tripDate)]);
+        ceProduced[date.indexOf(tripDate)] = (oldCE + trip.ceProduced).toFixed(2);
+      }
+    }
+  });
+
+  return { date, ceProduced };
+};
+
+export const getFuelSavedPerDay = (trips) => {
+  const date = [];
+  const fuel = [];
+  const price = [];
+
+  trips.forEach(trip => {
+    const tripDate = trip.date.toISOString().split('T')[0];
+    const fuelSaved = Number(trip.milesTraveled / trip.mpg);
+    const priceSaved = Number(fuelSaved * fuelCost);
+
+    if (trip.ceSaved !== 0) {
+      if (!date.includes(tripDate)) {
+        date.push(tripDate);
+        fuel[date.indexOf(tripDate)] = fuelSaved.toFixed(2);
+        price[date.indexOf(tripDate)] = priceSaved.toFixed(2);
+      } else {
+        const oldFuel = Number(fuel[date.indexOf(tripDate)]);
+        fuel[date.indexOf(tripDate)] = (oldFuel + fuelSaved).toFixed(2);
+
+        const oldPrice = Number(price[date.indexOf(tripDate)]);
+        price[date.indexOf(tripDate)] = (oldPrice + priceSaved).toFixed(2);
+      }
+    }
+  });
+
+  return { date: date, fuel: fuel, price: price };
 };

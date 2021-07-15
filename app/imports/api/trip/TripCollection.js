@@ -4,6 +4,7 @@ import { _ } from 'lodash';
 import BaseCollection from '../base/BaseCollection';
 import { fuelCost, avgMpge, cePerGallonFuel, tripModes, tripModesArray } from '../utilities/constants';
 import { ROLE } from '../role/Role';
+import { GroupMembers } from '../group/GroupMemberCollection';
 
 export const tripPublications = {
   trip: 'Trip',
@@ -70,6 +71,7 @@ class TripCollection extends BaseCollection {
    * @param mode of transportation.
    * @param mpg of vehicle.
    * @param owner of the document.
+   * @param passengers the number of passengers on the trip. Defaults to 0.
    * @returns {String} the docID of the new document.
    */
   define({ date, milesTraveled, mode, mpg, owner, passengers = 0 }) {
@@ -188,6 +190,38 @@ class TripCollection extends BaseCollection {
       return Meteor.subscribe(tripPublications.tripCommunity);
     }
     return null;
+  }
+
+  getGroupModesOfTransport(group) {
+    const members = GroupMembers.find({ group }).fetch();
+    const modesOfTransport = [
+      { mode: tripModes.TELEWORK, value: 0 },
+      { mode: tripModes.PUBLIC_TRANSPORTATION, value: 0 },
+      { mode: tripModes.BIKE, value: 0 },
+      { mode: tripModes.WALK, value: 0 },
+      { mode: tripModes.CARPOOL, value: 0 },
+      { mode: tripModes.ELECTRIC_VEHICLE, value: 0 },
+      { mode: tripModes.GAS_CAR, value: 0 },
+    ];
+    members.forEach(m => {
+      const memberTrips = this._collection.find({ owner: m.member }).fetch();
+      memberTrips.forEach((t) => {
+        const mode = _.find(modesOfTransport, ['mode', t.mode]);
+        mode.value += 1;
+      });
+    });
+    const modesOfTransportValue = [];
+    const modesOfTransportLabel = [];
+
+    // create the formatted data value and label for the charts.
+    modesOfTransport.forEach((m) => {
+      if (m.value !== 0) {
+        modesOfTransportValue.push(m.value);
+        modesOfTransportLabel.push(m.mode);
+      }
+    });
+
+    return { value: modesOfTransportValue, label: modesOfTransportLabel };
   }
 
   /**

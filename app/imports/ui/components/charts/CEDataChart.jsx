@@ -38,7 +38,7 @@ const CEDataChart = (props) => {
   }];
 
   const ceChartLayout = {
-    title: 'Carbon Emissions per Day (pounds)',
+    title: props.chartStyle.title ? `${props.chartStyle.title} Carbon Emissions per Day (pounds)` : 'Carbon Emissions per Day (pounds)',
     xaxis: {
       type: 'date',
       tickfont: {
@@ -64,7 +64,7 @@ const CEDataChart = (props) => {
   };
 
   const fuelChartLayout = {
-    title: 'Fuel Consumption per Day (gallons)',
+    title: props.chartStyle.title ? `${props.chartStyle.title} Fuel Consumption per Day (gallons)` : 'Fuel Consumption per Day (gallons)',
     xaxis: {
       type: 'date',
       tickfont: {
