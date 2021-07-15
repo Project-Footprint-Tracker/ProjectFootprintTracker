@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, Card, Grid, Header, Image, List } from 'semantic-ui-react';
 import { averageAutoMPG } from '../../../api/utilities/constants';
 import AddVehicleModal from './AddVehicleModal';
+import EditVehicleModal from './EditVehicleModal';
 
 const VehicleCard = (props) => {
   const [display, setDisplay] = useState(0);
@@ -93,7 +94,7 @@ const VehicleCard = (props) => {
         <Grid>
           <Grid.Row columns={2}>
             <Grid.Column floated='left' width={7}>
-              <Button size='tiny' content='Edit Vehicle' color='black'/>
+              <EditVehicleModal vehicle={getVehicle}/>
             </Grid.Column>
             <Grid.Column textAlign='right' width={7}>
               <AddVehicleModal owner={props.owner}/>
