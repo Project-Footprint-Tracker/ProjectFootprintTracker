@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import SimpleSchema from 'simpl-schema';
 import PropTypes from 'prop-types';
-import { Button, Divider, Form, Modal } from 'semantic-ui-react';
+import { Divider, Form, Icon, Modal } from 'semantic-ui-react';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
 import { AutoForm, ErrorsField, NumField, SubmitField, TextField } from 'uniforms-semantic';
 import swal from 'sweetalert';
@@ -54,7 +54,7 @@ const EditVehicleModal = ({ vehicle }) => {
       open={modalOpen}
       onClose={handleModalClose}
       onOpen={handleModalOpen}
-      trigger={<Button size='tiny' color='black'>Edit Vehicle</Button>}
+      trigger={<Icon size='large' style={{ cursor: 'pointer' }} name='edit outline'/>}
       style = {{ fontSize: '12px' }}
     >
       <Modal.Header>Add Vehicle</Modal.Header>
