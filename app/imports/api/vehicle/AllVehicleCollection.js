@@ -1,8 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import SimpleSchema from 'simpl-schema';
 import { _ } from 'lodash';
-import BaseCollection from '../../base/BaseCollection';
-import { averageAutoMPG } from '../../utilities/constants';
+import BaseCollection from '../base/BaseCollection';
+import { averageAutoMPG } from '../utilities/constants';
 
 class AllVehicleCollection extends BaseCollection {
   constructor() {
@@ -90,7 +90,7 @@ class AllVehicleCollection extends BaseCollection {
     return this._collection.find({ Owner: email }).fetch();
   }
 
-  getUserMpg = (owner) => {
+  getUserMpg(owner) {
     const userVehicles = this._collection.find({ Owner: owner }).fetch();
 
     if (userVehicles.length) {

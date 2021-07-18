@@ -7,7 +7,7 @@ import { _ } from 'meteor/underscore';
 import VehicleCard from './VehicleCard';
 import AddVehicleModal from './AddVehicleModal';
 import { UserVehicles } from '../../../../../api/vehicle/UserVehicleCollection';
-import { AllVehicles } from '../../../../../api/vehicle/to-delete/AllVehicleCollection';
+import { AllVehicles } from '../../../../../api/vehicle/AllVehicleCollection';
 
 /** Renders a feed containing all of the Vehicle documents. Use <VehicleCard> to render each card. */
 class VehicleList extends React.Component {
