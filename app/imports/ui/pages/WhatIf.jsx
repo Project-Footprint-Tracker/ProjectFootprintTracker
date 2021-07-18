@@ -1,12 +1,14 @@
 import { withTracker } from 'meteor/react-meteor-data';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { _ } from 'lodash';
 import { Dimmer, Loader } from 'semantic-ui-react';
 import { Trips } from '../../api/trip/TripCollection';
 import { Users } from '../../api/user/UserCollection';
 import ChoseScenario from '../components/what-if/ChoseScenario';
 import WhatIfContent from '../components/what-if/WhatIfContent';
 import { AllVehicles } from '../../api/vehicle/AllVehicleCollection';
+import { tripModes } from '../../api/utilities/constants';
 
 // This page contains the graphs that will visualize the user's data in a more meaningful way.
 // The page waits for the data to load first and shows a loading page. Then once the collection is ready, we show the dashboard.
@@ -29,8 +31,8 @@ function WhatIf(
   const [fuelSavedPerDayWI, setFSPDWI] = useState();
   const trueMilesTotal = (x) => {
     let gasMiles = 0;
-    x.mode.forEach(function (mode, index) {
-      if (mode === 'Gas Car' || mode === 'Carpool') {
+    _.forEach(x.mode, function (mode, index) {
+      if (mode === tripModes.GAS_CAR || mode === tripModes.CARPOOL) {
         gasMiles += x.distance[index];
       }
     });
