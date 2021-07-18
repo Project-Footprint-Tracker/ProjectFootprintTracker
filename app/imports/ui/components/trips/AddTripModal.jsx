@@ -7,7 +7,6 @@ import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
 import swal from 'sweetalert';
 import { getDateToday, getMilesTraveled } from '../../../api/utilities/CEData';
 import {
-  averageAutoMPG,
   imperialUnits,
   metricUnits,
   tripModes,
@@ -163,7 +162,7 @@ const AddTripModal = (props) => {
     }
     definitionData.mode = mode;
     definitionData.passengers = Number(passengers);
-    definitionData.mpg = averageAutoMPG; // change when vehicles are done
+    definitionData.mpg = props.userMPG; // change when vehicles are done
     definitionData.owner = props.owner;
     // CAM we're going to add the ce produced and ce saved to the Trips collection.
     const collectionName = Trips.getCollectionName();
@@ -220,6 +219,7 @@ AddTripModal.propTypes = {
   owner: PropTypes.string.isRequired,
   savedCommutes: PropTypes.array.isRequired,
   metric: PropTypes.bool.isRequired,
+  userMPG: PropTypes.number.isRequired,
 };
 
 export default AddTripModal;

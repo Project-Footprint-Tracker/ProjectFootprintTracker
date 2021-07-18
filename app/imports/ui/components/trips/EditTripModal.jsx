@@ -7,7 +7,7 @@ import { AutoForm, BoolField, DateField, ErrorsField, SubmitField } from 'unifor
 import swal from 'sweetalert';
 import { Trips } from '../../../api/trip/TripCollection';
 import { getDateToday, getMilesTraveled } from '../../../api/utilities/CEData';
-import { averageAutoMPG, imperialUnits, tripModes, tripModesArray } from '../../../api/utilities/constants';
+import { imperialUnits, tripModes, tripModesArray } from '../../../api/utilities/constants';
 import { updateMethod } from '../../../api/base/BaseCollection.methods';
 
 const EditTripModal = (props) => {
@@ -110,7 +110,6 @@ const EditTripModal = (props) => {
     }
     updateData.mode = mode;
     updateData.passengers = Number(passengers);
-    updateData.mpg = averageAutoMPG; // change when vehicles
     const collectionName = Trips.getCollectionName();
     updateMethod.callPromise({ collectionName, updateData })
       .then(() => {

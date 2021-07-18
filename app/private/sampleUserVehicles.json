@@ -1,9 +1,9 @@
 [
   {
-    "Owner": "john@foo.com",
-    "Year": 2020,
-    "Make": "Toyota",
-    "Model": "Corolla",
-    "Mpg": 31
+    "owner": "john@foo.com",
+    "year": 2020,
+    "make": "Toyota",
+    "model": "Corolla",
+    "MPG": 31
   }
 ]

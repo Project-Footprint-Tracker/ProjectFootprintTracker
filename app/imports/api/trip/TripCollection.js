@@ -3,7 +3,6 @@ import SimpleSchema from 'simpl-schema';
 import { _ } from 'lodash';
 import BaseCollection from '../base/BaseCollection';
 import { fuelCost, avgMpge, cePerGallonFuel, tripModes, tripModesArray } from '../utilities/constants';
-import { AllVehicles } from '../vehicle/AllVehicleCollection';
 import { ROLE } from '../role/Role';
 
 export const tripPublications = {
@@ -21,7 +20,7 @@ const calculateCarbonEmissions = (mode, miles, mpg, passengers) => {
     };
   case tripModes.CARPOOL: {
     const totalPassengers = passengers + 1;
-    const ceProduced = (ce / totalPassengers); // CAM we might need to add passengers as an optional field to trip.
+    const ceProduced = (ce / totalPassengers);
     const ceSaved = ce - ceProduced;
     return {
       ceProduced,
@@ -399,23 +398,12 @@ class TripCollection extends BaseCollection {
   /**
    * Returns the CE that the specified user produced. CE is produced whenever the user uses the Carpool and Gas Car modes.
    * @param username the username of the user.
-   * @param userMPG the MPG of the user
    * @returns {string} the amount of CE that the user produced. It is a string because the function does a .toFixed(2) to round
    * the number to two decimal places.
    */
   getCEProducedTotal(username) {
     const userTrips = this._collection.find({ owner: username }).fetch();
-    const userMpg = AllVehicles.getUserMpg(username);
-
-    let ceProduced = 0;
-
-    _.forEach(userTrips, function (objects) {
-      if (objects.mode === 'Gas Car' || objects.mode === 'Carpool') {
-        ceProduced += ((objects.milesTraveled / userMpg) * cePerGallonFuel);
-      }
-    });
-
-    return ceProduced.toFixed(2);
+    return userTrips.map(trip => trip.ceProduced).reduce((a, b) => a + b, 0).toFixed(2);
   }
 
   /**

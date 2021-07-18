@@ -4,6 +4,8 @@ import { check } from 'meteor/check';
 import { _ } from 'meteor/underscore';
 import swal from 'sweetalert';
 import BaseCollection from '../base/BaseCollection';
+import { zipCodes } from '../utilities/ZipCodes';
+import { ROLE } from '../role/Role';
 
 export const userPublications = {
   user: 'User',
@@ -16,12 +18,20 @@ class UserCollection extends BaseCollection {
       email: String,
       firstName: String,
       lastName: String,
-      zipCode: Number,
+      zipCode: {
+        type: Number,
+        allowedValues: zipCodes.map(doc => doc.zipCode),
+      },
       goal: String,
+      image: {
+        type: String,
+        optional: true,
+        defaultValue: '/images/default/default-pfp.png',
+      },
     }));
   }
 
-  define({ email, firstName, lastName, zipCode, goal }) {
+  define({ email, firstName, lastName, zipCode, goal, image }) {
     // if the user is already defined then don't create a duplicate
     const doc = this.findOne({ email });
     if (doc) {
@@ -33,12 +43,13 @@ class UserCollection extends BaseCollection {
       lastName,
       zipCode,
       goal,
+      image,
     });
     return docID;
   }
 
-  defineWithMessage({ email, firstName, lastName, zipCode, goal }) {
-    const docID = this._collection.insert({ email, firstName, lastName, zipCode, goal }, (error) => {
+  defineWithMessage({ email, firstName, lastName, zipCode, goal, image }) {
+    const docID = this._collection.insert({ email, firstName, lastName, zipCode, goal, image }, (error) => {
       if (error) {
         swal('Error', error.message, 'error');
       } else {
@@ -48,7 +59,7 @@ class UserCollection extends BaseCollection {
     return docID;
   }
 
-  update(docID, { email, firstName, lastName, zipCode, goal }) {
+  update(docID, { email, firstName, lastName, zipCode, goal, image }) {
     const updateData = {};
 
     if (email) {
@@ -71,6 +82,10 @@ class UserCollection extends BaseCollection {
       updateData.goal = goal;
     }
 
+    if (image) {
+      updateData.image = image;
+    }
+
     this._collection.update(docID, { $set: updateData });
   }
 
@@ -79,6 +94,10 @@ class UserCollection extends BaseCollection {
     check(doc, Object);
     this._collection.remove(doc._id);
     return true;
+  }
+
+  assertValidRoleForMethod(userId) {
+    this.assertRole(userId, [ROLE.ADMIN, ROLE.USER]);
   }
 
   publish() {
@@ -121,6 +140,14 @@ class UserCollection extends BaseCollection {
   getUserProfile(email) {
     const user = this._collection.findOne({ email: email });
     return user;
+  }
+
+  getUserCounty(email) {
+    const user = this._collection.findOne({ email: email });
+    const county = (user !== undefined ?
+      zipCodes.filter(({ zipCode }) => zipCode === user.zipCode)[0].county :
+      '');
+    return (county !== undefined ? county : '');
   }
 }
 

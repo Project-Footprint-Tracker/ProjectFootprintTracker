@@ -25,6 +25,7 @@ import ManageTrips from '../pages/manage/Trips';
 import ManageUsers from '../pages/manage/Users';
 import ManageUserVehicles from '../pages/manage/UserVehicles';
 import WhatIf from '../pages/WhatIf';
+import UserProfile from '../pages/UserProfile';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
 class App extends React.Component {
@@ -43,6 +44,7 @@ class App extends React.Component {
             <ProtectedRoute path="/Dashboard/:_id" component={Dashboard} />
             <ProtectedRoute path="/trips" component={TripHistory}/>
             <ProtectedRoute path='/whatif/:_id' component={WhatIf}/>
+            <ProtectedRoute path="/profile" component={UserProfile}/>
             <ProtectedRoute path="/group-compare" component={GroupCompare} />
             <AdminProtectedRoute path="/admin" component={ListStuffAdmin}/>
             <AdminProtectedRoute path="/manage/groups" component={ManageGroups} />

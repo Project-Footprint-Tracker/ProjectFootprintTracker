@@ -41,7 +41,7 @@ const TripHistoryRow = (props) => {
       <Table.Cell style={{ color: 'green' }}>{ceSaved}</Table.Cell>
       <Table.Cell style={{ color: 'red' }}>{ceProduced}</Table.Cell>
       <Table.Cell>
-        <EditTripModal trip={props.trip} savedCommutes={props.savedCommutes}/>
+        <EditTripModal trip={props.trip} savedCommutes={props.savedCommutes} />
         <DeleteTripModal trip={props.trip} metric={props.metric} />
       </Table.Cell>
     </Table.Row>

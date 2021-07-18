@@ -2,13 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import { Roles } from 'meteor/alanning:roles';
 import { Stuffs } from '../../api/stuff/Stuff';
 import { Trips } from '../../api/trip/TripCollection';
-// import { SavedTrips } from '../../api/saved-commute/to-delete/SavedTripCollection';
-import { AllVehicles } from '../../api/vehicle/AllVehicleCollection';
 import { Users } from '../../api/user/UserCollection';
-// import { VehicleMakes } from '../../api/vehicle/VehicleMakeCollection';
 import { UserVehicles } from '../../api/vehicle/UserVehicleCollection';
-// import { UserDailyData } from '../../api/trip/to-delete/UserDailyDataCollection';
-// import { UserSavedDistances } from '../../api/saved-commute/to-delete/UserSavedDistanceCollection';
 import { SavedCommutes } from '../../api/saved-commute/SavedCommuteCollection';
 import { Groups } from '../../api/group/GroupCollection';
 import { GroupMembers } from '../../api/group/GroupMemberCollection';
@@ -34,15 +29,11 @@ Meteor.publish(Stuffs.adminPublicationName, function () {
 });
 
 const allCollections = [
-  AllVehicles,
-  // VehicleMakes,
   EvVehicles,
   Groups,
   GroupMembers,
   Users,
   SavedCommutes,
-  // UserDailyData,
-  // UserSavedDistances,
   Trips,
   UserVehicles,
 ];

@@ -5,7 +5,7 @@ import { Dimmer, Loader } from 'semantic-ui-react';
 import { Trips } from '../../api/trip/TripCollection';
 import { Users } from '../../api/user/UserCollection';
 import DashboardContent from '../components/dashboard/DashboardContent';
-import { AllVehicles } from '../../api/vehicle/AllVehicleCollection';
+import { UserVehicles } from '../../api/vehicle/UserVehicleCollection';
 
 function Dashboard(
   {
@@ -92,7 +92,7 @@ Dashboard.propTypes = {
 export default withTracker(({ match }) => {
   const tripSubscribe = Trips.subscribeTrip();
   const userSubscribe = Users.subscribeUser();
-  const allVehicleSubscribe = AllVehicles.subscribeAllVehicle();
+  const userVehicleSubscribe = UserVehicles.subscribeUserVehicle();
 
   const username = match.params._id;
 
@@ -115,16 +115,16 @@ export default withTracker(({ match }) => {
   const fuelAvg = Trips.getFuelAvg(username);
   const ceAvg = Trips.getCEAvg(username);
 
-  const userMpg = AllVehicles.getUserMpg(username);
+  const userMpg = UserVehicles.getUserMpg(username);
 
   const tripReady = tripSubscribe.ready();
   const userReady = userSubscribe.ready();
-  const allVehicleReady = allVehicleSubscribe.ready();
+  const userVehicleReady = userVehicleSubscribe.ready();
 
   return {
     tripReady,
     userReady,
-    allVehicleReady,
+    userVehicleReady,
     vehicleMilesTraveled,
     milesTotal,
     milesSavedPerDay: milesPerDay.milesSaved,

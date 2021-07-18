@@ -6,36 +6,36 @@ import BaseCollection from '../base/BaseCollection';
 class EvVehicleCollection extends BaseCollection {
   constructor() {
     super('EvVehicles', new SimpleSchema({
-      Year: Number,
-      Make: String,
-      Model: String,
-      Mpge: Number,
+      year: Number,
+      make: String,
+      model: String,
+      mpge: Number,
     }));
   }
 
-  define({ Year, Make, Model, Mpge }) {
+  define({ year, make, model, mpge }) {
     const docID = this._collection.insert({
-      Year,
-      Make,
-      Model,
-      Mpge,
+      year,
+      make,
+      model,
+      mpge,
     });
     return docID;
   }
 
-  update(docID, { Year, Make, Model, Mpge }) {
+  update(docID, { year, make, model, mpge }) {
     const updateData = {};
-    if (_.isNumber(Year)) {
-      updateData.Year = Year;
+    if (_.isNumber(year)) {
+      updateData.Year = year;
     }
-    if (Make) {
-      updateData.Make = Make;
+    if (make) {
+      updateData.Make = make;
     }
-    if (Model) {
-      updateData.Make = Model;
+    if (model) {
+      updateData.Make = model;
     }
-    if (_.isNumber(Mpge)) {
-      updateData.Mpge = Mpge;
+    if (_.isNumber(mpge)) {
+      updateData.Mpge = mpge;
     }
     this._collection.update(docID, { $set: updateData });
   }
