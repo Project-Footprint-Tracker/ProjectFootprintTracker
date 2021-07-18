@@ -1,11 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Card, Statistic } from 'semantic-ui-react';
-import SideBar from '../to-delete/e-impact/SideBar';
 import Chart from '../Chart';
 import { cePerGallonFuel } from '../../../api/utilities/constants';
-
-/* global document */
 
 // Contains the graphs that visualizes the user's data.
 function WhatIfContent(
@@ -14,8 +11,7 @@ function WhatIfContent(
     trueMilesSavedTotal,
     milesSavedPerDay,
     modesOfTransport,
-    userProfile,
-    userReady,
+    userMpg,
     ceProducedTotal,
     ceReducedPerDay,
     fuelSavedPerDay,
@@ -28,10 +24,10 @@ function WhatIfContent(
 ) {
 
   const milesSavedTotalWI = newMilesTotal(milesSavedPerDayWI);
-  const fuelSavedTotalWI = (milesSavedTotalWI / userProfile.autoMPG).toFixed(2);
-  const ceProducedTotalWI = (((milesSavedTotal - milesSavedTotalWI) / userProfile.autoMPG) * cePerGallonFuel).toFixed(2);
+  const fuelSavedTotalWI = (milesSavedTotalWI / userMpg).toFixed(2);
+  const ceProducedTotalWI = (((milesSavedTotal - milesSavedTotalWI) / userMpg) * cePerGallonFuel).toFixed(2);
   const ceReducedTotalWI = (fuelSavedTotalWI * cePerGallonFuel).toFixed(2);
-  const fuelSavedTotal = (trueMilesSavedTotal / userProfile.autoMPG).toFixed(2);
+  const fuelSavedTotal = (trueMilesSavedTotal / userMpg).toFixed(2);
   const ceReducedTotal = (fuelSavedTotal * cePerGallonFuel).toFixed(2);
   const milesSavedPerDayData = [{
     x: milesSavedPerDay.date,
@@ -119,16 +115,6 @@ function WhatIfContent(
   const tMargin = '40';
   const bMargin = '10';
 
-  if (userProfile.theme === 'dark') {
-    chartBgColor = '#213c5c';
-    chartGridColor = '#5c5c5c';
-    chartFontColor = '#FFFFFF';
-  } else {
-    chartBgColor = '';
-    chartGridColor = '';
-    chartFontColor = '';
-  }
-
   const milesSavedPerDayLayout = {
     autosize: true,
     margin: {
@@ -207,27 +193,6 @@ function WhatIfContent(
       color: chartFontColor,
     },
   };
-
-  /* DOM Styling */
-  useEffect(() => {
-    const whatifCards = document.getElementsByClassName('whatif-card');
-    const cardHeaders = document.getElementsByClassName('card-header');
-    if (userProfile.theme === 'dark') {
-      for (let i = 0; i < whatifCards.length; i++) {
-        whatifCards[i].classList.add('dark-card');
-      }
-      for (let i = 0; i < cardHeaders.length; i++) {
-        cardHeaders[i].classList.add('dark-card-header');
-      }
-    } else {
-      for (let i = 0; i < whatifCards.length; i++) {
-        whatifCards[i].classList.remove('dark-card');
-      }
-      for (let i = 0; i < cardHeaders.length; i++) {
-        cardHeaders[i].classList.remove('dark-card-header');
-      }
-    }
-  }, [userProfile]);
 
   return (
     <div id='whatif-container'>
@@ -346,8 +311,7 @@ WhatIfContent.propTypes = {
   trueMilesSavedTotal: PropTypes.number,
   milesSavedPerDay: PropTypes.object,
   modesOfTransport: PropTypes.object,
-  userProfile: PropTypes.object,
-  userReady: PropTypes.bool,
+  userMpg: PropTypes.number,
   ceProducedTotal: PropTypes.string,
   ceReducedPerDay: PropTypes.object,
   fuelSavedPerDay: PropTypes.object,

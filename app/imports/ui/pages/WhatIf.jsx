@@ -6,6 +6,7 @@ import { Trips } from '../../api/trip/TripCollection';
 import { Users } from '../../api/user/UserCollection';
 import ChoseScenario from '../components/what-if/ChoseScenario';
 import WhatIfContent from '../components/what-if/WhatIfContent';
+import { AllVehicles } from '../../api/vehicle/AllVehicleCollection';
 
 // This page contains the graphs that will visualize the user's data in a more meaningful way.
 // The page waits for the data to load first and shows a loading page. Then once the collection is ready, we show the dashboard.
@@ -16,7 +17,7 @@ function WhatIf(
     milesSavedTotal,
     milesSavedPerDay,
     modesOfTransport,
-    userProfile,
+    userMpg,
     ceProducedTotal,
     ceReducedPerDay,
     fuelSavedPerDay,
@@ -54,7 +55,6 @@ function WhatIf(
         milesSavedTotal={milesSavedTotal}
         milesSavedPerDay={milesSavedPerDay}
         modesOfTransport={modesOfTransport}
-        userProfile={userProfile}
         ceProducedTotal={ceProducedTotal}
         ceReducedPerDay={ceReducedPerDay}
         fuelSavedPerDay={fuelSavedPerDay}
@@ -65,8 +65,7 @@ function WhatIf(
         trueMilesSavedTotal={trueMilesSavedTotal}
         milesSavedPerDay={milesSavedPerDay}
         modesOfTransport={modesOfTransport}
-        userProfile={userProfile}
-        userReady={userReady}
+        userMpg={userMpg}
         ceProducedTotal={ceProducedTotal}
         ceReducedPerDay={ceReducedPerDay}
         fuelSavedPerDay={fuelSavedPerDay}
@@ -87,7 +86,7 @@ WhatIf.propTypes = {
   milesSavedTotal: PropTypes.number,
   milesSavedPerDay: PropTypes.object,
   modesOfTransport: PropTypes.object,
-  userProfile: PropTypes.any,
+  userMpg: PropTypes.number,
   ceProducedTotal: PropTypes.string,
   ceReducedPerDay: PropTypes.object,
   fuelSavedPerDay: PropTypes.object,
@@ -98,27 +97,28 @@ WhatIf.propTypes = {
 export default withTracker(({ match }) => {
   const tripSubscribe = Trips.subscribeTrip();
   const userSubscribe = Users.subscribeUser();
+  const allVehicleSubscribe = AllVehicles.subscribeAllVehicle();
   const username = match.params._id;
 
   const milesSavedTotal = Trips.getMilesTotal(username);
 
   const milesSavedPerDay = Trips.getMilesSavedPerDay(username);
   const modesOfTransport = Trips.getModesOfTransport(username);
-  const userProfile = Users.getUserProfile(username);
-  const ceProducedTotal = Trips.getCEProducedTotal(username, (userSubscribe.ready()) ? userProfile.autoMPG : 1);
-  const ceReducedPerDay = Trips.getCEReducedPerDay(username, (userSubscribe.ready()) ? userProfile.autoMPG : 1);
-  const fuelSavedPerDay = Trips.getFuelSavedPerDay(username, (userSubscribe.ready()) ? userProfile.autoMPG : 1);
+  const ceProducedTotal = Trips.getCEProducedTotal(username);
+  const ceReducedPerDay = Trips.getCEReducedPerDay(username);
+  const fuelSavedPerDay = Trips.getFuelSavedPerDay(username);
+  const userMpg = AllVehicles.getUserMpg(username);
   return {
     tripReady: tripSubscribe.ready(),
     userReady: userSubscribe.ready(),
-
+    allVehicleReady: allVehicleSubscribe.ready(),
     milesSavedTotal,
 
     milesSavedPerDay,
     modesOfTransport,
-    userProfile,
     ceProducedTotal,
     ceReducedPerDay,
     fuelSavedPerDay,
+    userMpg,
   };
 })(WhatIf);

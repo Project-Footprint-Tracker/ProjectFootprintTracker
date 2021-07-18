@@ -14,7 +14,7 @@ function ChoseScenario(
   {
     milesSavedPerDay,
     modesOfTransport,
-    userProfile,
+    userMpg,
     ceProducedTotal,
     test,
   },
@@ -126,7 +126,6 @@ function ChoseScenario(
     const fuelSPDF = [];
     const fuelSPDP = [];
     let fuelSPD = {};
-    const userMPG = userProfile.autoMPG;
     // check that event is selected to change
     if (isEventSelected.current === true) {
       // store event state in array
@@ -185,18 +184,18 @@ function ChoseScenario(
       // If event produced miles & ce
       _.forEach(nMilesSavedPerDay.current, function (objects) {
         if (objects.mode === tripModes.GAS_CAR || objects.mode === tripModes.CARPOOL) {
-          ceProduced += ((objects.distance / userMPG) * cePerGallonFuel);
+          ceProduced += ((objects.distance / userMpg) * cePerGallonFuel);
           ceRPDD.push(objects.date);
           ceRPDG.push(0);
           fuelSPDD.push(objects.date);
           fuelSPDF.push(0);
-          fuelSPDP.push(((objects.distance / userMPG) * 3.77).toFixed(2));
+          fuelSPDP.push(((objects.distance / userMpg) * 3.77).toFixed(2));
         } else {
           ceRPDD.push(objects.date);
-          ceRPDG.push(((objects.distance / userMPG) * cePerGallonFuel).toFixed(2));
+          ceRPDG.push(((objects.distance / userMpg) * cePerGallonFuel).toFixed(2));
           fuelSPDD.push(objects.date);
-          fuelSPDF.push((objects.distance / userMPG).toFixed(2));
-          fuelSPDP.push(((objects.distance / userMPG) * 3.77).toFixed(2));
+          fuelSPDF.push((objects.distance / userMpg).toFixed(2));
+          fuelSPDP.push(((objects.distance / userMpg) * 3.77).toFixed(2));
         }
       });
       // If event reduced miles & ce
@@ -294,7 +293,7 @@ ChoseScenario.propTypes = {
   milesSavedTotal: PropTypes.number,
   milesSavedPerDay: PropTypes.object,
   modesOfTransport: PropTypes.object,
-  userProfile: PropTypes.object,
+  userMpg: PropTypes.number,
   ceProducedTotal: PropTypes.string,
   ceReducedPerDay: PropTypes.object,
   fuelSavedPerDay: PropTypes.object,
