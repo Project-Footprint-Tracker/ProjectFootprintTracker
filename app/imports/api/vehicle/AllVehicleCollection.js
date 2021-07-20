@@ -103,7 +103,7 @@ class AllVehicleCollection extends BaseCollection {
     }
 
     return averageAutoMPG;
-  };
+  }
 }
 
 export const AllVehicles = new AllVehicleCollection();
