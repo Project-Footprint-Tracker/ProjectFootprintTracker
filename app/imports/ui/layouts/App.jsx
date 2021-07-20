@@ -24,6 +24,7 @@ import ManageSavedCommutes from '../pages/manage/SavedCommutes';
 import ManageTrips from '../pages/manage/Trips';
 import ManageUsers from '../pages/manage/Users';
 import ManageUserVehicles from '../pages/manage/UserVehicles';
+import WhatIf from '../pages/WhatIf';
 import UserProfile from '../pages/UserProfile';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
@@ -39,9 +40,10 @@ class App extends React.Component {
             <Route path="/signin" component={Signin}/>
             <Route path="/signup" component={Signup}/>
             <Route path="/signout" component={Signout}/>
-            <Route path='/compare/:_id' component={Compare}/>
+            <ProtectedRoute path='/compare/:_id' component={Compare}/>
             <ProtectedRoute path="/Dashboard/:_id" component={Dashboard} />
             <ProtectedRoute path="/trips" component={TripHistory}/>
+            <ProtectedRoute path='/whatif/:_id' component={WhatIf}/>
             <ProtectedRoute path="/profile" component={UserProfile}/>
             <ProtectedRoute path="/group-compare" component={GroupCompare} />
             <AdminProtectedRoute path="/admin" component={ListStuffAdmin}/>

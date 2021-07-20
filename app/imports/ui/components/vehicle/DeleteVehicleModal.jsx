@@ -2,35 +2,27 @@ import React, { useState } from 'react';
 import { Button, Icon, Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import swal from 'sweetalert';
-import { Trips } from '../../../api/trip/TripCollection';
+import { UserVehicles } from '../../../api/vehicle/UserVehicleCollection';
 import { removeItMethod } from '../../../api/base/BaseCollection.methods';
-import { getMetricData } from '../../../api/utilities/CEData';
-import { imperialUnits, metricUnits } from '../../../api/utilities/constants';
 
-const DeleteTripModal = (props) => {
+const DeleteVehicleModal = ({ vehicle }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleModalOpen = () => setModalOpen(true);
   const handleModalClose = () => setModalOpen(false);
 
   const handleDelete = () => {
-    const collectionName = Trips.getCollectionName();
-    const instance = props.trip._id;
+    const collectionName = UserVehicles.getCollectionName();
+    const instance = vehicle._id;
     removeItMethod.callPromise({ collectionName, instance })
       .then(() => {
-        swal('Success', 'Trip deleted successfully', 'success');
+        swal('Success', 'Vehicle deleted successfully', 'success');
         handleModalClose();
+        // eslint-disable-next-line no-undef
+        window.location.reload();
       })
       .catch(error => swal('Error', error.message, 'error'));
   };
-  let distance;
-  if (props.metric) {
-    const metricData = getMetricData(props.trip.milesTraveled, props.trip.mpg, 0, 0);
-    distance = metricData.distance;
-  } else {
-    distance = props.trip.milesTraveled;
-  }
-  const label = props.metric ? metricUnits.distance : imperialUnits.distance;
 
   return (
     <Modal
@@ -40,10 +32,10 @@ const DeleteTripModal = (props) => {
       open={modalOpen}
       onClose={handleModalClose}
       onOpen={handleModalOpen}
-      trigger={<Icon style={{ cursor: 'pointer' }} name='trash alternate outline' />}
+      trigger={<Icon size='large' style={{ cursor: 'pointer' }} name='trash alternate outline' />}
     >
-      <Modal.Header>Delete Trip</Modal.Header>
-      <Modal.Content>Are you sure you want to delete the {`${distance} ${label} ${props.trip.mode}`} trip?</Modal.Content>
+      <Modal.Header>Delete Modal</Modal.Header>
+      <Modal.Content>Are you sure you want to delete the vehicle: {vehicle.name}?</Modal.Content>
       <Modal.Actions>
         <Button
           icon
@@ -51,7 +43,7 @@ const DeleteTripModal = (props) => {
           labelPosition='right'
           onClick={() => handleDelete()}
         >
-          Delete
+            Delete
           <Icon name='trash alternate outline'/>
         </Button>
         <Button
@@ -59,7 +51,7 @@ const DeleteTripModal = (props) => {
           labelPosition='right'
           onClick={handleModalClose}
         >
-          Cancel
+            Cancel
           <Icon name='x'/>
         </Button>
       </Modal.Actions>
@@ -67,9 +59,8 @@ const DeleteTripModal = (props) => {
   );
 };
 
-DeleteTripModal.propTypes = {
-  trip: PropTypes.object.isRequired,
-  metric: PropTypes.bool.isRequired,
+DeleteVehicleModal.propTypes = {
+  vehicle: PropTypes.object.isRequired,
 };
 
-export default DeleteTripModal;
+export default DeleteVehicleModal;

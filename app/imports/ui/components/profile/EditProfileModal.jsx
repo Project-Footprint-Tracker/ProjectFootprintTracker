@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
-import { Button, Modal } from 'semantic-ui-react';
+import { Button, Form, Modal } from 'semantic-ui-react';
 import { AutoForm, ErrorsField, HiddenField, NumField, SubmitField, TextField } from 'uniforms-semantic';
 import SimpleSchema from 'simpl-schema';
 import swal from 'sweetalert';
@@ -53,12 +53,12 @@ const EditProfileModal = ({ profile }) => {
 
   return (
     <Modal
-      size='mini'
+      size='tiny'
       closeIcon
       open={modalOpen}
       onClose={handleModalClose}
       onOpen={handleModalOpen}
-      trigger={<Button size='tiny' content='Edit Profile'/>}
+      trigger={<Button size='tiny' content='Edit Profile' color='black'/>}
       style={{ fontSize: '13px' }}
     >
       <Modal.Header>Edit Profile</Modal.Header>
@@ -69,8 +69,10 @@ const EditProfileModal = ({ profile }) => {
           model={profile}
         >
           <HiddenField name='email'/>
-          <TextField name='firstName'/>
-          <TextField name='lastName'/>
+          <Form.Group widths='equal'>
+            <TextField name='firstName'/>
+            <TextField name='lastName'/>
+          </Form.Group>
           <NumField name='zipCode'/>
           <TextField name='image' label='Image Link'/>
           <TextField name='goal'/>
