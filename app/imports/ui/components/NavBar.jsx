@@ -11,7 +11,6 @@ import { ROLE } from '../../api/role/Role';
 class NavBar extends React.Component {
 
   render() {
-    console.log(this.props.currentUser);
     const menuStyle = { marginBottom: '10px' };
     const manageDropdownItems = [
       { label: 'Groups', route: '/manage/groups' },

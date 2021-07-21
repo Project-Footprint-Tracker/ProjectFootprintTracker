@@ -9,10 +9,7 @@ export const UserDefineMethod = new ValidatedMethod({
   validate: null,
   run(userData) {
     if (Meteor.isServer) {
-      const docId = Users.define(userData);
-      console.log(Users.find().fetch());
-      console.log(userData);
-      return docId;
+      return Users.define(userData);
     }
     return null;
   },

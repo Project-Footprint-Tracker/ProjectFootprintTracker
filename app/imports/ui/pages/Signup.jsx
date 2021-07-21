@@ -1,12 +1,12 @@
-import { Meteor } from 'meteor/meteor';
 import React, { useState } from 'react';
+import { Roles } from 'meteor/alanning:roles';
 import PropTypes from 'prop-types';
 import { Link, Redirect } from 'react-router-dom';
 import swal from 'sweetalert';
 import { Container, Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
 import { Accounts } from 'meteor/accounts-base';
 import { UserDefineMethod } from '../../api/user/UserCollection.methods';
-// import { Users } from '../../api/user/UserCollection';
+import { ROLE } from '../../api/role/Role';
 
 /*
  * Signup component is similar to signin component, but we create a new user instead.
@@ -64,9 +64,9 @@ const Signup = ({ location }) => {
     },
     (userError) => {
       if (userError) {
-        swal(userError.message);
+        swal('Invalid ZIP Code. Please type a valid ZIP Code');
       } else {
-        Accounts.createUser({ email, username: email, password, firstName, lastName }, (accountError) => {
+        Accounts.createUser({ username: email, email, password }, (accountError) => {
           if (accountError) {
             setError(accountError.reason);
           } else {

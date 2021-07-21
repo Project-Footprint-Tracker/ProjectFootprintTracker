@@ -1,4 +1,3 @@
-import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import { Roles } from 'meteor/alanning:roles';
 import { Trips } from '../../api/trip/TripCollection';
@@ -11,12 +10,6 @@ import { EvVehicles } from '../../api/vehicle/EvVehicleCollection';
 import { UserVehicles } from '../../api/vehicle/UserVehicleCollection';
 
 /* eslint-disable no-console */
-
-Meteor.methods({
-  'insertUser'({ email, firstName, lastName, zipCode, goal, image }) {
-    Users.define({ email, firstName, lastName, zipCode, goal, image });
-  },
-});s
 
 function createUser(email, password, role) {
   console.log(`  Creating user ${email} with role ${role}.`);
