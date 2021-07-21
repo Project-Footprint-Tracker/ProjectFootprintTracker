@@ -1,8 +1,12 @@
+import { Meteor } from 'meteor/meteor';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link, Redirect } from 'react-router-dom';
+import swal from 'sweetalert';
 import { Container, Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
 import { Accounts } from 'meteor/accounts-base';
+import { UserDefineMethod } from '../../api/user/UserCollection.methods';
+// import { Users } from '../../api/user/UserCollection';
 
 /*
  * Signup component is similar to signin component, but we create a new user instead.
@@ -14,6 +18,7 @@ const Signup = ({ location }) => {
   const [lastName, setLastName] = useState('');
   const [zipCode, setZipCode] = useState(0);
   const [goal, setGoal] = useState('');
+  const [image, setImage] = useState('');
   const [error, setError] = useState('');
   const [redirectToReferer, setRedirectToReferer] = useState(false);
 
@@ -38,6 +43,9 @@ const Signup = ({ location }) => {
     case 'goal':
       setGoal(value);
       break;
+    case 'image':
+      setImage(value);
+      break;
     default:
         // do nothing
     }
@@ -45,18 +53,33 @@ const Signup = ({ location }) => {
 
   /* Handle Signup submission. Create user account and a profile entry, then redirect to the home page. */
   const submit = () => {
-    Accounts.createUser({ email, password, firstName, lastName, zipCode, goal }, (err) => {
-      if (err) {
-        setError(err.reason);
+
+    UserDefineMethod.call({
+      email,
+      firstName,
+      lastName,
+      zipCode,
+      goal,
+      image,
+    },
+    (userError) => {
+      if (userError) {
+        swal(userError.message);
       } else {
-        setError('');
-        setRedirectToReferer(true);
+        Accounts.createUser({ email, username: email, password, firstName, lastName }, (accountError) => {
+          if (accountError) {
+            setError(accountError.reason);
+          } else {
+            setError('');
+            setRedirectToReferer(true);
+          }
+        });
       }
     });
   };
 
   /* Display the signup form. Redirect to add page after successful registration and login. */
-  const { from } = location.state || { from: { pathname: `/Dashboard/${email}` } };
+  const { from } = location.state || { from: { pathname: '/' } };
   // if correct authentication, redirect to from: page instead of signup screen
   if (redirectToReferer) {
     return <Redirect to={from} />;
@@ -96,7 +119,6 @@ const Signup = ({ location }) => {
                 icon='user'
                 iconPosition='left'
                 name='firstName'
-                type='text'
                 onChange={handleChange}
               />
               <Form.Input
@@ -105,7 +127,6 @@ const Signup = ({ location }) => {
                 icon='user'
                 iconPosition='left'
                 name='lastName'
-                type='text'
                 onChange={handleChange}
               />
               <Form.Input
@@ -123,7 +144,14 @@ const Signup = ({ location }) => {
                 icon='trophy'
                 iconPosition='left'
                 name='goal'
-                type='text'
+                onChange={handleChange}
+              />
+              <Form.Input
+                label='Profile Picture'
+                id='signup-form-image'
+                icon='user'
+                iconPosition='left'
+                name='image'
                 onChange={handleChange}
               />
               <Form.Button id='signup-form-submit' content='Submit' />

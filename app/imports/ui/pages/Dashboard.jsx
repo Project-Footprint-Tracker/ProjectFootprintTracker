@@ -121,6 +121,14 @@ export default withTracker(({ match }) => {
   const userReady = userSubscribe.ready();
   const userVehicleReady = userVehicleSubscribe.ready();
 
+  console.log(username);
+  console.log(userProfile);
+  console.log(tripSubscribe);
+  console.log(tripReady);
+  console.log(userSubscribe);
+  console.log(userReady);
+  console.log(Trips.find({owner: username}).fetch());
+  console.log(Users.find({}).fetch());
   return {
     tripReady,
     userReady,

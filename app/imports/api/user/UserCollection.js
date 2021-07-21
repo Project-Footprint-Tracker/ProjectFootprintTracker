@@ -102,7 +102,6 @@ class UserCollection extends BaseCollection {
 
   publish() {
     if (Meteor.isServer) {
-      // get the TripCollection instance.
       const instance = this;
       /** This subscription publishes only the documents associated with the logged in user */
       Meteor.publish(userPublications.user, function publish() {

@@ -9,7 +9,9 @@ import { ROLE } from '../../api/role/Role';
 
 /* The NavBar appears at the top of every page. Rendered by the App Layout component. */
 class NavBar extends React.Component {
+
   render() {
+    console.log(this.props.currentUser);
     const menuStyle = { marginBottom: '10px' };
     const manageDropdownItems = [
       { label: 'Groups', route: '/manage/groups' },
