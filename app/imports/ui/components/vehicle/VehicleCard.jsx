@@ -20,7 +20,7 @@ const VehicleCard = (props) => {
   const getVehicle = props.userVehicles[display];
 
   const cardContent = (props.userVehicles.length !== 0 ?
-    <div>
+    <Grid>
       <Grid.Row columns={3}>
         <Grid.Column textAlign='center' width={2}>
           <Button
@@ -85,7 +85,7 @@ const VehicleCard = (props) => {
           </List>
         </Grid.Column>
       </Grid.Row>
-    </div> :
+    </Grid> :
     <Grid.Row>
       <Grid.Column verticalAlign='middle' textAlign='center' style={{ overflowX: 'auto' }}>
         <Header as='h3' content={'No vehicle content to show.'} subheader={'Please add a vehicle.'}/>
@@ -100,9 +100,7 @@ const VehicleCard = (props) => {
         <Card.Meta>US Average: {averageAutoMPG}</Card.Meta>
       </Card.Content>
       <Card.Content style={{ height: 250 }}>
-        <Grid>
-          {cardContent}
-        </Grid>
+        {cardContent}
       </Card.Content>
       <Card.Content extra>
         <AddVehicleModal owner={props.owner}/>
