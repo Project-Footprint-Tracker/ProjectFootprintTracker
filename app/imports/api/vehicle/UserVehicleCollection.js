@@ -138,7 +138,7 @@ class UserVehicleCollection extends BaseCollection {
     return this._collection.find({ owner: email }).fetch();
   }
 
-  getUserMpg = (owner) => {
+  getUserMpg(owner) {
     const userVehicles = this._collection.find({ owner: owner }).fetch();
 
     if (userVehicles.length) {

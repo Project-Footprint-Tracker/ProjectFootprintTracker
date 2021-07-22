@@ -7,8 +7,8 @@ import { Trips } from '../../api/trip/TripCollection';
 import { Users } from '../../api/user/UserCollection';
 import ChoseScenario from '../components/what-if/ChoseScenario';
 import WhatIfContent from '../components/what-if/WhatIfContent';
-import { AllVehicles } from '../../api/vehicle/AllVehicleCollection';
 import { tripModes } from '../../api/utilities/constants';
+import { UserVehicles } from '../../api/vehicle/UserVehicleCollection';
 
 // This page contains the graphs that will visualize the user's data in a more meaningful way.
 // The page waits for the data to load first and shows a loading page. Then once the collection is ready, we show the dashboard.
@@ -99,7 +99,7 @@ WhatIf.propTypes = {
 export default withTracker(({ match }) => {
   const tripSubscribe = Trips.subscribeTrip();
   const userSubscribe = Users.subscribeUser();
-  const allVehicleSubscribe = AllVehicles.subscribeAllVehicle();
+  const userVehicleSubscribe = UserVehicles.subscribeUserVehicle();
   const username = match.params._id;
 
   const milesSavedTotal = Trips.getMilesTotal(username);
@@ -109,11 +109,11 @@ export default withTracker(({ match }) => {
   const ceProducedTotal = Trips.getCEProducedTotal(username);
   const ceReducedPerDay = Trips.getCEReducedPerDay(username);
   const fuelSavedPerDay = Trips.getFuelSavedPerDay(username);
-  const userMpg = AllVehicles.getUserMpg(username);
+  const userMpg = UserVehicles.getUserMpg(username);
   return {
     tripReady: tripSubscribe.ready(),
     userReady: userSubscribe.ready(),
-    allVehicleReady: allVehicleSubscribe.ready(),
+    allVehicleReady: userVehicleSubscribe.ready(),
     milesSavedTotal,
 
     milesSavedPerDay,

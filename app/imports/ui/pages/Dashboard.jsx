@@ -120,7 +120,6 @@ export default withTracker(({ match }) => {
   const tripReady = tripSubscribe.ready();
   const userReady = userSubscribe.ready();
   const userVehicleReady = userVehicleSubscribe.ready();
-
   return {
     tripReady,
     userReady,
