@@ -13,7 +13,7 @@ const ModesChart = (props) => {
   }];
 
   const chartLayout = {
-    title: 'Modes of Transportation',
+    title: props.chartStyle.title ? props.chartStyle.title : 'Modes of Transportation',
     legend: {
       orientation: 'h',
       xanchor: 'center',
