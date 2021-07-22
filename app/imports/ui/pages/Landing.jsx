@@ -1,11 +1,17 @@
 import React from 'react';
-import { Button, Grid, Header, Image } from 'semantic-ui-react';
+import { Button, Divider, Grid, Header, Image, Loader } from 'semantic-ui-react';
 import { NavLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { withTracker } from 'meteor/react-meteor-data';
+import { Trips } from '../../api/trip/TripCollection';
+import LandingWhatIf from '../components/landing/LandingWhatIf';
+import { getDateToday } from '../../api/utilities/CEData';
 
 /* A simple static component to render some text for the landing page. */
-const Landing = () => {
+const Landing = ({ monthTrips, ready }) => {
   const padding = { paddingTop: 100 };
-  return (
+
+  return (ready ?
     <div>
       <Grid verticalAlign='middle' textAlign='center' container>
         <div style={padding} className='ghg-text'>
@@ -38,9 +44,25 @@ const Landing = () => {
             </Button>
           </Grid.Column>
         </Grid.Row>
+        <Divider/>
+        <LandingWhatIf monthTrips={monthTrips}/>
       </Grid>
-    </div>
+    </div> :
+    <Loader active>Getting Trip Data</Loader>
   );
 };
 
-export default Landing;
+Landing.propTypes = {
+  monthTrips: PropTypes.array.isRequired,
+  ready: PropTypes.bool.isRequired,
+};
+
+export default withTracker(() => {
+  const ready = Trips.subscribeTripCommunity().ready();
+  const lastMonth = getDateToday().getMonth() - 1;
+  const monthTrips = Trips.getTripsOnMonth(null, lastMonth);
+  return {
+    monthTrips,
+    ready,
+  };
+})(Landing);

@@ -5,6 +5,7 @@ import BaseCollection from '../base/BaseCollection';
 import { fuelCost, avgMpge, cePerGallonFuel, tripModes, tripModesArray } from '../utilities/constants';
 import { ROLE } from '../role/Role';
 import { GroupMembers } from '../group/GroupMemberCollection';
+import { getDateToday } from '../utilities/CEData';
 
 export const tripPublications = {
   trip: 'Trip',
@@ -162,12 +163,7 @@ class TripCollection extends BaseCollection {
         return this.ready();
       });
 
-      Meteor.publish(tripPublications.tripCommunity, function publish() {
-        if (this.userId) {
-          return instance._collection.find();
-        }
-        return this.ready();
-      });
+      Meteor.publish(tripPublications.tripCommunity, () => instance._collection.find());
     }
   }
 
@@ -436,8 +432,10 @@ class TripCollection extends BaseCollection {
    * the number to two decimal places.
    */
   getCEProducedTotal(username) {
-    const userTrips = this._collection.find({ owner: username }).fetch();
-    return userTrips.map(trip => trip.ceProduced).reduce((a, b) => a + b, 0).toFixed(2);
+    const trips = username ?
+      this._collection.find({ owner: username }).fetch() :
+      this._collection.find({}).fetch();
+    return trips.map(trip => trip.ceProduced).reduce((a, b) => a + b, 0).toFixed(2);
   }
 
   /**
@@ -866,8 +864,19 @@ class TripCollection extends BaseCollection {
   }
 
   getCESavedTotal(username) {
-    const userTrips = this._collection.find({ owner: username }).fetch();
-    return userTrips.map(trip => trip.ceSaved).reduce((a, b) => a + b, 0);
+    const trips = username ?
+      this._collection.find({ owner: username }).fetch() :
+      this._collection.find({}).fetch();
+    return trips.map(trip => trip.ceSaved).reduce((a, b) => a + b, 0);
+  }
+
+  getTripsOnMonth(username, monthNum) {
+    const trips = username ?
+      this._collection.find({ owner: username }, { sort: [['date', 'asc']] }).fetch() :
+      this._collection.find({}, { sort: [['date', 'asc']] }).fetch();
+    const today = getDateToday();
+    const month = monthNum || today.getMonth();
+    return trips.filter(({ date }) => date.getMonth() === month);
   }
 }
 
