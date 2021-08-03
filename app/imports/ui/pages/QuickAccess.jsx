@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Grid, Form, Card, Image, Header, Popup, Button } from 'semantic-ui-react';
-import '../../../../client/style.css';
-import { cePerGallonFuel } from '../../../api/utilities/constants';
+import '../../../client/style.css';
+import { cePerGallonFuel } from '../../api/utilities/constants';
 
 const QuickAccess = () => {
   const [miles, setMiles] = useState(1);

@@ -1,5 +1,4 @@
-import { lbsToKgFactor, miToKmFactor, mpgToKMLFactor } from './constants';
-import { kmToMiFactor } from '../../ui/utilities/to-delete/GlobalVariables';
+import { kmToMiFactor, lbsToKgFactor, miToKmFactor, mpgToKMLFactor } from './constants';
 
 export const getMetricData = (milesTraveled, mpg, ceSavedLbs, ceProducedLbs) => {
   const metricData = {};
