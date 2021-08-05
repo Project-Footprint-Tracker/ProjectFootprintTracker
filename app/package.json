@@ -11,6 +11,7 @@
   "dependencies": {
     "@babel/runtime": "^7.14.0",
     "@esri/react-arcgis": "^5.1.0",
+    "@fullcalendar/core": "^5.9.0",
     "@fullcalendar/daygrid": "^5.7.0",
     "@fullcalendar/interaction": "^5.7.0",
     "@fullcalendar/react": "^5.7.0",

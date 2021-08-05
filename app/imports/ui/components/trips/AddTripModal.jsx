@@ -154,7 +154,7 @@ const AddTripModal = (props) => {
 
   const handleSubmit = (data) => {
     const definitionData = {};
-    definitionData.date = data.date;
+    definitionData.date = data.date.setUTCHours(0, 0, 0, 0);
     definitionData.milesTraveled = (unit === imperialUnits.distance) ? distance :
       getMilesTraveled(distance);
     if (data.roundTrip) {

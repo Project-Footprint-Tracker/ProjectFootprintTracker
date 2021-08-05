@@ -330,13 +330,9 @@ class TripCollection extends BaseCollection {
    */
   getMilesSavedPerDay(username) {
     const userTrips = this._collection.find({ owner: username }).fetch();
-
     const date = [];
     const distance = [];
     const mode = [];
-
-    // initialize to be the first date if there are trips.
-    let prevDate = new Date();
 
     _.forEach(userTrips, function (objects) {
 
@@ -344,20 +340,58 @@ class TripCollection extends BaseCollection {
       const tripDistance = objects.milesTraveled;
       const tripMode = objects.mode;
 
-      if (prevDate.getTime() !== tripDate.getTime()) {
-        if (tripMode !== tripModes.GAS_CAR) {
-          date.push(tripDate);
-          mode.push(tripMode);
+      // check to see if there is an existing trip for that date.
+      const dateIndex = _.findIndex(date, (o) => o.getTime() === tripDate.getTime());
+
+      if (dateIndex !== -1) {
+        if (tripMode === tripModes.GAS_CAR) {
+          distance[dateIndex] -= tripDistance;
+        } else {
+          distance[dateIndex] += tripDistance;
+        }
+        mode[dateIndex] = mode[dateIndex].concat(`, ${tripMode}`);
+
+      } else {
+        if (tripMode === tripModes.GAS_CAR) {
+          distance.push(-tripDistance);
+        } else {
           distance.push(tripDistance);
         }
-        prevDate = tripDate;
-      } else {
-        mode[mode.length - 1] = mode[mode.length - 1].concat(`, ${tripMode}`);
-        distance[distance.length - 1] += tripDistance;
+        date.push(tripDate);
+        mode.push(tripMode);
       }
     });
 
     return { date: date, distance: distance, mode: mode };
+  }
+
+  getTrips(username) {
+    const userTrips = this._collection.find({ owner: username }).fetch();
+
+    const date = [];
+    const distance = [];
+    const mode = [];
+    const collection = [];
+
+    _.forEach(userTrips, function (trip) {
+
+      const tripDate = trip.date;
+      const tripMode = trip.mode;
+      const tripDistance = trip.milesTraveled;
+
+      if (tripMode === tripModes.GAS_CAR) {
+        distance.push(-tripDistance);
+      } else {
+        distance.push(tripDistance);
+      }
+
+      date.push(tripDate);
+      mode.push(tripMode);
+
+      collection.push({ date: tripDate, mode: tripMode, distance: tripDistance });
+    });
+
+    return { date, distance, mode, collection };
   }
 
   getMilesTraveledPerDay(username) {

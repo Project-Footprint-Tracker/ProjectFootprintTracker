@@ -521,3 +521,11 @@ export const getUserMpg = (owner) => {
 
   return averageAutoMPG;
 };
+
+export const getDate = (date) => {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const day = date.getDate();
+
+  return [year, month, day].join('-');
+}

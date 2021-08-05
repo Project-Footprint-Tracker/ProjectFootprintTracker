@@ -1,4 +1,4 @@
-import { _ } from 'meteor/underscore';
+import { _ } from 'lodash';
 import React, { useState, useRef } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -7,12 +7,14 @@ import swal from 'sweetalert';
 import { Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { cePerGallonFuel, tripModes } from '../../../api/utilities/constants';
+import { getDate } from '../../../api/utilities/Utilities';
 
 /* global window */
 
 function ChoseScenario(
   {
     milesSavedPerDay,
+    allTrips,
     modesOfTransport,
     userMpg,
     ceProducedTotal,
@@ -59,7 +61,7 @@ function ChoseScenario(
   }
 
   // state for events in fullcalendar
-  const [events, setEvents] = useState(() => _.map(milesSavedPerDay.date, function (date, i) {
+  const [events, setEvents] = useState(() => _.map(allTrips.date, function (date, i) {
     const year = `${date.getFullYear()}`;
     let month = `${date.getMonth() + 1}`;
     let day = `${date.getDate()}`;
@@ -72,7 +74,7 @@ function ChoseScenario(
       day = `0${day}`;
     }
 
-    return { id: i, title: milesSavedPerDay.mode[i], date: [year, month, day].join('-'), color: colorType(milesSavedPerDay.mode[i]) };
+    return { id: i, title: allTrips.mode[i], date: [year, month, day].join('-'), color: colorType(allTrips.mode[i]) };
   }));
 
   // state for event user selected in fullcalendar
@@ -101,8 +103,17 @@ function ChoseScenario(
       day = `0${day}`;
     }
 
+    console.log(info.event)
+    console.log(info.event.start);
+
     // update state selectEvent with event user selected on fullcalendar
-    setSelectedEvent(() => ({ id: info.event.id, title: info.event.title, date: [year, month, day].join('-'), oldDateFormat: info.event.start }));
+    setSelectedEvent(() => ({
+      id: info.event.id,
+      title: info.event.title,
+      date: [year, month, day].join('-'),
+      oldDateFormat: info.event.start,
+      utcHours: info.event.start.setUTCHours(0, 0, 0, 0),
+    }));
     defaultData.current = false;
     isEventSelected.current = true;
   };
@@ -135,12 +146,8 @@ function ChoseScenario(
       // update state events with array
       setEvents(eventArr);
 
-      // update nMilesSavedPerDay with new info
-      nMilesSavedPerDay.current[selectedEvent.id] = {
-        date: selectedEvent.oldDateFormat,
-        distance: nMilesSavedPerDay.current[selectedEvent.id].distance,
-        mode: nMilesSavedPerDay.current[selectedEvent.id].mode,
-      };
+      console.log(eventArr);
+      console.log(selectedEvent.id);
 
       // Changing MODES OF TRANSPORT (PIE GRAPH CHANGES).
       // get index of original mode
@@ -169,12 +176,75 @@ function ChoseScenario(
       // update nCEProducedTotal
       // ! check for if user doesn't have autoMPG registered
       // Get date of original selected event.
-      const indexOfOldMiles = nMilesSavedPerDay.current.findIndex(({ date }) => date === selectedEvent.oldDateFormat);
+
+      const indexOfOldMiles = _.findIndex(nMilesSavedPerDay.current, function (object) {
+        const selectedEventDate = getDate(selectedEvent.oldDateFormat);
+        const nMilesSavedDate = getDate(object.date);
+
+        return selectedEventDate === nMilesSavedDate;
+      });
+
+
+      // Get the new modes in the date.
+      const selectedEventModes = nMilesSavedPerDay.current[indexOfOldMiles].mode;
+      const splitModes = selectedEventModes.split(', ');
+
+      const newTransport = [];
+      if (selectedEventModes.indexOf(',') !== -1) {
+        const indexOfMode = _.findIndex(splitModes, (o) => o === selectedEvent.title);
+
+        _.forEach(splitModes, function (mode, index) {
+          if (index !== indexOfMode) {
+            newTransport.push(mode);
+          } else {
+            newTransport.push(transport);
+          }
+        });
+      }
+
+      // calculate the new distance with the new modes.
+      const currentDistance = nMilesSavedPerDay.current[indexOfOldMiles].distance;
+
+      let newDistanceTotal = 0;
+      if (newTransport.length !== 0) {
+        const originalModes = milesSavedPerDay.mode[indexOfOldMiles]; // use original modes as reference
+        const splitOriginalModes = originalModes.split(', ');
+
+        _.forEach(splitOriginalModes, function (mode, index) {
+          const tripIndex = _.findIndex(allTrips.collection, function (trip) {
+            return mode === trip.mode && getDate(selectedEvent.oldDateFormat) === getDate(trip.date);
+          });
+
+          console.log({tripIndex, distance: allTrips.distance[tripIndex], trips: allTrips.collection});
+
+          let newDistance = allTrips.distance[tripIndex];
+          // if the new mode is a gas car but the old mode is not,then negate it.
+          // else if the new mode is not a gas car but the old mode is, then negate it.
+          // else just add it.
+          if (newTransport[index] === tripModes.GAS_CAR && mode !== tripModes.GAS_CAR) {
+            newDistance = -newDistance;
+          } else if (newTransport[index] !== tripModes.GAS_CAR && mode === tripModes.GAS_CAR) {
+            newDistance = -newDistance;
+          }
+          newDistanceTotal += newDistance;
+          console.log(newDistanceTotal);
+        });
+      } else if (transport === tripModes.GAS_CAR) {
+        newDistanceTotal = -currentDistance;
+      } else if (currentDistance < 0) {
+        newDistanceTotal = -currentDistance;
+      } else {
+        newDistanceTotal = currentDistance;
+      }
+
+      console.log({ currentDistance, newDistanceTotal });
+
       nMilesSavedPerDay.current[indexOfOldMiles] = {
         date: selectedEvent.oldDateFormat,
-        distance: nMilesSavedPerDay.current[selectedEvent.id].distance,
-        mode: transport,
+        distance: newDistanceTotal,
+        mode: newTransport.length > 0 ? newTransport.join(', ') : transport,
       };
+
       _.forEach(nMilesSavedPerDay.current, function (objects) {
         milesSPDDate.push(objects.date);
         milesSPDDistance.push(objects.distance);
@@ -292,6 +362,7 @@ ChoseScenario.propTypes = {
   tripDate: PropTypes.instanceOf(Date),
   milesSavedTotal: PropTypes.number,
   milesSavedPerDay: PropTypes.object,
+  allTrips: PropTypes.object,
   modesOfTransport: PropTypes.object,
   userMpg: PropTypes.number,
   ceProducedTotal: PropTypes.string,

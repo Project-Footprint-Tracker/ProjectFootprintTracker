@@ -130,7 +130,7 @@ function WhatIfContent(
     },
     yaxis: {
       title: 'Miles Saved (miles)',
-      range: [0, Math.max(...milesSavedPerDay.distance)],
+      range: [Math.min(...milesSavedPerDay.distance) > 0 ? 0 : Math.min(...milesSavedPerDay.distance), Math.max(...milesSavedPerDay.distance)],
       type: 'linear',
       gridcolor: chartGridColor,
     },
