@@ -126,11 +126,12 @@ function WhatIfContent(
       range: [milesSavedPerDay.date[0], milesSavedPerDay.date[10]],
       rangeslider: { range: [milesSavedPerDay.date[0], milesSavedPerDay.date[milesSavedPerDay.length - 1]] },
       type: 'date',
+      tickformat: '%B %d %Y',
       gridcolor: chartGridColor,
     },
     yaxis: {
       title: 'Miles Saved (miles)',
-      range: [Math.min(...milesSavedPerDay.distance) > 0 ? 0 : Math.min(...milesSavedPerDay.distance), Math.max(...milesSavedPerDay.distance)],
+      range: [Math.min(...milesSavedPerDayWI.distance) > 0 ? 0 : Math.min(...milesSavedPerDayWI.distance), Math.max(...milesSavedPerDayWI.distance)],
       type: 'linear',
       gridcolor: chartGridColor,
     },
