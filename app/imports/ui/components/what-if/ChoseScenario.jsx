@@ -103,9 +103,6 @@ function ChoseScenario(
       day = `0${day}`;
     }
 
-    console.log(info.event)
-    console.log(info.event.start);
-
     // update state selectEvent with event user selected on fullcalendar
     setSelectedEvent(() => ({
       id: info.event.id,
@@ -146,9 +143,6 @@ function ChoseScenario(
       // update state events with array
       setEvents(eventArr);
 
-      console.log(eventArr);
-      console.log(selectedEvent.id);
-
       // Changing MODES OF TRANSPORT (PIE GRAPH CHANGES).
       // get index of original mode
       const indexOfOldTransport = nModesOfTransport.current.findIndex(({ label }) => label === selectedEvent.title);
@@ -184,7 +178,6 @@ function ChoseScenario(
         return selectedEventDate === nMilesSavedDate;
       });
 
-
       // Get the new modes in the date.
       const selectedEventModes = nMilesSavedPerDay.current[indexOfOldMiles].mode;
       const splitModes = selectedEventModes.split(', ');
@@ -215,9 +208,9 @@ function ChoseScenario(
             return mode === trip.mode && getDate(selectedEvent.oldDateFormat) === getDate(trip.date);
           });
 
-          console.log({tripIndex, distance: allTrips.distance[tripIndex], trips: allTrips.collection});
-
+          // get the distance from the original list of trips.
           let newDistance = allTrips.distance[tripIndex];
+
           // if the new mode is a gas car but the old mode is not,then negate it.
           // else if the new mode is not a gas car but the old mode is, then negate it.
           // else just add it.
@@ -227,7 +220,6 @@ function ChoseScenario(
             newDistance = -newDistance;
           }
           newDistanceTotal += newDistance;
-          console.log(newDistanceTotal);
         });
       } else if (transport === tripModes.GAS_CAR) {
         newDistanceTotal = -currentDistance;
@@ -237,8 +229,7 @@ function ChoseScenario(
         newDistanceTotal = currentDistance;
       }
 
-      console.log({ currentDistance, newDistanceTotal });
-
+      // update nMilesSavedPerDay
       nMilesSavedPerDay.current[indexOfOldMiles] = {
         date: selectedEvent.oldDateFormat,
         distance: newDistanceTotal,
@@ -251,6 +242,7 @@ function ChoseScenario(
         milesSPDM.push(objects.mode);
       });
       milesSPD = { date: milesSPDDate, distance: milesSPDDistance, mode: milesSPDM };
+
       // If event produced miles & ce
       _.forEach(nMilesSavedPerDay.current, function (objects) {
         if (objects.mode === tripModes.GAS_CAR || objects.mode === tripModes.CARPOOL) {

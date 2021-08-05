@@ -109,7 +109,6 @@ export default withTracker(({ match }) => {
 
   const milesSavedPerDay = Trips.getMilesSavedPerDay(username);
   const allTrips = Trips.getTrips(username);
-  console.log(allTrips);
 
   const modesOfTransport = Trips.getModesOfTransport(username);
   const ceProducedTotal = Trips.getCEProducedTotal(username);
