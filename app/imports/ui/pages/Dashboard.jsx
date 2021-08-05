@@ -99,7 +99,6 @@ export default withTracker(({ match }) => {
   const vehicleMilesTraveled = Trips.getVehicleMilesTraveled(username);
   const milesTotal = Trips.getMilesTotal(username);
   const milesPerDay = Trips.getMilesTraveledPerDay(username);
-
   const modesOfTransport = Trips.getModesOfTransport(username);
   const milesPerMode = Trips.getMilesPerMode(username);
 

@@ -293,9 +293,9 @@ class TripCollection extends BaseCollection {
     let milesAdded = 0;
 
     _.forEach(userTrips, function (objects) {
-      if (objects.mode === 'Gas Car') {
+      if (objects.mode === tripModes.GAS_CAR) {
         milesAdded += objects.milesTraveled;
-      } else if (objects.mode === 'Carpool') {
+      } else if (objects.mode === tripModes.CARPOOL) {
         milesAdded += objects.milesTraveled;
         milesSaved += (objects.milesTraveled * objects.passengers);
       } else {
@@ -330,13 +330,9 @@ class TripCollection extends BaseCollection {
    */
   getMilesSavedPerDay(username) {
     const userTrips = this._collection.find({ owner: username }).fetch();
-
     const date = [];
     const distance = [];
     const mode = [];
-
-    // initialize to be the first date if there are trips.
-    let prevDate = new Date();
 
     _.forEach(userTrips, function (objects) {
 
@@ -344,20 +340,58 @@ class TripCollection extends BaseCollection {
       const tripDistance = objects.milesTraveled;
       const tripMode = objects.mode;
 
-      if (prevDate.getTime() !== tripDate.getTime()) {
-        if (tripMode !== 'Gas Car') {
-          date.push(tripDate);
-          mode.push(tripMode);
+      // check to see if there is an existing trip for that date.
+      const dateIndex = _.findIndex(date, (o) => o.getTime() === tripDate.getTime());
+
+      if (dateIndex !== -1) {
+        if (tripMode === tripModes.GAS_CAR) {
+          distance[dateIndex] -= tripDistance;
+        } else {
+          distance[dateIndex] += tripDistance;
+        }
+        mode[dateIndex] = mode[dateIndex].concat(`, ${tripMode}`);
+
+      } else {
+        if (tripMode === tripModes.GAS_CAR) {
+          distance.push(-tripDistance);
+        } else {
           distance.push(tripDistance);
         }
-        prevDate = tripDate;
-      } else {
-        mode[mode.length - 1] = mode[mode.length - 1].concat(`, ${tripMode}`);
-        distance[distance.length - 1] += tripDistance;
+        date.push(tripDate);
+        mode.push(tripMode);
       }
     });
 
     return { date: date, distance: distance, mode: mode };
+  }
+
+  getTrips(username) {
+    const userTrips = this._collection.find({ owner: username }).fetch();
+
+    const date = [];
+    const distance = [];
+    const mode = [];
+    const collection = [];
+
+    _.forEach(userTrips, function (trip) {
+
+      const tripDate = trip.date;
+      const tripMode = trip.mode;
+      const tripDistance = trip.milesTraveled;
+
+      if (tripMode === tripModes.GAS_CAR) {
+        distance.push(-tripDistance);
+      } else {
+        distance.push(tripDistance);
+      }
+
+      date.push(tripDate);
+      mode.push(tripMode);
+
+      collection.push({ date: tripDate, mode: tripMode, distance: tripDistance });
+    });
+
+    return { date, distance, mode, collection };
   }
 
   getMilesTraveledPerDay(username) {
@@ -380,7 +414,7 @@ class TripCollection extends BaseCollection {
       const tripMode = objects.mode;
 
       if (prevDate.getTime() === tripDate.getTime()) {
-        if (tripMode === 'Gas Car') {
+        if (tripMode === tripModes.GAS_CAR) {
           if (added.length < date.length) {
             addedMode.push(tripMode);
             added.push(-tripDistance);
@@ -390,7 +424,7 @@ class TripCollection extends BaseCollection {
           }
         }
 
-        if (tripMode !== 'Gas Car') {
+        if (tripMode !== tripModes.GAS_CAR) {
           if (saved.length < date.length) {
             savedMode.push(tripMode);
             saved.push(tripDistance);
@@ -403,7 +437,7 @@ class TripCollection extends BaseCollection {
         date.push(tripDate);
         prevDate = tripDate;
 
-        if (tripMode === 'Gas Car') {
+        if (tripMode === tripModes.GAS_CAR) {
           addedMode.push(tripMode);
           added.push(-tripDistance);
         } else {
@@ -587,12 +621,12 @@ class TripCollection extends BaseCollection {
         monthMilesTraveled = 0;
       }
 
-      if (mode === 'Gas Car') {
+      if (mode === tripModes.GAS_CAR) {
 
         yearMilesTraveled += distance;
         monthMilesTraveled += distance;
         dayMilesTraveled += distance;
-      } else if (mode === 'Carpool') {
+      } else if (mode === tripModes.CARPOOL) {
 
         yearMilesTraveled += distance;
         yearMilesSaved += (distance * numOfPassenger);
@@ -715,12 +749,12 @@ class TripCollection extends BaseCollection {
         monthFuelSpent = 0;
       }
 
-      if (mode === 'Gas Car') {
+      if (mode === tripModes.GAS_CAR) {
 
         yearFuelSpent += (distance / mpg);
         monthFuelSpent += (distance / mpg);
         dayFuelSpent += (distance / mpg);
-      } else if (mode === 'Carpool') {
+      } else if (mode === tripModes.CARPOOL) {
 
         yearFuelSpent += (distance / mpg);
         yearFuelSaved += ((distance * numOfPassenger) / mpg);
@@ -821,7 +855,7 @@ class TripCollection extends BaseCollection {
 
       numOfDay += 1;
 
-      if (mode === 'Gas Car' || mode === 'Carpool') {
+      if (mode === tripModes.GAS_CAR || mode === tripModes.CARPOOL) {
         yearEvFuel += (distance / avgMpge);
         monthEvFuel += (distance / avgMpge);
         dayEvFuel += (distance / avgMpge);

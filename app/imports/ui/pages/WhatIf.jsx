@@ -18,6 +18,7 @@ function WhatIf(
     userReady,
     milesSavedTotal,
     milesSavedPerDay,
+    allTrips,
     modesOfTransport,
     userMpg,
     ceProducedTotal,
@@ -56,6 +57,7 @@ function WhatIf(
       <ChoseScenario
         milesSavedTotal={milesSavedTotal}
         milesSavedPerDay={milesSavedPerDay}
+        allTrips={allTrips}
         modesOfTransport={modesOfTransport}
         ceProducedTotal={ceProducedTotal}
         ceReducedPerDay={ceReducedPerDay}
@@ -87,6 +89,7 @@ function WhatIf(
 WhatIf.propTypes = {
   milesSavedTotal: PropTypes.number,
   milesSavedPerDay: PropTypes.object,
+  allTrips: PropTypes.object,
   modesOfTransport: PropTypes.object,
   userMpg: PropTypes.number,
   ceProducedTotal: PropTypes.string,
@@ -105,6 +108,8 @@ export default withTracker(({ match }) => {
   const milesSavedTotal = Trips.getMilesTotal(username);
 
   const milesSavedPerDay = Trips.getMilesSavedPerDay(username);
+  const allTrips = Trips.getTrips(username);
+
   const modesOfTransport = Trips.getModesOfTransport(username);
   const ceProducedTotal = Trips.getCEProducedTotal(username);
   const ceReducedPerDay = Trips.getCEReducedPerDay(username);
@@ -115,7 +120,7 @@ export default withTracker(({ match }) => {
     userReady: userSubscribe.ready(),
     allVehicleReady: userVehicleSubscribe.ready(),
     milesSavedTotal,
-
+    allTrips,
     milesSavedPerDay,
     modesOfTransport,
     ceProducedTotal,
