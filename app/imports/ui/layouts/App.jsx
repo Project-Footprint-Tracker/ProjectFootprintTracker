@@ -7,12 +7,11 @@ import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import NavBar from '../components/NavBar';
 import Footer from '../components/Footer';
 import Landing from '../pages/Landing';
-import ListStuffAdmin from '../pages/ListStuffAdmin';
 import NotFound from '../pages/NotFound';
 import Signin from '../pages/Signin';
 import Signup from '../pages/Signup';
 import Signout from '../pages/Signout';
-import QuickAccess from '../pages/e-impact/QuickAccess';
+import QuickAccess from '../pages/QuickAccess';
 import Dashboard from '../pages/Dashboard';
 import TripHistory from '../pages/TripHistory';
 import Compare from '../pages/Compare';
@@ -46,7 +45,6 @@ class App extends React.Component {
             <ProtectedRoute path='/whatif/:_id' component={WhatIf}/>
             <ProtectedRoute path="/profile" component={UserProfile}/>
             <ProtectedRoute path="/group-compare" component={GroupCompare} />
-            <AdminProtectedRoute path="/admin" component={ListStuffAdmin}/>
             <AdminProtectedRoute path="/manage/groups" component={ManageGroups} />
             <AdminProtectedRoute path="/manage/group-members" component={ManageGroupMembers} />
             <AdminProtectedRoute path="/manage/saved-commutes" component={ManageSavedCommutes} />
