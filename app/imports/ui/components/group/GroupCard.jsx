@@ -4,7 +4,7 @@ import { Button, Card, Header, Icon, Table } from 'semantic-ui-react';
 
 const GroupCard = ({ groups }) => {
   const getGroups = groups.length !== 0 ?
-    groups.map((group) => <Table.Row key={group.key}>
+    groups.map((group) => <Table.Row key={group._id}>
       <Table.Cell>{group.group}</Table.Cell>
       <Table.Cell width={1}>
         <Icon style={{ cursor: 'pointer' }} name='edit outline'/>
