@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import { Roles } from 'meteor/alanning:roles';
 import { ROLE } from '../../api/role/Role';
+import { Users } from '../../api/user/UserCollection';
 
 /* eslint-disable no-console */
 
@@ -25,7 +26,12 @@ export function createUser(email, password, role) {
 if (Meteor.users.find().count() === 0) {
   if (Meteor.settings.defaultAccounts) {
     console.log('Creating the default user(s)');
-    Meteor.settings.defaultAccounts.map(({ email, password, role }) => createUser(email, password, role));
+    const users = JSON.parse(Assets.getText('sampleUsers.json'));
+    users.forEach(user => {
+      Users.define(user);
+      createUser(user.email, 'changeme', user.role || ROLE.USER);
+    });
+    console.log(`  UserCollection: ${Users.count()} users`);
   } else {
     console.log('Cannot initialize the database!  Please invoke meteor with a settings file.');
   }

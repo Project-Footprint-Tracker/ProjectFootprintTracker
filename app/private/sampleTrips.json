@@ -33,5 +33,186 @@
     "mode": "Telework",
     "mpg": 25,
     "owner": "john@foo.com"
+  },
+  {
+    "date": "2021-06-29",
+    "milesTraveled": "26",
+    "mode": "Gas Vehicle",
+    "mpg": 29,
+    "owner": "cam@foo.com"
+  },
+  {
+    "date": "2021-06-28",
+    "milesTraveled": "26",
+    "mode": "Public Transportation",
+    "mpg": 29,
+    "owner": "cam@foo.com"
+  },
+  {
+    "date": "2021-06-27",
+    "milesTraveled": "26",
+    "mode": "Public Transportation",
+    "mpg": 29,
+    "owner": "cam@foo.com"
+  },
+  {
+    "date": "2021-06-26",
+    "milesTraveled": "32",
+    "mode": "Carpool",
+    "mpg": 29,
+    "passengers": 2,
+    "owner": "cam@foo.com"
+  },
+  {
+    "date": "2021-06-24",
+    "milesTraveled": "32",
+    "mode": "Carpool",
+    "mpg": 29,
+    "passengers": 2,
+    "owner": "cam@foo.com"
+  },
+  {
+    "date": "2021-06-29",
+    "milesTraveled": "34",
+    "mode": "Gas Vehicle",
+    "mpg": 22,
+    "owner": "abi@foo.com"
+  },
+  {
+    "date": "2021-06-28",
+    "milesTraveled": "26",
+    "mode": "Gas Vehicle",
+    "mpg": 22,
+    "owner": "abi@foo.com"
+  },
+  {
+    "date": "2021-06-27",
+    "milesTraveled": "26",
+    "mode": "Gas Vehicle",
+    "mpg": 22,
+    "owner": "abi@foo.com"
+  },
+  {
+    "date": "2021-06-26",
+    "milesTraveled": "32",
+    "mode": "Gas Vehicle",
+    "mpg": 22,
+    "owner": "abi@foo.com"
+  },
+  {
+    "date": "2021-06-24",
+    "milesTraveled": "32",
+    "mode": "Gas Vehicle",
+    "mpg": 22,
+    "passengers": 2,
+    "owner": "abi@foo.com"
+  },
+  {
+    "date": "2021-06-29",
+    "milesTraveled": "34",
+    "mode": "Public Transportation",
+    "mpg": 22,
+    "owner": "betty@foo.com"
+  },
+  {
+    "date": "2021-06-28",
+    "milesTraveled": "26",
+    "mode": "Public Transportation",
+    "mpg": 22,
+    "owner": "betty@foo.com"
+  },
+  {
+    "date": "2021-06-27",
+    "milesTraveled": "26",
+    "mode": "Public Transportation",
+    "mpg": 22,
+    "owner": "betty@foo.com"
+  },
+  {
+    "date": "2021-06-26",
+    "milesTraveled": "32",
+    "mode": "Public Transportation",
+    "mpg": 22,
+    "owner": "betty@foo.com"
+  },
+  {
+    "date": "2021-06-24",
+    "milesTraveled": "32",
+    "mode": "Public Transportation",
+    "mpg": 22,
+    "passengers": 2,
+    "owner": "betty@foo.com"
+  },
+  {
+    "date": "2021-06-29",
+    "milesTraveled": "14",
+    "mode": "EV/Hybrid",
+    "mpg": 32,
+    "owner": "charley@foo.com"
+  },
+  {
+    "date": "2021-06-28",
+    "milesTraveled": "14",
+    "mode": "EV/Hybrid",
+    "mpg": 32,
+    "owner": "charley@foo.com"
+  },
+  {
+    "date": "2021-06-27",
+    "milesTraveled": "14",
+    "mode": "EV/Hybrid",
+    "mpg": 32,
+    "owner": "charley@foo.com"
+  },
+  {
+    "date": "2021-06-26",
+    "milesTraveled": "35",
+    "mode": "EV/Hybrid",
+    "mpg": 32,
+    "owner": "charley@foo.com"
+  },
+  {
+    "date": "2021-06-24",
+    "milesTraveled": "32",
+    "mode": "EV/Hybrid",
+    "mpg": 32,
+    "passengers": 2,
+    "owner": "charley@foo.com"
+  },
+  {
+    "date": "2021-06-29",
+    "milesTraveled": "14",
+    "mode": "Gas Vehicle",
+    "mpg": 32,
+    "owner": "dora@foo.com"
+  },
+  {
+    "date": "2021-06-28",
+    "milesTraveled": "14",
+    "mode": "Telework",
+    "mpg": 32,
+    "owner": "dora@foo.com"
+  },
+  {
+    "date": "2021-06-27",
+    "milesTraveled": "14",
+    "mode": "Gas Vehicle",
+    "mpg": 32,
+    "owner": "dora@foo.com"
+  },
+  {
+    "date": "2021-06-26",
+    "milesTraveled": "35",
+    "mode": "Gas Vehicle",
+    "mpg": 32,
+    "owner": "dora@foo.com"
+  },
+  {
+    "date": "2021-06-24",
+    "milesTraveled": "32",
+    "mode": "Telework",
+    "mpg": 32,
+    "passengers": 2,
+    "owner": "dora@foo.com"
   }
 ]

@@ -528,4 +528,4 @@ export const getDate = (date) => {
   const day = date.getDate();
 
   return [year, month, day].join('-');
-}
+};
