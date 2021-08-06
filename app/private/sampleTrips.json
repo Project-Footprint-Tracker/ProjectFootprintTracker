@@ -18,6 +18,7 @@
     "milesTraveled": "25",
     "mode": "Carpool",
     "mpg": 25,
+    "passengers": 1,
     "owner": "john@foo.com"
   },
   {
