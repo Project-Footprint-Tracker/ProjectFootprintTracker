@@ -131,10 +131,10 @@ export const counties = {
  */
 export const getCountyTrips = (county) => {
   const trips = Trips.find({}, {}).fetch();
-  return trips.filter(t => {
+  return (trips.filter(t => {
     const ownerZip = Users.findDoc({ email: t.owner }).zipCode;
     return countyZipcodes[county].includes(ownerZip);
-  });
+  }) || []);
 };
 
 export const getCEReducedPerDay = (trips) => {

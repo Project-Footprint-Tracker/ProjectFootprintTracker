@@ -14,7 +14,7 @@ export const userPublications = {
 
 class UserCollection extends BaseCollection {
   constructor() {
-    super('Users', new SimpleSchema({
+    super('User', new SimpleSchema({
       email: String,
       firstName: String,
       lastName: String,

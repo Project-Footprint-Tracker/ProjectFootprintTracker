@@ -24,7 +24,7 @@ import CEDataChart from '../components/charts/CEDataChart';
 
 const GroupCompare = ({ groups, ready, countyTrips, groupTrips, userTrips }) => {
 
-  const choiceNames = ['My'];
+  const choiceNames = ['My Trips'];
   groups.forEach((g) => choiceNames.push(g.name));
   choiceNames.push(counties.Hawaii);
   choiceNames.push(counties.Honolulu);
@@ -47,7 +47,7 @@ const GroupCompare = ({ groups, ready, countyTrips, groupTrips, userTrips }) => 
     if (name === 'leftGroup') {
       setChoice1(value);
       switch (value) {
-      case 'My':
+      case 'My Trips':
         setChoice1Trips(userTrips);
         break;
       case counties.Hawaii:
@@ -62,7 +62,7 @@ const GroupCompare = ({ groups, ready, countyTrips, groupTrips, userTrips }) => 
     } else {
       setChoice2(value);
       switch (value) {
-      case 'My':
+      case 'My Trips':
         setChoice2Trips(userTrips);
         break;
       case counties.Hawaii:
@@ -143,8 +143,11 @@ export default withTracker(() => {
   const membersReady = GroupMembers.subscribe().ready();
   const tripsReady = Trips.subscribeTripCommunity().ready();
   const usersReady = Users.subscribeUserAdmin().ready();
-  const ready = groupReady && membersReady && tripsReady && usersReady;
-  // console.log(groupReady, membersReady, tripsReady, ready);
+  const ready = groupReady
+      && membersReady
+      && tripsReady
+      && usersReady
+      && username !== undefined;
   const userTrips = Trips.find({ owner: username }, {}).fetch();
   const groupTrips = {};
   groups.forEach((g) => {
