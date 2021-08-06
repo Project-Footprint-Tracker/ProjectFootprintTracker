@@ -28,10 +28,13 @@ const VehicleCard = (props) => {
             color='black'
             icon='left chevron'
             onClick={() => handleNext()}
+            disabled={props.userVehicles.length === 1}
           />
         </Grid.Column>
         <Grid.Column textAlign='center' width={12} style={{ overflowX: 'auto' }}>
           <Header as='h3' content={getVehicle.name} subheader={getVehicle.type}/>
+          <EditVehicleModal vehicle={getVehicle}/>
+          <DeleteVehicleModal vehicle={getVehicle}/>
         </Grid.Column>
         <Grid.Column textAlign='center' width={2}>
           <Button
@@ -39,14 +42,13 @@ const VehicleCard = (props) => {
             color='black'
             icon='right chevron'
             onClick={() => handlePrev()}
+            disabled={props.userVehicles.length === 1}
           />
         </Grid.Column>
       </Grid.Row>
       <Grid.Row columns={3}>
         <Grid.Column textAlign='center' width={6}>
           <Image src={getVehicle.logo} style={{ maxHeight: 125 }}/>
-          <EditVehicleModal vehicle={getVehicle}/>
-          <DeleteVehicleModal vehicle={getVehicle}/>
         </Grid.Column>
         <Grid.Column width={4} style={{ maxHeight: 125, overflow: 'auto' }}>
           <List>
@@ -94,8 +96,8 @@ const VehicleCard = (props) => {
   );
 
   return (
-    <Card fluid style={{ height: 370 }}>
-      <Card.Content textAlign='center'>
+    <Card fluid style={{ height: 400 }}>
+      <Card.Content textAlign='center' style={{ maxHeight: 60 }}>
         <Card.Header>My Average MPG: {props.userMPG}</Card.Header>
         <Card.Meta>US Average: {averageAutoMPG}</Card.Meta>
       </Card.Content>

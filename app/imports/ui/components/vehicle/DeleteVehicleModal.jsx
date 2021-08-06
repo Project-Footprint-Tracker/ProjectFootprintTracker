@@ -32,7 +32,7 @@ const DeleteVehicleModal = ({ vehicle }) => {
       open={modalOpen}
       onClose={handleModalClose}
       onOpen={handleModalOpen}
-      trigger={<Icon size='large' style={{ cursor: 'pointer' }} name='trash alternate outline' />}
+      trigger={<Icon style={{ cursor: 'pointer' }} name='trash alternate outline' />}
     >
       <Modal.Header>Delete Modal</Modal.Header>
       <Modal.Content>Are you sure you want to delete the vehicle: {vehicle.name}?</Modal.Content>

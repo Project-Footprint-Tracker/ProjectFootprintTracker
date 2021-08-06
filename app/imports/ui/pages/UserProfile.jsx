@@ -8,12 +8,14 @@ import { UserVehicles } from '../../api/vehicle/UserVehicleCollection';
 import ProfileCard from '../components/profile/ProfileCard';
 import { GroupMembers } from '../../api/group/GroupMemberCollection';
 import VehicleCard from '../components/vehicle/VehicleCard';
+import GroupCard from '../components/group/GroupCard';
 
 const UserProfile = ({
   owner,
   profile,
   county,
   userGroups,
+  userGroupsNames,
   vehicles,
   userMPG,
   ready,
@@ -26,14 +28,19 @@ const UserProfile = ({
         </Grid.Column>
       </Grid.Row>
       <Grid.Row columns={2}>
-        <Grid.Column width={7}>
+        <Grid.Column width={8}>
           <ProfileCard
             profile={profile}
             countyName={county}
-            groups={userGroups}
+            groups={userGroupsNames}
           />
         </Grid.Column>
-        <Grid.Column width={9}>
+        <Grid.Column width={8}>
+          <GroupCard groups={userGroups}/>
+        </Grid.Column>
+      </Grid.Row>
+      <Grid.Row>
+        <Grid.Column>
           <VehicleCard
             owner={owner}
             userMPG={userMPG}
@@ -51,6 +58,7 @@ UserProfile.propTypes = {
   profile: PropTypes.object,
   county: PropTypes.string,
   userGroups: PropTypes.array,
+  userGroupsNames: PropTypes.array,
   vehicles: PropTypes.array.isRequired,
   userMPG: PropTypes.number.isRequired,
   ready: PropTypes.bool.isRequired,
@@ -66,7 +74,8 @@ export default withTracker(() => {
   const county = Users.getUserCounty(owner);
   const vehicles = UserVehicles.getUserVehicles(owner);
   const userMPG = UserVehicles.getUserMpg(owner);
-  const userGroups = GroupMembers.find({ member: owner }).fetch().map(doc => doc.group);
+  const userGroups = GroupMembers.find({ member: owner }).fetch();
+  const userGroupsNames = userGroups.map(doc => doc.group);
   return {
     owner,
     profile,
@@ -74,6 +83,7 @@ export default withTracker(() => {
     vehicles,
     userMPG,
     userGroups,
+    userGroupsNames,
     ready,
   };
 })(UserProfile);

@@ -54,7 +54,7 @@ const EditVehicleModal = ({ vehicle }) => {
       open={modalOpen}
       onClose={handleModalClose}
       onOpen={handleModalOpen}
-      trigger={<Icon size='large' style={{ cursor: 'pointer' }} name='edit outline'/>}
+      trigger={<Icon style={{ cursor: 'pointer' }} name='edit outline'/>}
       style = {{ fontSize: '12px' }}
     >
       <Modal.Header>Add Vehicle</Modal.Header>
