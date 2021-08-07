@@ -216,26 +216,6 @@ function DashboardContent(
     },
   };
 
-  useEffect(() => {
-    const generalCard = document.getElementsByClassName('general-card');
-    const generalCardHeader = document.getElementsByClassName('card-header');
-    if (userProfile.theme === 'dark') {
-      for (let i = 0; i < generalCard.length; i++) {
-        generalCard[i].classList.add('dark-card');
-      }
-      for (let i = 0; i < generalCardHeader.length; i++) {
-        generalCardHeader[i].classList.add('dark-card-header');
-      }
-    } else {
-      for (let i = 0; i < generalCard.length; i++) {
-        generalCard[i].classList.remove('dark-card');
-      }
-      for (let i = 0; i < generalCardHeader.length; i++) {
-        generalCardHeader[i].classList.remove('dark-card-header');
-      }
-    }
-  }, [userProfile]);
-
   return (
     <div id='dashboard-container'>
       <Card.Group centered stackable itemsPerRow={5}>

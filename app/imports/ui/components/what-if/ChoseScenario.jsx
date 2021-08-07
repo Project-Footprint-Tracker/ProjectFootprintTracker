@@ -6,7 +6,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import swal from 'sweetalert';
 import { Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { cePerGallonFuel, tripModes } from '../../../api/utilities/constants';
+import { cePerGallonFuel, tripModes, fuelCost } from '../../../api/utilities/constants';
 import { getDate } from '../../../api/utilities/Utilities';
 
 /* global window */
@@ -204,6 +204,8 @@ function ChoseScenario(
         const splitOriginalModes = originalModes.split(', ');
 
         _.forEach(splitOriginalModes, function (mode, index) {
+
+          // find the index to access the distance of that particular trip
           const tripIndex = _.findIndex(allTrips.collection, function (trip) {
             return mode === trip.mode && getDate(selectedEvent.oldDateFormat) === getDate(trip.date);
           });
@@ -245,19 +247,20 @@ function ChoseScenario(
 
       // If event produced miles & ce
       _.forEach(nMilesSavedPerDay.current, function (objects) {
+
         if (objects.mode === tripModes.GAS_CAR || objects.mode === tripModes.CARPOOL) {
           ceProduced += ((objects.distance / userMpg) * cePerGallonFuel);
           ceRPDD.push(objects.date);
           ceRPDG.push(0);
           fuelSPDD.push(objects.date);
           fuelSPDF.push(0);
-          fuelSPDP.push(((objects.distance / userMpg) * 3.77).toFixed(2));
+          fuelSPDP.push(((objects.distance / userMpg) * fuelCost).toFixed(2));
         } else {
           ceRPDD.push(objects.date);
           ceRPDG.push(((objects.distance / userMpg) * cePerGallonFuel).toFixed(2));
           fuelSPDD.push(objects.date);
           fuelSPDF.push((objects.distance / userMpg).toFixed(2));
-          fuelSPDP.push(((objects.distance / userMpg) * 3.77).toFixed(2));
+          fuelSPDP.push(((objects.distance / userMpg) * fuelCost).toFixed(2));
         }
       });
       // If event reduced miles & ce
