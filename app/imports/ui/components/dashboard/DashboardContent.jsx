@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Card } from 'semantic-ui-react';
 import Chart from '../Chart';
@@ -8,8 +8,6 @@ import DashboardCeCard from './DashboardCeCard';
 import DashboardTreeCard from './DashboardTreeCard';
 import { cePerGallonFuel, poundsOfCePerTree } from '../../../api/utilities/constants';
 import DashboardLeafCard from './DashboardLeafCard';
-
-/* global document */
 
 // Contains the graphs that visualizes the user's data.
 function DashboardContent(
