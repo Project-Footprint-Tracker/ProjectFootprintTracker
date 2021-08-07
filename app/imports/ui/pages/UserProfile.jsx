@@ -32,11 +32,15 @@ const UserProfile = ({
           <ProfileCard
             profile={profile}
             countyName={county}
-            groups={userGroupsNames}
+            userGroupsNames={userGroupsNames}
           />
         </Grid.Column>
         <Grid.Column width={8}>
-          <GroupCard groups={userGroups}/>
+          <GroupCard
+            owner={owner}
+            userGroupsNames = {userGroupsNames}
+            userGroups={userGroups}
+          />
         </Grid.Column>
       </Grid.Row>
       <Grid.Row>

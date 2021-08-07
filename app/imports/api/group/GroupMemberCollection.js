@@ -1,6 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import _ from 'lodash';
 import BaseCollection from '../base/BaseCollection';
+import { ROLE } from '../role/Role';
 
 class GroupMemberCollection extends BaseCollection {
 
@@ -33,6 +34,10 @@ class GroupMemberCollection extends BaseCollection {
 
   removeIt(id) {
     return super.removeIt(id);
+  }
+
+  assertValidRoleForMethod(userId) {
+    this.assertRole(userId, [ROLE.ADMIN, ROLE.USER]);
   }
 
   dumpOne(docID) {

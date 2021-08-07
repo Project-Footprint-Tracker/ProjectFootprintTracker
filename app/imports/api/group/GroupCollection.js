@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { Meteor } from 'meteor/meteor';
 import BaseCollection from '../base/BaseCollection';
 import { GroupMembers } from './GroupMemberCollection';
+import { ROLE } from '../role/Role';
 
 class GroupCollection extends BaseCollection {
   constructor() {
@@ -56,6 +57,10 @@ class GroupCollection extends BaseCollection {
 
   checkIntegrity() {
     return [];
+  }
+
+  assertValidRoleForMethod(userId) {
+    this.assertRole(userId, [ROLE.ADMIN, ROLE.USER]);
   }
 
   dumpOne(docID) {

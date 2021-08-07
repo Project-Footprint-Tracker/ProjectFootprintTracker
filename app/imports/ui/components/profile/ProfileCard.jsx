@@ -6,9 +6,9 @@ import EditProfileModal from './EditProfileModal';
 const ProfileCard = (props) => {
   const getUpperCase = (string) => string[0].toUpperCase() + string.slice(1);
 
-  const groups = props.groups.length === 0 ?
+  const groups = props.userGroupsNames.length === 0 ?
     <i>No groups added yet</i> :
-    props.groups.join(', ');
+    props.userGroupsNames.join(', ');
 
   return (
     <Card fluid style={{ height: 370 }} >
@@ -58,7 +58,7 @@ ProfileCard.propTypes = {
     _id: PropTypes.string,
   }).isRequired,
   countyName: PropTypes.string.isRequired,
-  groups: PropTypes.array.isRequired,
+  userGroupsNames: PropTypes.array.isRequired,
 };
 
 export default ProfileCard;

@@ -44,7 +44,7 @@ const DeleteSavedCommuteModal = (props) => {
       trigger={<Icon style={{ cursor: 'pointer' }} name='trash alternate outline' />}
     >
       <Modal.Header>Delete Trip</Modal.Header>
-      <Modal.Content>Are you sure want to delete the saved commute: {props.savedCommute.name}, {distance} {label}?</Modal.Content>
+      <Modal.Content>Are you sure you want to delete the saved commute: {props.savedCommute.name}, {distance} {label}?</Modal.Content>
       <Modal.Actions>
         <Button
           icon
