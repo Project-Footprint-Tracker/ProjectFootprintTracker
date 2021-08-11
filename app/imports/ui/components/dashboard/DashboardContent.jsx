@@ -6,7 +6,7 @@ import DashboardMilesCard from './DashboardMilesCard';
 import DashboardFuelCard from './DashboardFuelCard';
 import DashboardCeCard from './DashboardCeCard';
 import DashboardTreeCard from './DashboardTreeCard';
-import { cePerGallonFuel, poundsOfCePerTree } from '../../../api/utilities/constants';
+import { poundsOfCePerTree } from '../../../api/utilities/constants';
 import DashboardLeafCard from './DashboardLeafCard';
 
 // Contains the graphs that visualizes the user's data.
@@ -19,8 +19,11 @@ function DashboardContent(
     modesOfTransport,
     milesPerMode,
     userProfile,
+    ceProducedTotal,
     ceSavedTotal,
     ceReducedPerDay,
+    fuelSpentTotal,
+    fuelSavedTotal,
     fuelSavedPerDay,
     milesSavedAvg,
     milesTraveledAvg,
@@ -29,7 +32,6 @@ function DashboardContent(
     ceReducedAvg,
     ceProducedAvg,
     evCeProducedAvg,
-    userMpg,
   },
 ) {
 
@@ -56,9 +58,6 @@ function DashboardContent(
     },
   ];
 
-  const fuelSavedTotal = (vehicleMilesSaved / userMpg).toFixed(2);
-  const fuelCostTotal = (vehicleMilesAdded / userMpg).toFixed(2);
-
   const fuelSavedPerDayData = {
     x: fuelSavedPerDay.date,
     y: fuelSavedPerDay.fuel,
@@ -75,10 +74,6 @@ function DashboardContent(
     mode: 'lines+markers',
   };
 
-  const ceProducedTotal = (fuelCostTotal * cePerGallonFuel).toFixed(2);
-
-  const ceReducedTotal = (fuelSavedTotal * cePerGallonFuel).toFixed(2);
-
   const ceReducedPerDayData = {
     x: ceReducedPerDay.date,
     y: ceReducedPerDay.ce,
@@ -89,7 +84,7 @@ function DashboardContent(
   // 100,000 trees = 2,400 tons of CO2 or 4,800,000 pounds of CO2
   // 1 tree = 48 pounds of CO2
   const treesPerCeProduced = Math.ceil(ceProducedTotal / poundsOfCePerTree);
-  const treesPerCeReduced = Math.ceil(ceReducedTotal / poundsOfCePerTree);
+  const treesPerCeReduced = Math.ceil(ceSavedTotal / poundsOfCePerTree);
 
   const modesOfTransportData = [{
     values: modesOfTransport.value,
@@ -220,8 +215,8 @@ function DashboardContent(
           userProfile={userProfile}
         />
         <DashboardFuelCard
-          fuelCostTotal={fuelCostTotal}
-          fuelSavedTotal={fuelSavedTotal}
+          fuelCostTotal={fuelSpentTotal.toFixed(2)}
+          fuelSavedTotal={fuelSavedTotal.toFixed(2)}
           fuelSavedAvgPerYear={fuelSavedAvg.year}
           fuelSavedAvgPerMonth={fuelSavedAvg.month}
           fuelSavedAvgPerDay={fuelSavedAvg.day}
@@ -232,7 +227,7 @@ function DashboardContent(
         />
         <DashboardCeCard
           ceProducedTotal={ceProducedTotal}
-          ceReducedTotal={ceReducedTotal}
+          ceReducedTotal={ceSavedTotal.toFixed(2)}
           ceProducedAvg={ceProducedAvg}
           ceReducedAvg={ceReducedAvg}
           evCeProducedAvg={evCeProducedAvg}
@@ -311,6 +306,8 @@ DashboardContent.propTypes = {
   userReady: PropTypes.bool,
   ceSavedTotal: PropTypes.number,
   ceProducedTotal: PropTypes.string,
+  fuelSpentTotal: PropTypes.number,
+  fuelSavedTotal: PropTypes.number,
   ceReducedPerDay: PropTypes.object,
   fuelSavedPerDay: PropTypes.object,
   milesSavedAvg: PropTypes.object,

@@ -22,9 +22,14 @@ function WhatIfContent(
   },
 ) {
 
-  const milesSavedTotalWI = newMilesTotal(milesSavedPerDayWI);
+  const milesTotalWI = newMilesTotal(milesSavedPerDayWI);
+  const milesSavedTotalWI = milesTotalWI.milesSavedTotalWI;
+  const milesAddedTotalWI = milesTotalWI.milesAddedTotalWI;
+
+  console.log(milesTotalWI);
+
   const fuelSavedTotalWI = (milesSavedTotalWI / userMpg).toFixed(2);
-  const ceProducedTotalWI = ((milesSavedTotalWI / userMpg) * cePerGallonFuel).toFixed(2);
+  const ceProducedTotalWI = ((milesAddedTotalWI / userMpg) * cePerGallonFuel).toFixed(2);
   const ceReducedTotalWI = (fuelSavedTotalWI * cePerGallonFuel).toFixed(2);
   const fuelSavedTotal = (milesSavedTotal / userMpg).toFixed(2);
   const ceReducedTotal = (fuelSavedTotal * cePerGallonFuel).toFixed(2);

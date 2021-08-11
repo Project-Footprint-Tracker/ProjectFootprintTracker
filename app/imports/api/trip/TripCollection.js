@@ -12,11 +12,14 @@ export const tripPublications = {
   tripCommunity: 'TripCommunity',
 };
 
-const calculateCarbonEmissions = (mode, miles, mpg, passengers) => {
-  const ce = (miles / mpg) * cePerGallonFuel;
+const calculateFuelAndCe = (mode, miles, mpg, passengers) => {
+  const fuel = (miles / mpg);
+  const ce = fuel * cePerGallonFuel;
   switch (mode) {
   case tripModes.GAS_CAR:
     return {
+      fuelSpent: fuel,
+      fuelSaved: 0,
       ceProduced: ce,
       ceSaved: 0,
     };
@@ -24,13 +27,18 @@ const calculateCarbonEmissions = (mode, miles, mpg, passengers) => {
     const totalPassengers = passengers + 1;
     const ceProduced = (ce / totalPassengers);
     const ceSaved = ce - ceProduced;
+    const fuelSaved = fuel * passengers;
     return {
+      fuelSpent: fuel,
+      fuelSaved,
       ceProduced,
       ceSaved,
     };
   }
   default:
     return {
+      fuelSpent: 0,
+      fuelSaved: fuel,
       ceProduced: 0,
       ceSaved: ce,
     };
@@ -55,6 +63,8 @@ class TripCollection extends BaseCollection {
       },
       mpg: Number,
       owner: String,
+      fuelSpent: Number,
+      fuelSaved: Number,
       ceProduced: Number,
       ceSaved: Number,
       passengers: {
@@ -76,13 +86,15 @@ class TripCollection extends BaseCollection {
    * @returns {String} the docID of the new document.
    */
   define({ date, milesTraveled, mode, mpg, owner, passengers = 0 }) {
-    const { ceProduced, ceSaved } = calculateCarbonEmissions(mode, milesTraveled, mpg, passengers);
+    const { fuelSpent, fuelSaved, ceProduced, ceSaved } = calculateFuelAndCe(mode, milesTraveled, mpg, passengers);
     const docID = this._collection.insert({
       date,
       milesTraveled,
       mode,
       mpg,
       owner,
+      fuelSpent,
+      fuelSaved,
       ceProduced,
       ceSaved,
       passengers,
@@ -121,7 +133,7 @@ class TripCollection extends BaseCollection {
     if (_.isNumber(passengers)) {
       updateData.passengers = passengers;
     }
-    const { ceProduced, ceSaved } = calculateCarbonEmissions(updateData.mode, updateData.milesTraveled, updateData.mpg, updateData.passengers);
+    const { ceProduced, ceSaved } = calculateFuelAndCe(updateData.mode, updateData.milesTraveled, updateData.mpg, updateData.passengers);
     updateData.ceProduced = ceProduced;
     updateData.ceSaved = ceSaved;
     this._collection.update(docID, { $set: updateData });
@@ -280,91 +292,6 @@ class TripCollection extends BaseCollection {
     return modesOfTransport;
   }
 
-  /**
-   * Gets the number of miles traveled using green modes of transport and miles traveled using gas car.
-   * @param username the username of the user.
-   * @returns {{milesAdded: number, milesSaved: number}} milesAdded is the miles traveled using gas car and miles saved is the number
-   * of miles using green modes of transport.
-   */
-  getVehicleMilesTraveled(username) {
-    const userTrips = this._collection.find({ owner: username }).fetch();
-
-    let milesSaved = 0;
-    let milesAdded = 0;
-
-    _.forEach(userTrips, function (objects) {
-      if (objects.mode === tripModes.GAS_CAR) {
-        milesAdded += objects.milesTraveled;
-      } else if (objects.mode === tripModes.CARPOOL) {
-        milesAdded += objects.milesTraveled;
-        milesSaved += (objects.milesTraveled * objects.passengers);
-      } else {
-        milesSaved += objects.milesTraveled;
-      }
-    });
-
-    return { milesSaved: milesSaved, milesAdded: milesAdded };
-  }
-
-  /**
-   * Returns the total miles that the user has traveled.
-   * @param username the username of the user.
-   * @returns {number} the total miles.
-   */
-  getMilesTotal(username) {
-    const userTrips = this._collection.find({ owner: username }).fetch();
-
-    let milesSaved = 0;
-    _.forEach(userTrips, function (objects) {
-      milesSaved += objects.milesTraveled;
-    });
-
-    return milesSaved;
-  }
-
-  /**
-   * Returns the miles that the user has saved per day.
-   * @param username the username of the user.
-   * @returns {{date: [], mode: [], distance: []}}
-   * An object that contains an array dates for each trip, an array of modes used for each of those trips and the distance of the trip for respective date.
-   */
-  getMilesSavedPerDay(username) {
-    const userTrips = this._collection.find({ owner: username }).fetch();
-    const date = [];
-    const distance = [];
-    const mode = [];
-
-    _.forEach(userTrips, function (objects) {
-
-      const tripDate = objects.date;
-      const tripDistance = objects.milesTraveled;
-      const tripMode = objects.mode;
-
-      // check to see if there is an existing trip for that date.
-      const dateIndex = _.findIndex(date, (o) => o.getTime() === tripDate.getTime());
-
-      if (dateIndex !== -1) {
-        if (tripMode === tripModes.GAS_CAR) {
-          distance[dateIndex] -= tripDistance;
-        } else {
-          distance[dateIndex] += tripDistance;
-        }
-        mode[dateIndex] = mode[dateIndex].concat(`, ${tripMode}`);
-
-      } else {
-        if (tripMode === tripModes.GAS_CAR) {
-          distance.push(-tripDistance);
-        } else {
-          distance.push(tripDistance);
-        }
-        date.push(tripDate);
-        mode.push(tripMode);
-      }
-    });
-
-    return { date: date, distance: distance, mode: mode };
-  }
-
   getTrips(username) {
     const userTrips = this._collection.find({ owner: username }).fetch();
 
@@ -394,173 +321,29 @@ class TripCollection extends BaseCollection {
     return { date, distance, mode, collection };
   }
 
-  getMilesTraveledPerDay(username) {
+  getTripsOnMonth(username, monthNum) {
+    const trips = username ?
+      this._collection.find({ owner: username }, { sort: [['date', 'asc']] }).fetch() :
+      this._collection.find({}, { sort: [['date', 'asc']] }).fetch();
+    const today = getDateToday();
+    const month = monthNum || today.getMonth();
+    return trips.filter(({ date }) => date.getMonth() === month);
+  }
+
+  /**
+   * Returns the total miles that the user has traveled.
+   * @param username the username of the user.
+   * @returns {number} the total miles.
+   */
+  getMilesTotal(username) {
     const userTrips = this._collection.find({ owner: username }).fetch();
 
-    const date = [];
-
-    const saved = [];
-    const savedMode = [];
-
-    const added = [];
-    const addedMode = [];
-
-    let prevDate = new Date();
-
+    let milesSaved = 0;
     _.forEach(userTrips, function (objects) {
-
-      const tripDate = objects.date;
-      const tripDistance = objects.milesTraveled;
-      const tripMode = objects.mode;
-
-      if (prevDate.getTime() === tripDate.getTime()) {
-        if (tripMode === tripModes.GAS_CAR) {
-          if (added.length < date.length) {
-            addedMode.push(tripMode);
-            added.push(-tripDistance);
-          } else {
-            addedMode[added.length - 1] = tripMode;
-            added[added.length - 1] -= tripDistance;
-          }
-        }
-
-        if (tripMode !== tripModes.GAS_CAR) {
-          if (saved.length < date.length) {
-            savedMode.push(tripMode);
-            saved.push(tripDistance);
-          } else {
-            savedMode[savedMode.length - 1] = savedMode[savedMode.length - 1].concat(`, ${tripMode}`);
-            saved[saved.length - 1] += tripDistance;
-          }
-        }
-      } else {
-        date.push(tripDate);
-        prevDate = tripDate;
-
-        if (tripMode === tripModes.GAS_CAR) {
-          addedMode.push(tripMode);
-          added.push(-tripDistance);
-        } else {
-          savedMode.push(tripMode);
-          saved.push(tripDistance);
-
-          addedMode.push('');
-          added.push(0);
-        }
-      }
+      milesSaved += objects.milesTraveled;
     });
 
-    // const print = { date: date, distance: saved, mode: savedMode };
-    // console.log(print);
-
-    return {
-      milesSaved: { date: date, distance: saved, mode: savedMode },
-      milesAdded: { date: date, distance: added, mode: addedMode },
-    };
-  }
-
-  /**
-   * Returns the CE that the specified user produced. CE is produced whenever the user uses the Carpool and Gas Car modes.
-   * @param username the username of the user.
-   * @returns {string} the amount of CE that the user produced. It is a string because the function does a .toFixed(2) to round
-   * the number to two decimal places.
-   */
-  getCEProducedTotal(username) {
-    const trips = username ?
-      this._collection.find({ owner: username }).fetch() :
-      this._collection.find({}).fetch();
-    return trips.map(trip => trip.ceProduced).reduce((a, b) => a + b, 0).toFixed(2);
-  }
-
-  /**
-   * Gets the CE that the user has reduced each day.
-   * @param username the username of the user.
-   * @returns {{date: [], ce: []}}
-   * An object that contains an array of dates for the trips and an array of CE that they saved for each of the respective date.
-   */
-  getCEReducedPerDay(username) {
-    const userTrips = this._collection.find({ owner: username }, { sort: { date: -1 } }).fetch();
-
-    const date = [];
-    const ce = [];
-
-    userTrips.forEach((trip) => {
-      const tripDate = trip.date.toISOString().split('T')[0];
-      if (trip.ceSaved !== 0) {
-        if (!date.includes(tripDate)) {
-          date.push(tripDate);
-          ce.push(trip.ceSaved.toFixed(2));
-        } else {
-          const oldCE = Number(ce[date.indexOf(tripDate)]);
-          ce[date.indexOf(tripDate)] = (oldCE + trip.ceSaved).toFixed(2);
-        }
-      }
-    });
-
-    return { date, ce };
-  }
-
-  /**
-   * Gets the CE produced by the user per day.
-   * @param username of the user
-   * @returns {{date: *[], ceProduced: *[]}}
-   */
-  getCEProducedPerDay(username) {
-    const userTrips = this._collection.find({ owner: username }, { sort: { date: -1 } }).fetch();
-
-    const date = [];
-    const ceProduced = [];
-
-    userTrips.forEach((trip) => {
-      const tripDate = trip.date.toISOString().split('T')[0];
-      if (trip.ceProduced !== 0) {
-        if (!date.includes(tripDate)) {
-          date.push(tripDate);
-          ceProduced.push(trip.ceProduced.toFixed(2));
-        } else {
-          const oldCE = Number(ceProduced[date.indexOf(tripDate)]);
-          ceProduced[date.indexOf(tripDate)] = (oldCE + trip.ceProduced).toFixed(2);
-        }
-      }
-    });
-
-    return { date, ceProduced };
-  }
-
-  /**
-   * Gets the fuel that the user saved per day as well as the dollar saved.
-   * @param username the username of the user.
-   * @returns {{date: [], fuel: [], price: []}}
-   * An object that contains an array of dates and an array of fuel and dollar saved for the respective date.
-   */
-  getFuelSavedPerDay(username) {
-    const userTrips = this._collection.find({ owner: username }, { sort: { date: -1 } }).fetch();
-
-    const date = [];
-    const fuel = [];
-    const price = [];
-
-    userTrips.forEach(trip => {
-      const tripDate = trip.date.toISOString().split('T')[0];
-      const fuelSaved = Number(trip.milesTraveled / trip.mpg);
-      const priceSaved = Number(fuelSaved * fuelCost);
-
-      if (trip.ceSaved !== 0) {
-        if (!date.includes(tripDate)) {
-          date.push(tripDate);
-          fuel[date.indexOf(tripDate)] = fuelSaved.toFixed(2);
-          price[date.indexOf(tripDate)] = priceSaved.toFixed(2);
-        } else {
-          const oldFuel = Number(fuel[date.indexOf(tripDate)]);
-          fuel[date.indexOf(tripDate)] = (oldFuel + fuelSaved).toFixed(2);
-
-          const oldPrice = Number(price[date.indexOf(tripDate)]);
-          price[date.indexOf(tripDate)] = (oldPrice + priceSaved).toFixed(2);
-        }
-      }
-    });
-
-    return { date: date, fuel: fuel, price: price };
+    return milesSaved;
   }
 
   getMilesAvg(username) {
@@ -690,6 +473,344 @@ class TripCollection extends BaseCollection {
     };
   }
 
+  /**
+   * Returns the miles that the user has saved per day.
+   * @param username the username of the user.
+   * @returns {{date: [], mode: [], distance: []}}
+   * An object that contains an array dates for each trip, an array of modes used for each of those trips and the distance of the trip for respective date.
+   */
+  getMilesSavedPerDay(username) {
+    const userTrips = this._collection.find({ owner: username }).fetch();
+    const date = [];
+    const distance = [];
+    const mode = [];
+
+    _.forEach(userTrips, function (objects) {
+
+      const tripDate = objects.date;
+      const tripDistance = objects.milesTraveled;
+      const tripMode = objects.mode;
+
+      // check to see if there is an existing trip for that date.
+      const dateIndex = _.findIndex(date, (o) => o.getTime() === tripDate.getTime());
+
+      if (dateIndex !== -1) {
+        if (tripMode === tripModes.GAS_CAR) {
+          distance[dateIndex] -= tripDistance;
+        } else {
+          distance[dateIndex] += tripDistance;
+        }
+        mode[dateIndex] = mode[dateIndex].concat(`, ${tripMode}`);
+
+      } else {
+        if (tripMode === tripModes.GAS_CAR) {
+          distance.push(-tripDistance);
+        } else {
+          distance.push(tripDistance);
+        }
+        date.push(tripDate);
+        mode.push(tripMode);
+      }
+    });
+
+    return { date: date, distance: distance, mode: mode };
+  }
+
+  /**
+   * Gets the number of miles traveled using green modes of transport and miles traveled using gas car.
+   * @param username the username of the user.
+   * @returns {{milesAdded: number, milesSaved: number}} milesAdded is the miles traveled using gas car and miles saved is the number
+   * of miles using green modes of transport.
+   */
+  getVehicleMilesTraveled(username) {
+    const userTrips = this._collection.find({ owner: username }).fetch();
+    console.log(userTrips);
+
+    let milesSaved = 0;
+    let milesAdded = 0;
+
+    _.forEach(userTrips, function (objects) {
+      if (objects.mode === tripModes.GAS_CAR) {
+        milesAdded += objects.milesTraveled;
+      } else if (objects.mode === tripModes.CARPOOL) {
+        milesAdded += objects.milesTraveled;
+        milesSaved += (objects.milesTraveled * objects.passengers);
+      } else {
+        milesSaved += objects.milesTraveled;
+      }
+    });
+
+    return { milesSaved: milesSaved, milesAdded: milesAdded };
+  }
+
+  getMilesTraveledPerDay(username) {
+    const userTrips = this._collection.find({ owner: username }).fetch();
+
+    const date = [];
+
+    const saved = [];
+    const savedMode = [];
+
+    const added = [];
+    const addedMode = [];
+
+    let prevDate = new Date();
+
+    _.forEach(userTrips, function (objects) {
+
+      const tripDate = objects.date;
+      const tripDistance = objects.milesTraveled;
+      const tripMode = objects.mode;
+
+      if (prevDate.getTime() === tripDate.getTime()) {
+        if (tripMode === tripModes.GAS_CAR) {
+          if (added.length < date.length) {
+            addedMode.push(tripMode);
+            added.push(-tripDistance);
+          } else {
+            addedMode[added.length - 1] = tripMode;
+            added[added.length - 1] -= tripDistance;
+          }
+        }
+
+        if (tripMode !== tripModes.GAS_CAR) {
+          if (saved.length < date.length) {
+            savedMode.push(tripMode);
+            saved.push(tripDistance);
+          } else {
+            savedMode[savedMode.length - 1] = savedMode[savedMode.length - 1].concat(`, ${tripMode}`);
+            saved[saved.length - 1] += tripDistance;
+          }
+        }
+      } else {
+        date.push(tripDate);
+        prevDate = tripDate;
+
+        if (tripMode === tripModes.GAS_CAR) {
+          addedMode.push(tripMode);
+          added.push(-tripDistance);
+        } else {
+          savedMode.push(tripMode);
+          saved.push(tripDistance);
+
+          addedMode.push('');
+          added.push(0);
+        }
+      }
+    });
+
+    // const print = { date: date, distance: saved, mode: savedMode };
+    // console.log(print);
+
+    return {
+      milesSaved: { date: date, distance: saved, mode: savedMode },
+      milesAdded: { date: date, distance: added, mode: addedMode },
+    };
+  }
+
+  getCEAvg(username) {
+    const userTrips = this._collection.find({ owner: username }).fetch();
+
+    let currentYear = '';
+    let currentMonth = '';
+
+    let yearEvFuel = 0;
+    let numOfYear = 0;
+
+    let monthEvFuel = 0;
+    let numOfMonth = 0;
+
+    let dayEvFuel = 0;
+    let numOfDay = 0;
+
+    _.forEach(userTrips, function (objects) {
+
+      const date = (objects.date.toString()).split(' ');
+      const mode = objects.mode;
+      const distance = objects.milesTraveled;
+
+      const year = date[3];
+      const month = date[1];
+
+      if (currentYear !== year) {
+        currentYear = year;
+        numOfYear += 1;
+      }
+
+      if (currentMonth !== month) {
+        currentMonth = month;
+        numOfMonth += 1;
+      }
+
+      numOfDay += 1;
+
+      if (mode === tripModes.GAS_CAR || mode === tripModes.CARPOOL) {
+        yearEvFuel += (distance / avgMpge);
+        monthEvFuel += (distance / avgMpge);
+        dayEvFuel += (distance / avgMpge);
+      }
+    });
+
+    const yearEvCeAvg = (yearEvFuel / numOfYear) * cePerGallonFuel;
+    const monthEvCeAvg = (monthEvFuel / numOfMonth) * cePerGallonFuel;
+    const dayEvCeAvg = (dayEvFuel / numOfDay) * cePerGallonFuel;
+
+    const fuelAvg = this.getFuelAvg(username);
+
+    const fuelSavedAvg = fuelAvg.fuelSavedAvg;
+    const yearCeReducedAvg = (fuelSavedAvg.year * cePerGallonFuel).toFixed(2);
+    const monthCeReducedAvg = (fuelSavedAvg.month * cePerGallonFuel).toFixed(2);
+    const dayCeReducedAvg = (fuelSavedAvg.day * cePerGallonFuel).toFixed(2);
+
+    const fuelSpentAvg = fuelAvg.fuelSpentAvg;
+    const yearCeProducedAvg = (fuelSpentAvg.year * cePerGallonFuel).toFixed(2);
+    const monthCeProducedAvg = (fuelSpentAvg.month * cePerGallonFuel).toFixed(2);
+    const dayCeProducedAvg = (fuelSpentAvg.day * cePerGallonFuel).toFixed(2);
+
+    return {
+      ceReducedAvg: {
+        ceReducedAvgPerYear: yearCeReducedAvg,
+        ceReducedAvgPerMonth: monthCeReducedAvg,
+        ceReducedAvgPerDay: dayCeReducedAvg,
+      },
+      ceProducedAvg: {
+        ceProducedAvgPerYear: yearCeProducedAvg,
+        ceProducedAvgPerMonth: monthCeProducedAvg,
+        ceProducedAvgPerDay: dayCeProducedAvg,
+      },
+      evCeProducedAvg: {
+        evCeProducedAvgPerYear: yearEvCeAvg ? yearEvCeAvg.toFixed(2) : '0.00',
+        evCeProducedAvgPerMonth: monthEvCeAvg ? monthEvCeAvg.toFixed(2) : '0.00',
+        evCeProducedAvgPerDay: dayEvCeAvg ? dayEvCeAvg.toFixed(2) : '0.00',
+      },
+    };
+  }
+
+  /**
+   * Returns the CE that the specified user produced. CE is produced whenever the user uses the Carpool and Gas Car modes.
+   * @param username the username of the user.
+   * @returns {string} the amount of CE that the user produced. It is a string because the function does a .toFixed(2) to round
+   * the number to two decimal places.
+   */
+  getCEProducedTotal(username) {
+    const trips = username ?
+      this._collection.find({ owner: username }).fetch() :
+      this._collection.find({}).fetch();
+    return trips.map(trip => trip.ceProduced).reduce((a, b) => a + b, 0).toFixed(2);
+  }
+
+  getCESavedTotal(username) {
+    const trips = username ?
+      this._collection.find({ owner: username }).fetch() :
+      this._collection.find({}).fetch();
+    return trips.map(trip => trip.ceSaved).reduce((a, b) => a + b, 0);
+  }
+
+  /**
+   * Gets the CE that the user has reduced each day.
+   * @param username the username of the user.
+   * @returns {{date: [], ce: []}}
+   * An object that contains an array of dates for the trips and an array of CE that they saved for each of the respective date.
+   */
+  getCEReducedPerDay(username) {
+    const userTrips = this._collection.find({ owner: username }, { sort: { date: -1 } }).fetch();
+
+    const date = [];
+    const ce = [];
+
+    userTrips.forEach((trip) => {
+      const tripDate = trip.date.toISOString().split('T')[0];
+      if (trip.ceSaved !== 0) {
+        if (!date.includes(tripDate)) {
+          date.push(tripDate);
+          ce.push(trip.ceSaved.toFixed(2));
+        } else {
+          const oldCE = Number(ce[date.indexOf(tripDate)]);
+          ce[date.indexOf(tripDate)] = (oldCE + trip.ceSaved).toFixed(2);
+        }
+      }
+    });
+
+    return { date, ce };
+  }
+
+  /**
+   * Gets the CE produced by the user per day.
+   * @param username of the user
+   * @returns {{date: *[], ceProduced: *[]}}
+   */
+  getCEProducedPerDay(username) {
+    const userTrips = this._collection.find({ owner: username }, { sort: { date: -1 } }).fetch();
+
+    const date = [];
+    const ceProduced = [];
+
+    userTrips.forEach((trip) => {
+      const tripDate = trip.date.toISOString().split('T')[0];
+      if (trip.ceProduced !== 0) {
+        if (!date.includes(tripDate)) {
+          date.push(tripDate);
+          ceProduced.push(trip.ceProduced.toFixed(2));
+        } else {
+          const oldCE = Number(ceProduced[date.indexOf(tripDate)]);
+          ceProduced[date.indexOf(tripDate)] = (oldCE + trip.ceProduced).toFixed(2);
+        }
+      }
+    });
+
+    return { date, ceProduced };
+  }
+
+  getFuelSpentTotal(username) {
+    const trips = username ?
+        this._collection.find({ owner: username }).fetch() :
+        this._collection.find({}).fetch();
+    return trips.map(trip => trip.fuelSpent).reduce((a, b) => a + b, 0);
+  }
+
+  getFuelSavedTotal(username) {
+    const trips = username ?
+        this._collection.find({ owner: username }).fetch() :
+        this._collection.find({}).fetch();
+    return trips.map(trip => trip.fuelSaved).reduce((a, b) => a + b, 0);
+  }
+
+  /**
+   * Gets the fuel that the user saved per day as well as the dollar saved.
+   * @param username the username of the user.
+   * @returns {{date: [], fuel: [], price: []}}
+   * An object that contains an array of dates and an array of fuel and dollar saved for the respective date.
+   */
+  getFuelSavedPerDay(username) {
+    const userTrips = this._collection.find({ owner: username }, { sort: { date: -1 } }).fetch();
+
+    const date = [];
+    const fuel = [];
+    const price = [];
+
+    userTrips.forEach(trip => {
+      const tripDate = trip.date.toISOString().split('T')[0];
+      const fuelSaved = Number(trip.milesTraveled / trip.mpg);
+      const priceSaved = Number(fuelSaved * fuelCost);
+
+      if (trip.ceSaved !== 0) {
+        if (!date.includes(tripDate)) {
+          date.push(tripDate);
+          fuel[date.indexOf(tripDate)] = fuelSaved.toFixed(2);
+          price[date.indexOf(tripDate)] = priceSaved.toFixed(2);
+        } else {
+          const oldFuel = Number(fuel[date.indexOf(tripDate)]);
+          fuel[date.indexOf(tripDate)] = (oldFuel + fuelSaved).toFixed(2);
+
+          const oldPrice = Number(price[date.indexOf(tripDate)]);
+          price[date.indexOf(tripDate)] = (oldPrice + priceSaved).toFixed(2);
+        }
+      }
+    });
+
+    return { date: date, fuel: fuel, price: price };
+  }
+
   getFuelAvg(username) {
     const userTrips = this._collection.find({ owner: username }).fetch();
 
@@ -817,100 +938,6 @@ class TripCollection extends BaseCollection {
         day: (dayFuelSpentAvg) ? dayFuelSpentAvg.toFixed(2) : 0,
       },
     };
-  }
-
-  getCEAvg(username) {
-    const userTrips = this._collection.find({ owner: username }).fetch();
-
-    let currentYear = '';
-    let currentMonth = '';
-
-    let yearEvFuel = 0;
-    let numOfYear = 0;
-
-    let monthEvFuel = 0;
-    let numOfMonth = 0;
-
-    let dayEvFuel = 0;
-    let numOfDay = 0;
-
-    _.forEach(userTrips, function (objects) {
-
-      const date = (objects.date.toString()).split(' ');
-      const mode = objects.mode;
-      const distance = objects.milesTraveled;
-
-      const year = date[3];
-      const month = date[1];
-
-      if (currentYear !== year) {
-        currentYear = year;
-        numOfYear += 1;
-      }
-
-      if (currentMonth !== month) {
-        currentMonth = month;
-        numOfMonth += 1;
-      }
-
-      numOfDay += 1;
-
-      if (mode === tripModes.GAS_CAR || mode === tripModes.CARPOOL) {
-        yearEvFuel += (distance / avgMpge);
-        monthEvFuel += (distance / avgMpge);
-        dayEvFuel += (distance / avgMpge);
-      }
-    });
-
-    const yearEvCeAvg = (yearEvFuel / numOfYear) * cePerGallonFuel;
-    const monthEvCeAvg = (monthEvFuel / numOfMonth) * cePerGallonFuel;
-    const dayEvCeAvg = (dayEvFuel / numOfDay) * cePerGallonFuel;
-
-    const fuelAvg = this.getFuelAvg(username);
-
-    const fuelSavedAvg = fuelAvg.fuelSavedAvg;
-    const yearCeReducedAvg = (fuelSavedAvg.year * cePerGallonFuel).toFixed(2);
-    const monthCeReducedAvg = (fuelSavedAvg.month * cePerGallonFuel).toFixed(2);
-    const dayCeReducedAvg = (fuelSavedAvg.day * cePerGallonFuel).toFixed(2);
-
-    const fuelSpentAvg = fuelAvg.fuelSpentAvg;
-    const yearCeProducedAvg = (fuelSpentAvg.year * cePerGallonFuel).toFixed(2);
-    const monthCeProducedAvg = (fuelSpentAvg.month * cePerGallonFuel).toFixed(2);
-    const dayCeProducedAvg = (fuelSpentAvg.day * cePerGallonFuel).toFixed(2);
-
-    return {
-      ceReducedAvg: {
-        ceReducedAvgPerYear: yearCeReducedAvg,
-        ceReducedAvgPerMonth: monthCeReducedAvg,
-        ceReducedAvgPerDay: dayCeReducedAvg,
-      },
-      ceProducedAvg: {
-        ceProducedAvgPerYear: yearCeProducedAvg,
-        ceProducedAvgPerMonth: monthCeProducedAvg,
-        ceProducedAvgPerDay: dayCeProducedAvg,
-      },
-      evCeProducedAvg: {
-        evCeProducedAvgPerYear: yearEvCeAvg ? yearEvCeAvg.toFixed(2) : '0.00',
-        evCeProducedAvgPerMonth: monthEvCeAvg ? monthEvCeAvg.toFixed(2) : '0.00',
-        evCeProducedAvgPerDay: dayEvCeAvg ? dayEvCeAvg.toFixed(2) : '0.00',
-      },
-    };
-  }
-
-  getCESavedTotal(username) {
-    const trips = username ?
-      this._collection.find({ owner: username }).fetch() :
-      this._collection.find({}).fetch();
-    return trips.map(trip => trip.ceSaved).reduce((a, b) => a + b, 0);
-  }
-
-  getTripsOnMonth(username, monthNum) {
-    const trips = username ?
-      this._collection.find({ owner: username }, { sort: [['date', 'asc']] }).fetch() :
-      this._collection.find({}, { sort: [['date', 'asc']] }).fetch();
-    const today = getDateToday();
-    const month = monthNum || today.getMonth();
-    return trips.filter(({ date }) => date.getMonth() === month);
   }
 }
 
