@@ -22,6 +22,7 @@ function WhatIf(
     modesOfTransport,
     userMpg,
     ceProducedTotal,
+    ceReducedTotal,
     ceReducedPerDay,
     fuelSavedPerDay,
   },
@@ -30,16 +31,21 @@ function WhatIf(
   const [modesOfTransportWI, setMOTDWI] = useState();
   const [ceReducedPerDayWI, setGRPDWI] = useState();
   const [fuelSavedPerDayWI, setFSPDWI] = useState();
-  const trueMilesTotal = (x) => {
-    let gasMiles = 0;
-    _.forEach(x.mode, function (mode, index) {
-      if (mode === tripModes.GAS_CAR || mode === tripModes.CARPOOL) {
-        gasMiles += x.distance[index];
+
+  const trueMilesTotal = (userTrips) => {
+
+    let milesSavedTotalWI = 0;
+
+    _.forEach(userTrips.distance, function (distance, index) {
+
+      if (userTrips.mode[index] !== tripModes.GAS_CAR) {
+        milesSavedTotalWI += distance;
       }
     });
-    return (milesSavedTotal - gasMiles);
+
+    return milesSavedTotalWI;
   };
-  const trueMilesSavedTotal = trueMilesTotal(milesSavedPerDay);
+
   useEffect(() => {
     setMSPDWI(milesSavedPerDay);
     setMOTDWI(modesOfTransport);
@@ -66,7 +72,7 @@ function WhatIf(
       />
       <WhatIfContent
         milesSavedTotal={milesSavedTotal}
-        trueMilesSavedTotal={trueMilesSavedTotal}
+        trueMilesSavedTotal={milesSavedTotal}
         milesSavedPerDay={milesSavedPerDay}
         modesOfTransport={modesOfTransport}
         userMpg={userMpg}
@@ -93,6 +99,7 @@ WhatIf.propTypes = {
   modesOfTransport: PropTypes.object,
   userMpg: PropTypes.number,
   ceProducedTotal: PropTypes.string,
+  ceReducedTotal: PropTypes.string,
   ceReducedPerDay: PropTypes.object,
   fuelSavedPerDay: PropTypes.object,
   tripReady: PropTypes.bool.isRequired,
@@ -105,13 +112,16 @@ export default withTracker(({ match }) => {
   const userVehicleSubscribe = UserVehicles.subscribeUserVehicle();
   const username = match.params._id;
 
-  const milesSavedTotal = Trips.getMilesTotal(username);
+  const milesTraveledTotal = Trips.getVehicleMilesTraveled(username);
 
-  const milesTraveled = Trips.getMilesTraveledPerDay(username);
+  const milesTraveledPerDay = Trips.getMilesTraveledPerDay(username);
   const allTrips = Trips.getTrips(username);
 
   const modesOfTransport = Trips.getModesOfTransport(username);
+
   const ceProducedTotal = Trips.getCEProducedTotal(username);
+  const ceReducedTotal = Trips.getCESavedTotal(username);
+
   const ceReducedPerDay = Trips.getCEReducedPerDay(username);
   const fuelSavedPerDay = Trips.getFuelSavedPerDay(username);
   const userMpg = UserVehicles.getUserMpg(username);
@@ -119,11 +129,12 @@ export default withTracker(({ match }) => {
     tripReady: tripSubscribe.ready(),
     userReady: userSubscribe.ready(),
     allVehicleReady: userVehicleSubscribe.ready(),
-    milesSavedTotal,
+    milesSavedTotal: milesTraveledTotal.milesSaved,
     allTrips,
-    milesSavedPerDay: milesTraveled.milesSaved,
+    milesSavedPerDay: milesTraveledPerDay.milesSaved,
     modesOfTransport,
     ceProducedTotal,
+    ceReducedTotal,
     ceReducedPerDay,
     fuelSavedPerDay,
     userMpg,

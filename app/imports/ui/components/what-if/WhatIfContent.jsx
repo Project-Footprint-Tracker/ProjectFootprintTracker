@@ -8,7 +8,6 @@ import { cePerGallonFuel } from '../../../api/utilities/constants';
 function WhatIfContent(
   {
     milesSavedTotal,
-    trueMilesSavedTotal,
     milesSavedPerDay,
     modesOfTransport,
     userMpg,
@@ -25,9 +24,9 @@ function WhatIfContent(
 
   const milesSavedTotalWI = newMilesTotal(milesSavedPerDayWI);
   const fuelSavedTotalWI = (milesSavedTotalWI / userMpg).toFixed(2);
-  const ceProducedTotalWI = (((milesSavedTotal - milesSavedTotalWI) / userMpg) * cePerGallonFuel).toFixed(2);
+  const ceProducedTotalWI = ((milesSavedTotalWI / userMpg) * cePerGallonFuel).toFixed(2);
   const ceReducedTotalWI = (fuelSavedTotalWI * cePerGallonFuel).toFixed(2);
-  const fuelSavedTotal = (trueMilesSavedTotal / userMpg).toFixed(2);
+  const fuelSavedTotal = (milesSavedTotal / userMpg).toFixed(2);
   const ceReducedTotal = (fuelSavedTotal * cePerGallonFuel).toFixed(2);
   const milesSavedPerDayData = [{
     x: milesSavedPerDay.date,
@@ -204,7 +203,7 @@ function WhatIfContent(
           </Card.Header>
           <Card.Content textAlign='center'>
             <Statistic>
-              <Statistic.Value className='whatif-statistic'>{trueMilesSavedTotal}</Statistic.Value>
+              <Statistic.Value className='whatif-statistic'>{milesSavedTotal}</Statistic.Value>
               <Statistic.Label className='whatif-statistic'>miles</Statistic.Label>
             </Statistic>
           </Card.Content>
