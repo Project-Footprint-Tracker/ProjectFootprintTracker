@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Card, Header, Modal, Popup } from 'semantic-ui-react';
-
-/* global document */
 
 // Generalized structure of how a dashboard statistics card is setup.
 function DashboardStatisticsCard(
@@ -15,7 +13,6 @@ function DashboardStatisticsCard(
     showMore,
     moreHeader,
     moreContent,
-    userProfile,
   },
 ) {
 
@@ -34,34 +31,6 @@ function DashboardStatisticsCard(
       </Modal.Content>
     </Modal> :
     <div> </div>;
-
-  /* DOM Styling */
-  useEffect(() => {
-    const dashboardCards = document.getElementsByClassName('general-card');
-    const dashboardModals = document.getElementsByClassName('card-modal');
-    const cardHeaders = document.getElementsByClassName('card-header');
-    if (userProfile.theme === 'dark') {
-      for (let i = 0; i < dashboardCards.length; i++) {
-        dashboardCards[i].classList.add('dark-card');
-      }
-      for (let i = 0; i < dashboardModals.length; i++) {
-        dashboardModals[i].classList.add('dark-card');
-      }
-      for (let i = 0; i < cardHeaders.length; i++) {
-        cardHeaders[i].classList.add('dark-card-header');
-      }
-    } else {
-      for (let i = 0; i < dashboardCards.length; i++) {
-        dashboardCards[i].classList.remove('dark-card');
-      }
-      for (let i = 0; i < dashboardModals.length; i++) {
-        dashboardModals[i].classList.remove('dark-card');
-      }
-      for (let i = 0; i < cardHeaders.length; i++) {
-        cardHeaders[i].classList.remove('dark-card-header');
-      }
-    }
-  }, [userProfile, moreInfo]);
 
   return (
     <Card className='general-card'>

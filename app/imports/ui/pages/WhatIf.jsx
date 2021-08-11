@@ -107,7 +107,7 @@ export default withTracker(({ match }) => {
 
   const milesSavedTotal = Trips.getMilesTotal(username);
 
-  const milesSavedPerDay = Trips.getMilesSavedPerDay(username);
+  const milesTraveled = Trips.getMilesTraveledPerDay(username);
   const allTrips = Trips.getTrips(username);
 
   const modesOfTransport = Trips.getModesOfTransport(username);
@@ -121,7 +121,7 @@ export default withTracker(({ match }) => {
     allVehicleReady: userVehicleSubscribe.ready(),
     milesSavedTotal,
     allTrips,
-    milesSavedPerDay,
+    milesSavedPerDay: milesTraveled.milesSaved,
     modesOfTransport,
     ceProducedTotal,
     ceReducedPerDay,

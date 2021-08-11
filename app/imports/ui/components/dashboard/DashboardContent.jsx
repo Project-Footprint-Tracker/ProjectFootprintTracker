@@ -100,21 +100,11 @@ function DashboardContent(
   }];
 
   /* Graph Layouts */
-  let chartBgColor = '';
-  let chartGridColor = '';
-  let chartFontColor = '';
+  const chartBgColor = '';
+  const chartGridColor = '';
+  const chartFontColor = '';
   const tMargin = '40';
   const bMargin = '10';
-
-  if (userProfile.theme === 'dark') {
-    chartBgColor = '#213c5c';
-    chartGridColor = '#5c5c5c';
-    chartFontColor = '#FFFFFF';
-  } else {
-    chartBgColor = '';
-    chartGridColor = '';
-    chartFontColor = '';
-  }
 
   const milesPerDayLayout = {
     autosize: true,
