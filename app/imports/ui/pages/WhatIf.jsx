@@ -19,45 +19,64 @@ function WhatIf(
     milesSavedTotal,
     milesSavedPerDay,
     allTrips,
+    detailedTrips,
     modesOfTransport,
     userMpg,
     ceProducedTotal,
+    ceReducedTotal,
     ceReducedPerDay,
     fuelSavedPerDay,
+    fuelSavedTotal,
   },
 ) {
   const [milesSavedPerDayWI, setMSPDWI] = useState();
+  const [detailedTripsWI, setDTWI] = useState();
   const [modesOfTransportWI, setMOTDWI] = useState();
   const [ceReducedPerDayWI, setGRPDWI] = useState();
   const [fuelSavedPerDayWI, setFSPDWI] = useState();
-  const trueMilesTotal = (x) => {
-    let gasMiles = 0;
-    _.forEach(x.mode, function (mode, index) {
-      if (mode === tripModes.GAS_CAR || mode === tripModes.CARPOOL) {
-        gasMiles += x.distance[index];
+
+  const trueMilesTotal = (userTrips) => {
+
+    let milesSavedTotalWI = 0;
+    let milesAddedTotalWI = 0;
+
+    _.forEach(userTrips.distance, function (distance, index) {
+
+      if (userTrips.mode[index] === tripModes.GAS_CAR) {
+        milesAddedTotalWI += -distance;
+      } else if (userTrips.mode[index] === tripModes.CARPOOL) {
+        milesAddedTotalWI += distance;
+        milesSavedTotalWI += distance;
+      } else {
+        milesSavedTotalWI += distance;
       }
     });
-    return (milesSavedTotal - gasMiles);
+
+    return { milesSavedTotalWI, milesAddedTotalWI };
   };
-  const trueMilesSavedTotal = trueMilesTotal(milesSavedPerDay);
+
   useEffect(() => {
+    setDTWI(detailedTrips);
     setMSPDWI(milesSavedPerDay);
     setMOTDWI(modesOfTransport);
     setGRPDWI(ceReducedPerDay);
     setFSPDWI(fuelSavedPerDay);
   }, [fuelSavedPerDay]);
-  const testFP = (miles, mode, ce, fuel) => {
+  const testFP = (trips, miles, mode, ce, fuel) => {
+    setDTWI(trips);
     setMSPDWI(miles);
     setMOTDWI(mode);
     setGRPDWI(ce);
     setFSPDWI(fuel);
   };
+
   return ((tripReady && userReady) ?
     <div style={{ width: '100%' }}>
       <ChoseScenario
         milesSavedTotal={milesSavedTotal}
         milesSavedPerDay={milesSavedPerDay}
         allTrips={allTrips}
+        detailedTrips={detailedTrips}
         modesOfTransport={modesOfTransport}
         ceProducedTotal={ceProducedTotal}
         ceReducedPerDay={ceReducedPerDay}
@@ -66,13 +85,15 @@ function WhatIf(
       />
       <WhatIfContent
         milesSavedTotal={milesSavedTotal}
-        trueMilesSavedTotal={trueMilesSavedTotal}
         milesSavedPerDay={milesSavedPerDay}
         modesOfTransport={modesOfTransport}
         userMpg={userMpg}
         ceProducedTotal={ceProducedTotal}
+        ceReducedTotal={ceReducedTotal}
         ceReducedPerDay={ceReducedPerDay}
         fuelSavedPerDay={fuelSavedPerDay}
+        fuelSavedTotal={fuelSavedTotal}
+        detailedTripsWI={detailedTripsWI}
         milesSavedPerDayWI={milesSavedPerDayWI}
         modesOfTransportWI={modesOfTransportWI}
         ceReducedPerDayWI={ceReducedPerDayWI}
@@ -90,11 +111,14 @@ WhatIf.propTypes = {
   milesSavedTotal: PropTypes.number,
   milesSavedPerDay: PropTypes.object,
   allTrips: PropTypes.object,
+  detailedTrips: PropTypes.array,
   modesOfTransport: PropTypes.object,
   userMpg: PropTypes.number,
   ceProducedTotal: PropTypes.string,
+  ceReducedTotal: PropTypes.number,
   ceReducedPerDay: PropTypes.object,
   fuelSavedPerDay: PropTypes.object,
+  fuelSavedTotal: PropTypes.number,
   tripReady: PropTypes.bool.isRequired,
   userReady: PropTypes.bool.isRequired,
 };
@@ -105,27 +129,36 @@ export default withTracker(({ match }) => {
   const userVehicleSubscribe = UserVehicles.subscribeUserVehicle();
   const username = match.params._id;
 
-  const milesSavedTotal = Trips.getMilesTotal(username);
+  const milesTraveledTotal = Trips.getVehicleMilesTraveled(username);
 
   const milesSavedPerDay = Trips.getMilesSavedPerDay(username);
   const allTrips = Trips.getTrips(username);
+  const detailedTrips = Trips.getDetailedTrips(username);
 
   const modesOfTransport = Trips.getModesOfTransport(username);
+
   const ceProducedTotal = Trips.getCEProducedTotal(username);
+  const ceReducedTotal = Trips.getCESavedTotal(username);
+
   const ceReducedPerDay = Trips.getCEReducedPerDay(username);
+
+  const fuelSavedTotal = Trips.getFuelSavedTotal(username);
   const fuelSavedPerDay = Trips.getFuelSavedPerDay(username);
   const userMpg = UserVehicles.getUserMpg(username);
   return {
     tripReady: tripSubscribe.ready(),
     userReady: userSubscribe.ready(),
     allVehicleReady: userVehicleSubscribe.ready(),
-    milesSavedTotal,
+    milesSavedTotal: milesTraveledTotal.milesSaved,
     allTrips,
+    detailedTrips,
     milesSavedPerDay,
     modesOfTransport,
     ceProducedTotal,
+    ceReducedTotal,
     ceReducedPerDay,
     fuelSavedPerDay,
+    fuelSavedTotal,
     userMpg,
   };
 })(WhatIf);

@@ -21,6 +21,8 @@ function Dashboard(
     ceSavedTotal,
     ceProducedTotal,
     ceReducedPerDay,
+    fuelSpentTotal,
+    fuelSavedTotal,
     fuelSavedPerDay,
     milesSavedAvg,
     milesTraveledAvg,
@@ -48,6 +50,8 @@ function Dashboard(
         ceSavedTotal={ceSavedTotal}
         ceProducedTotal={ceProducedTotal}
         ceReducedPerDay={ceReducedPerDay}
+        fuelSpentTotal={fuelSpentTotal}
+        fuelSavedTotal={fuelSavedTotal}
         fuelSavedPerDay={fuelSavedPerDay}
         milesSavedAvg={milesSavedAvg}
         milesTraveledAvg={milesTraveledAvg}
@@ -77,6 +81,8 @@ Dashboard.propTypes = {
   ceProducedTotal: PropTypes.string,
   ceReducedPerDay: PropTypes.object,
   evCeProducedAvg: PropTypes.object,
+  fuelSpentTotal: PropTypes.number,
+  fuelSavedTotal: PropTypes.number,
   fuelSavedPerDay: PropTypes.object,
   milesSavedAvg: PropTypes.object,
   milesTraveledAvg: PropTypes.object,
@@ -97,6 +103,7 @@ export default withTracker(({ match }) => {
   const username = match.params._id;
 
   const vehicleMilesTraveled = Trips.getVehicleMilesTraveled(username);
+
   const milesTotal = Trips.getMilesTotal(username);
   const milesPerDay = Trips.getMilesTraveledPerDay(username);
   const modesOfTransport = Trips.getModesOfTransport(username);
@@ -107,6 +114,9 @@ export default withTracker(({ match }) => {
   const ceSavedTotal = Trips.getCESavedTotal(username);
   const ceProducedTotal = Trips.getCEProducedTotal(username);
   const ceReducedPerDay = Trips.getCEReducedPerDay(username);
+
+  const fuelSpentTotal = Trips.getFuelSpentTotal(username);
+  const fuelSavedTotal = Trips.getFuelSavedTotal(username);
 
   const fuelSavedPerDay = Trips.getFuelSavedPerDay(username);
 
@@ -125,15 +135,17 @@ export default withTracker(({ match }) => {
     userVehicleReady,
     vehicleMilesTraveled,
     milesTotal,
-    milesSavedPerDay: milesPerDay.milesSaved,
-    milesAddedPerDay: milesPerDay.milesAdded,
     modesOfTransport,
     milesPerMode,
     userProfile,
     ceSavedTotal,
     ceProducedTotal,
     ceReducedPerDay,
+    fuelSpentTotal,
+    fuelSavedTotal,
     fuelSavedPerDay,
+    milesSavedPerDay: milesPerDay.milesSaved,
+    milesAddedPerDay: milesPerDay.milesAdded,
     milesSavedAvg: milesAvg.milesSavedAvg,
     milesTraveledAvg: milesAvg.milesTraveledAvg,
     fuelSavedAvg: fuelAvg.fuelSavedAvg,
