@@ -528,7 +528,6 @@ class TripCollection extends BaseCollection {
    */
   getVehicleMilesTraveled(username) {
     const userTrips = this._collection.find({ owner: username }).fetch();
-    console.log(userTrips);
 
     let milesSaved = 0;
     let milesAdded = 0;
@@ -767,15 +766,15 @@ class TripCollection extends BaseCollection {
 
   getFuelSpentTotal(username) {
     const trips = username ?
-        this._collection.find({ owner: username }).fetch() :
-        this._collection.find({}).fetch();
+      this._collection.find({ owner: username }).fetch() :
+      this._collection.find({}).fetch();
     return trips.map(trip => trip.fuelSpent).reduce((a, b) => a + b, 0);
   }
 
   getFuelSavedTotal(username) {
     const trips = username ?
-        this._collection.find({ owner: username }).fetch() :
-        this._collection.find({}).fetch();
+      this._collection.find({ owner: username }).fetch() :
+      this._collection.find({}).fetch();
     return trips.map(trip => trip.fuelSaved).reduce((a, b) => a + b, 0);
   }
 

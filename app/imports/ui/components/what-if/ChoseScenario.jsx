@@ -42,7 +42,6 @@ function ChoseScenario(
   const nDetailedTrips = useRef(_.map(detailedTrips, (trip) => trip));
   const nCeProducedTotal = useRef(ceProducedTotal);
 
-
   function colorType(type) {
     let color;
     if (type === tripModes.TELEWORK) {
@@ -177,17 +176,12 @@ function ChoseScenario(
       // ! check for if user doesn't have autoMPG registered
       // Get date of original selected event.
 
-      console.log(nDetailedTrips);
-      console.log(transport);
       const indexDetailedTrip = _.findIndex(nDetailedTrips.current, function (trip) {
         const selectedEventDate = getDate(selectedEvent.oldDateFormat);
         const nDetailedTripDate = getDate(trip.date);
 
-        console.log(trip.mode);
         return (selectedEventDate === nDetailedTripDate) && (trip.mode === selectedEvent.title);
       });
-
-      console.log(indexDetailedTrip);
 
       const currentDetailedTrip = nDetailedTrips.current[indexDetailedTrip];
       const fuel = currentDetailedTrip.milesTraveled / currentDetailedTrip.mpg;
@@ -234,7 +228,6 @@ function ChoseScenario(
 
       tripsWI = _.map(nDetailedTrips, (trip) => trip);
 
-      console.log(tripsWI);
       const indexOfOldMiles = _.findIndex(nMilesSavedPerDay.current, function (object) {
         const selectedEventDate = getDate(selectedEvent.oldDateFormat);
         const nMilesSavedDate = getDate(object.date);

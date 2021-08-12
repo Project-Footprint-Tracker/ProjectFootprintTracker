@@ -28,7 +28,6 @@ function WhatIfContent(
 
   const milesTotalWI = newMilesTotal(milesSavedPerDayWI);
   const milesSavedTotalWI = milesTotalWI.milesSavedTotalWI;
-  const milesAddedTotalWI = milesTotalWI.milesAddedTotalWI;
 
   const calculateFuelAndCeWI = () => {
 

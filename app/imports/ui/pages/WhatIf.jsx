@@ -135,8 +135,6 @@ export default withTracker(({ match }) => {
   const allTrips = Trips.getTrips(username);
   const detailedTrips = Trips.getDetailedTrips(username);
 
-  console.log(allTrips);
-
   const modesOfTransport = Trips.getModesOfTransport(username);
 
   const ceProducedTotal = Trips.getCEProducedTotal(username);
