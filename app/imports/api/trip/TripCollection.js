@@ -292,6 +292,10 @@ class TripCollection extends BaseCollection {
     return modesOfTransport;
   }
 
+  getDetailedTrips(username) {
+    return this._collection.find({ owner: username }).fetch();
+  }
+
   getTrips(username) {
     const userTrips = this._collection.find({ owner: username }).fetch();
 

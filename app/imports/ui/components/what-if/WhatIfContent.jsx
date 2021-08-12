@@ -17,7 +17,7 @@ function WhatIfContent(
     ceReducedPerDay,
     fuelSavedPerDay,
     fuelSavedTotal,
-    allTripsWI,
+    detailedTripsWI,
     milesSavedPerDayWI,
     modesOfTransportWI,
     ceReducedPerDayWI,
@@ -30,15 +30,13 @@ function WhatIfContent(
   const milesSavedTotalWI = milesTotalWI.milesSavedTotalWI;
   const milesAddedTotalWI = milesTotalWI.milesAddedTotalWI;
 
-  console.log(allTripsWI);
-
   const calculateFuelAndCeWI = () => {
 
     let fuelSavedTotalWI = 0;
     let ceProducedTotalWI = 0;
     let ceReducedTotalWI = 0;
 
-    _.forEach(allTripsWI, function (trip) {
+    _.forEach(detailedTripsWI, function (trip) {
 
       const fuel = trip.milesTraveled / userMpg;
       const ce = fuel * cePerGallonFuel;
@@ -351,7 +349,7 @@ WhatIfContent.propTypes = {
   ceReducedPerDay: PropTypes.object,
   fuelSavedPerDay: PropTypes.object,
   fuelSavedTotal: PropTypes.number,
-  allTripsWI: PropTypes.array,
+  detailedTripsWI: PropTypes.array,
   milesSavedPerDayWI: PropTypes.object,
   modesOfTransportWI: PropTypes.object,
   ceReducedPerDayWI: PropTypes.object,

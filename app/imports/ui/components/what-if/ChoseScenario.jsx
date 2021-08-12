@@ -15,6 +15,7 @@ function ChoseScenario(
   {
     milesSavedPerDay,
     allTrips,
+    detailedTrips,
     modesOfTransport,
     userMpg,
     ceProducedTotal,
@@ -38,7 +39,9 @@ function ChoseScenario(
     value: modesOfTransport.value[i],
   })));
 
+  const nDetailedTrips = useRef(_.map(detailedTrips, (trip) => trip));
   const nCeProducedTotal = useRef(ceProducedTotal);
+
 
   function colorType(type) {
     let color;
@@ -111,6 +114,7 @@ function ChoseScenario(
       oldDateFormat: info.event.start,
       utcHours: info.event.start.setUTCHours(0, 0, 0, 0),
     }));
+
     defaultData.current = false;
     isEventSelected.current = true;
   };
@@ -134,6 +138,8 @@ function ChoseScenario(
     const fuelSPDF = [];
     const fuelSPDP = [];
     let fuelSPD = {};
+    let tripsWI = [];
+
     // check that event is selected to change
     if (isEventSelected.current === true) {
       // store event state in array
@@ -171,6 +177,64 @@ function ChoseScenario(
       // ! check for if user doesn't have autoMPG registered
       // Get date of original selected event.
 
+      console.log(nDetailedTrips);
+      console.log(transport);
+      const indexDetailedTrip = _.findIndex(nDetailedTrips.current, function (trip) {
+        const selectedEventDate = getDate(selectedEvent.oldDateFormat);
+        const nDetailedTripDate = getDate(trip.date);
+
+        console.log(trip.mode);
+        return (selectedEventDate === nDetailedTripDate) && (trip.mode === selectedEvent.title);
+      });
+
+      console.log(indexDetailedTrip);
+
+      const currentDetailedTrip = nDetailedTrips.current[indexDetailedTrip];
+      const fuel = currentDetailedTrip.milesTraveled / currentDetailedTrip.mpg;
+      const ce = fuel * cePerGallonFuel;
+
+      // if user changes trip to carpool, assume that the passenger is 1.
+      if (transport === tripModes.CARPOOL) {
+        nDetailedTrips.current[indexDetailedTrip] = {
+          ceProduced: ce / 2,
+          ceSaved: ce - (ce / 2),
+          date: selectedEvent.oldDateFormat,
+          fuelSaved: fuel,
+          fuelSpent: fuel,
+          milesTraveled: currentDetailedTrip.milesTraveled,
+          mode: tripModes.CARPOOL,
+          mpg: currentDetailedTrip.mpg,
+          passengers: 1,
+        };
+      } else if (transport === tripModes.GAS_CAR) {
+        nDetailedTrips.current[indexDetailedTrip] = {
+          ceProduced: ce,
+          ceSaved: 0,
+          date: selectedEvent.oldDateFormat,
+          fuelSaved: 0,
+          fuelSpent: fuel,
+          milesTraveled: currentDetailedTrip.milesTraveled,
+          mode: tripModes.GAS_CAR,
+          mpg: currentDetailedTrip.mpg,
+          passengers: 0,
+        };
+      } else {
+        nDetailedTrips.current[indexDetailedTrip] = {
+          ceProduced: 0,
+          ceSaved: ce,
+          date: selectedEvent.oldDateFormat,
+          fuelSaved: fuel,
+          fuelSpent: 0,
+          milesTraveled: currentDetailedTrip.milesTraveled,
+          mode: transport,
+          mpg: currentDetailedTrip.mpg,
+          passengers: 0,
+        };
+      }
+
+      tripsWI = _.map(nDetailedTrips, (trip) => trip);
+
+      console.log(tripsWI);
       const indexOfOldMiles = _.findIndex(nMilesSavedPerDay.current, function (object) {
         const selectedEventDate = getDate(selectedEvent.oldDateFormat);
         const nMilesSavedDate = getDate(object.date);
@@ -272,7 +336,7 @@ function ChoseScenario(
     } else {
       swal('Pick a date');
     }
-    test(milesSPD, modesOT, ceRPD, fuelSPD);
+    test(tripsWI[0], milesSPD, modesOT, ceRPD, fuelSPD);
   };
 
   // updates selected state transport
@@ -358,6 +422,7 @@ ChoseScenario.propTypes = {
   milesSavedTotal: PropTypes.number,
   milesSavedPerDay: PropTypes.object,
   allTrips: PropTypes.object,
+  detailedTrips: PropTypes.array,
   modesOfTransport: PropTypes.object,
   userMpg: PropTypes.number,
   ceProducedTotal: PropTypes.string,
