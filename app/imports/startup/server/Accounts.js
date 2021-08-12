@@ -24,10 +24,9 @@ export function createUser(email, password, role) {
 
 // When running app for first time, pass a settings file to set up a default user account.
 if (Meteor.users.find().count() === 0) {
-  if (Meteor.settings.defaultAccounts) {
+  if (Meteor.settings.defaultUsers) {
     console.log('Creating the default user(s)');
-    const users = JSON.parse(Assets.getText('sampleUsers.json'));
-    users.forEach(user => {
+    Meteor.settings.defaultUsers.forEach(user => {
       Users.define(user);
       createUser(user.email, 'changeme', user.role || ROLE.USER);
     });
