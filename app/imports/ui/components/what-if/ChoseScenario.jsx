@@ -310,9 +310,9 @@ function ChoseScenario(
 
         ceProduced += objects.ceProduced;
         ceRPDD.push(objects.date);
-        ceRPDG.push(objects.ceSaved);
+        ceRPDG.push((objects.ceSaved).toFixed(2));
         fuelSPDD.push(objects.date);
-        fuelSPDF.push(objects.fuelSaved);
+        fuelSPDF.push((objects.fuelSaved).toFixed(2));
         fuelSPDP.push((objects.fuelSaved * fuelCost).toFixed(2));
       });
 

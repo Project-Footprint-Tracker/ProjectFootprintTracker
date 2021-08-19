@@ -722,15 +722,18 @@ class TripCollection extends BaseCollection {
     const ce = [];
 
     userTrips.forEach((trip) => {
-      const tripDate = trip.date.toISOString().split('T')[0];
-      if (trip.ceSaved !== 0) {
-        if (!date.includes(tripDate)) {
-          date.push(new Date(tripDate));
-          ce.push(trip.ceSaved.toFixed(2));
-        } else {
-          const oldCE = Number(ce[date.indexOf(tripDate)]);
-          ce[date.indexOf(tripDate)] = (oldCE + trip.ceSaved).toFixed(2);
-        }
+
+      const tripDate = trip.date;
+
+      // check to see if there is an existing trip for that date.
+      const dateIndex = _.findIndex(date, (o) => o.getTime() === tripDate.getTime());
+
+      if (dateIndex === -1) {
+        date.push(tripDate);
+        ce.push(trip.ceSaved.toFixed(2));
+      } else {
+        const oldCE = Number(ce[dateIndex]);
+        ce[dateIndex] = (oldCE + trip.ceSaved).toFixed(2);
       }
     });
 
@@ -749,15 +752,18 @@ class TripCollection extends BaseCollection {
     const ceProduced = [];
 
     userTrips.forEach((trip) => {
-      const tripDate = trip.date.toISOString().split('T')[0];
-      if (trip.ceProduced !== 0) {
-        if (!date.includes(tripDate)) {
-          date.push(new Date(tripDate));
-          ceProduced.push(trip.ceProduced.toFixed(2));
-        } else {
-          const oldCE = Number(ceProduced[date.indexOf(tripDate)]);
-          ceProduced[date.indexOf(tripDate)] = (oldCE + trip.ceProduced).toFixed(2);
-        }
+
+      const tripDate = trip.date;
+
+      // check to see if there is an existing trip for that date.
+      const dateIndex = _.findIndex(date, (o) => o.getTime() === tripDate.getTime());
+
+      if (dateIndex === -1) {
+        date.push(tripDate);
+        ceProduced.push(trip.ceProduced.toFixed(2));
+      } else {
+        const oldCE = Number(ceProduced[dateIndex]);
+        ceProduced[dateIndex] = (oldCE + trip.ceProduced).toFixed(2);
       }
     });
 
@@ -792,20 +798,23 @@ class TripCollection extends BaseCollection {
     const price = [];
 
     userTrips.forEach(trip => {
-      const tripDate = trip.date.toISOString().split('T')[0];
       const fuelSaved = trip.fuelSaved;
       const priceSaved = Number(fuelSaved * fuelCost);
+      const tripDate = trip.date;
 
-      if (!date.includes(tripDate)) {
+      // check to see if there is an existing trip for that date.
+      const dateIndex = _.findIndex(date, (o) => o.getTime() === tripDate.getTime());
+
+      if (dateIndex === -1) {
         date.push(new Date(tripDate));
-        fuel[date.indexOf(tripDate)] = fuelSaved.toFixed(2);
-        price[date.indexOf(tripDate)] = priceSaved.toFixed(2);
+        fuel.push(fuelSaved.toFixed(2));
+        price.push(priceSaved.toFixed(2));
       } else {
-        const oldFuel = Number(fuel[date.indexOf(tripDate)]);
-        fuel[date.indexOf(tripDate)] = (oldFuel + fuelSaved).toFixed(2);
+        const oldFuel = Number(fuel[dateIndex]);
+        fuel[dateIndex] = (oldFuel + fuelSaved).toFixed(2);
 
-        const oldPrice = Number(price[date.indexOf(tripDate)]);
-        price[date.indexOf(tripDate)] = (oldPrice + priceSaved).toFixed(2);
+        const oldPrice = Number(price[dateIndex]);
+        price[dateIndex] = (oldPrice + priceSaved).toFixed(2);
       }
     });
 
