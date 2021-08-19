@@ -17,7 +17,6 @@ function ChoseScenario(
     allTrips,
     detailedTrips,
     modesOfTransport,
-    userMpg,
     ceProducedTotal,
     test,
   },
@@ -96,6 +95,7 @@ function ChoseScenario(
     const year = `${info.event.start.getFullYear()}`;
     let month = `${info.event.start.getMonth() + 1}`;
     let day = `${info.event.start.getDate()}`;
+    let offsetDay = `${info.event.start.getDate() + 1}`;
 
     // Adjust month and day to have 2 numbers if necessary
     if (month.length < 2) {
@@ -104,6 +104,9 @@ function ChoseScenario(
     if (day.length < 2) {
       day = `0${day}`;
     }
+    if (offsetDay.length < 2) {
+      offsetDay = `0${offsetDay}`;
+    }
 
     // update state selectEvent with event user selected on fullcalendar
     setSelectedEvent(() => ({
@@ -111,7 +114,7 @@ function ChoseScenario(
       title: info.event.title,
       date: [year, month, day].join('-'),
       oldDateFormat: info.event.start,
-      utcHours: info.event.start.setUTCHours(0, 0, 0, 0),
+      offsetDate: [year, month, offsetDay].join('-'),
     }));
 
     defaultData.current = false;
@@ -192,7 +195,7 @@ function ChoseScenario(
         nDetailedTrips.current[indexDetailedTrip] = {
           ceProduced: ce / 2,
           ceSaved: ce - (ce / 2),
-          date: selectedEvent.oldDateFormat,
+          date: new Date(selectedEvent.offsetDate),
           fuelSaved: fuel,
           fuelSpent: fuel,
           milesTraveled: currentDetailedTrip.milesTraveled,
@@ -204,7 +207,7 @@ function ChoseScenario(
         nDetailedTrips.current[indexDetailedTrip] = {
           ceProduced: ce,
           ceSaved: 0,
-          date: selectedEvent.oldDateFormat,
+          date: new Date(selectedEvent.offsetDate),
           fuelSaved: 0,
           fuelSpent: fuel,
           milesTraveled: currentDetailedTrip.milesTraveled,
@@ -216,7 +219,7 @@ function ChoseScenario(
         nDetailedTrips.current[indexDetailedTrip] = {
           ceProduced: 0,
           ceSaved: ce,
-          date: selectedEvent.oldDateFormat,
+          date: new Date(selectedEvent.offsetDate),
           fuelSaved: fuel,
           fuelSpent: 0,
           milesTraveled: currentDetailedTrip.milesTraveled,
@@ -290,7 +293,7 @@ function ChoseScenario(
 
       // update nMilesSavedPerDay
       nMilesSavedPerDay.current[indexOfOldMiles] = {
-        date: selectedEvent.oldDateFormat,
+        date: new Date(selectedEvent.offsetDate),
         distance: newDistanceTotal,
         mode: newTransport.length > 0 ? newTransport.join(', ') : transport,
       };
@@ -303,23 +306,16 @@ function ChoseScenario(
       milesSPD = { date: milesSPDDate, distance: milesSPDDistance, mode: milesSPDM };
 
       // If event produced miles & ce
-      _.forEach(nMilesSavedPerDay.current, function (objects) {
+      _.forEach(tripsWI[0], function (objects) {
 
-        if (objects.mode === tripModes.GAS_CAR || objects.mode === tripModes.CARPOOL) {
-          ceProduced += ((objects.distance / userMpg) * cePerGallonFuel);
-          ceRPDD.push(objects.date);
-          ceRPDG.push(0);
-          fuelSPDD.push(objects.date);
-          fuelSPDF.push(0);
-          fuelSPDP.push(((objects.distance / userMpg) * fuelCost).toFixed(2));
-        } else {
-          ceRPDD.push(objects.date);
-          ceRPDG.push(((objects.distance / userMpg) * cePerGallonFuel).toFixed(2));
-          fuelSPDD.push(objects.date);
-          fuelSPDF.push((objects.distance / userMpg).toFixed(2));
-          fuelSPDP.push(((objects.distance / userMpg) * fuelCost).toFixed(2));
-        }
+        ceProduced += objects.ceProduced;
+        ceRPDD.push(objects.date);
+        ceRPDG.push((objects.ceSaved).toFixed(2));
+        fuelSPDD.push(objects.date);
+        fuelSPDF.push((objects.fuelSaved).toFixed(2));
+        fuelSPDP.push((objects.fuelSaved * fuelCost).toFixed(2));
       });
+
       // If event reduced miles & ce
       ceRPD = { date: ceRPDD, ce: ceRPDG };
       fuelSPD = { date: fuelSPDD, fuel: fuelSPDF, price: fuelSPDP };
