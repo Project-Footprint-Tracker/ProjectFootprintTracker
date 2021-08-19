@@ -787,27 +787,27 @@ class TripCollection extends BaseCollection {
   getFuelSavedPerDay(username) {
     const userTrips = this._collection.find({ owner: username }, { sort: { date: -1 } }).fetch();
 
+    console.log(userTrips);
+
     const date = [];
     const fuel = [];
     const price = [];
 
     userTrips.forEach(trip => {
       const tripDate = trip.date.toISOString().split('T')[0];
-      const fuelSaved = Number(trip.milesTraveled / trip.mpg);
+      const fuelSaved = trip.fuelSaved;
       const priceSaved = Number(fuelSaved * fuelCost);
 
-      if (trip.ceSaved !== 0) {
-        if (!date.includes(tripDate)) {
-          date.push(tripDate);
-          fuel[date.indexOf(tripDate)] = fuelSaved.toFixed(2);
-          price[date.indexOf(tripDate)] = priceSaved.toFixed(2);
-        } else {
-          const oldFuel = Number(fuel[date.indexOf(tripDate)]);
-          fuel[date.indexOf(tripDate)] = (oldFuel + fuelSaved).toFixed(2);
+      if (!date.includes(tripDate)) {
+        date.push(tripDate);
+        fuel[date.indexOf(tripDate)] = fuelSaved.toFixed(2);
+        price[date.indexOf(tripDate)] = priceSaved.toFixed(2);
+      } else {
+        const oldFuel = Number(fuel[date.indexOf(tripDate)]);
+        fuel[date.indexOf(tripDate)] = (oldFuel + fuelSaved).toFixed(2);
 
-          const oldPrice = Number(price[date.indexOf(tripDate)]);
-          price[date.indexOf(tripDate)] = (oldPrice + priceSaved).toFixed(2);
-        }
+        const oldPrice = Number(price[date.indexOf(tripDate)]);
+        price[date.indexOf(tripDate)] = (oldPrice + priceSaved).toFixed(2);
       }
     });
 
