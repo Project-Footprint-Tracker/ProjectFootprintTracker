@@ -725,7 +725,7 @@ class TripCollection extends BaseCollection {
       const tripDate = trip.date.toISOString().split('T')[0];
       if (trip.ceSaved !== 0) {
         if (!date.includes(tripDate)) {
-          date.push(tripDate);
+          date.push(new Date(tripDate));
           ce.push(trip.ceSaved.toFixed(2));
         } else {
           const oldCE = Number(ce[date.indexOf(tripDate)]);
@@ -752,7 +752,7 @@ class TripCollection extends BaseCollection {
       const tripDate = trip.date.toISOString().split('T')[0];
       if (trip.ceProduced !== 0) {
         if (!date.includes(tripDate)) {
-          date.push(tripDate);
+          date.push(new Date(tripDate));
           ceProduced.push(trip.ceProduced.toFixed(2));
         } else {
           const oldCE = Number(ceProduced[date.indexOf(tripDate)]);
@@ -787,8 +787,6 @@ class TripCollection extends BaseCollection {
   getFuelSavedPerDay(username) {
     const userTrips = this._collection.find({ owner: username }, { sort: { date: -1 } }).fetch();
 
-    console.log(userTrips);
-
     const date = [];
     const fuel = [];
     const price = [];
@@ -799,7 +797,7 @@ class TripCollection extends BaseCollection {
       const priceSaved = Number(fuelSaved * fuelCost);
 
       if (!date.includes(tripDate)) {
-        date.push(tripDate);
+        date.push(new Date(tripDate));
         fuel[date.indexOf(tripDate)] = fuelSaved.toFixed(2);
         price[date.indexOf(tripDate)] = priceSaved.toFixed(2);
       } else {
