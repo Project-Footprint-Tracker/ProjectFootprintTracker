@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Card } from 'semantic-ui-react';
-import Chart from '../Chart';
+import Chart from './Chart';
 
 const ModesChart = (props) => {
+
   const chartData = [{
-    values: props.modesData.value,
-    labels: props.modesData.label,
+    values: Object.values(props.modesData),
+    labels: Object.keys(props.modesData),
     hoverinfo: 'label+value',
     hole: 0.3,
     type: 'pie',

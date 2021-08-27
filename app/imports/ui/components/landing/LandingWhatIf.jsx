@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Header, Statistic } from 'semantic-ui-react';
 import { getCEProducedData, getPotentialTrips, getStatistics } from './utilites';
-import Chart from '../Chart';
+import Chart from '../charts/Chart';
 
 const LandingWhatIf = ({ monthTrips }) => {
   const original = getStatistics(monthTrips);

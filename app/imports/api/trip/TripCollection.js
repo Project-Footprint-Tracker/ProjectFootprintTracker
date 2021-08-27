@@ -4,7 +4,6 @@ import { _ } from 'lodash';
 import BaseCollection from '../base/BaseCollection';
 import { fuelCost, avgMpge, cePerGallonFuel, tripModes, tripModesArray } from '../utilities/constants';
 import { ROLE } from '../role/Role';
-import { GroupMembers } from '../group/GroupMemberCollection';
 import { getDateToday } from '../utilities/CEData';
 
 export const tripPublications = {
@@ -200,96 +199,42 @@ class TripCollection extends BaseCollection {
     return null;
   }
 
-  getGroupModesOfTransport(group) {
-    const members = GroupMembers.find({ group }).fetch();
-    const modesOfTransport = [
-      { mode: tripModes.TELEWORK, value: 0 },
-      { mode: tripModes.PUBLIC_TRANSPORTATION, value: 0 },
-      { mode: tripModes.BIKE, value: 0 },
-      { mode: tripModes.WALK, value: 0 },
-      { mode: tripModes.CARPOOL, value: 0 },
-      { mode: tripModes.ELECTRIC_VEHICLE, value: 0 },
-      { mode: tripModes.GAS_CAR, value: 0 },
-    ];
-    members.forEach(m => {
-      const memberTrips = this._collection.find({ owner: m.member }).fetch();
-      memberTrips.forEach((t) => {
-        const mode = _.find(modesOfTransport, ['mode', t.mode]);
-        mode.value += 1;
-      });
-    });
-    const modesOfTransportValue = [];
-    const modesOfTransportLabel = [];
-
-    // create the formatted data value and label for the charts.
-    modesOfTransport.forEach((m) => {
-      if (m.value !== 0) {
-        modesOfTransportValue.push(m.value);
-        modesOfTransportLabel.push(m.mode);
-      }
-    });
-
-    return { value: modesOfTransportValue, label: modesOfTransportLabel };
-  }
-
   /**
-   * Gets the modes of transportation that the user has used. Only returning the ones that they used and ignoring the ones that they did not.
+   * Gets the number of times a user has used each mode of transportation.
    * @param username the username of the user (ex: admin@foo.com)
-   * @returns {{label: [], value: []}} an object with two keys, label which is an array of modes of transportation that they used, and value which is an array of count
-   * for the respective mode.
+   * @returns {Object} an object wherein the keys are the different modes of transportation and the values are the number of times the each mode has been used.
    */
   getModesOfTransport(username) {
     const userTrips = this._collection.find({ owner: username }).fetch();
-    const modesOfTransport = [
-      { mode: tripModes.TELEWORK, value: 0 },
-      { mode: tripModes.PUBLIC_TRANSPORTATION, value: 0 },
-      { mode: tripModes.BIKE, value: 0 },
-      { mode: tripModes.WALK, value: 0 },
-      { mode: tripModes.CARPOOL, value: 0 },
-      { mode: tripModes.ELECTRIC_VEHICLE, value: 0 },
-      { mode: tripModes.GAS_CAR, value: 0 },
-    ];
 
-    // iterate over user's trips and increment each value of mode they used.
-    _.forEach(userTrips, function (objects) {
-      const mode = _.find(modesOfTransport, ['mode', objects.mode]);
-      mode.value += 1;
-    });
-
-    const modesOfTransportValue = [];
-    const modesOfTransportLabel = [];
-
-    // create the formatted data value and label for the charts.
-    _.forEach(modesOfTransport, function (objects) {
-      if (objects.value !== 0) {
-        modesOfTransportValue.push(objects.value);
-        modesOfTransportLabel.push(objects.mode);
+    const modesOfTransport = userTrips.reduce((result, trip) => {
+      const allModes = { ...result };
+      if (trip.mode in allModes) {
+        allModes[trip.mode]++;
+      } else {
+        allModes[trip.mode] = 1;
       }
-    });
-
-    return { value: modesOfTransportValue, label: modesOfTransportLabel };
-  }
-
-  getMilesPerMode(username) {
-    const userTrips = this._collection.find({ owner: username }).fetch();
-    const modesOfTransport = [
-      { mode: tripModes.TELEWORK, miles: 0 },
-      { mode: tripModes.PUBLIC_TRANSPORTATION, miles: 0 },
-      { mode: tripModes.BIKE, miles: 0 },
-      { mode: tripModes.WALK, miles: 0 },
-      { mode: tripModes.CARPOOL, miles: 0 },
-      { mode: tripModes.ELECTRIC_VEHICLE, miles: 0 },
-      { mode: tripModes.GAS_CAR, miles: 0 },
-    ];
-
-    _.forEach(userTrips, function (objects) {
-      const tripMode = objects.mode;
-
-      const mode = _.find(modesOfTransport, { mode: tripMode });
-      mode.miles += objects.milesTraveled;
-    });
+      return allModes;
+    }, {});
 
     return modesOfTransport;
+  }
+
+  /**
+   * Gets the number of miles a user has traveled using each mode of transportation.
+   * @param username the username of the user (ex: admin@foo.com)
+   * @returns {Object} an object wherein the keys are the different modes of transportation and the values are the miles traveled using each mode.
+   */
+  getMilesPerMode(username) {
+    const userTrips = this._collection.find({ owner: username }).fetch();
+    const modesMiles = {};
+
+    tripModesArray.forEach(tripMode => {
+      const filteredTrips = userTrips.filter(({ mode }) => tripMode === mode);
+      modesMiles[tripMode] = filteredTrips.reduce((prev, trip) => prev + Number(trip.milesTraveled), 0);
+    });
+
+    return modesMiles;
   }
 
   getDetailedTrips(username) {

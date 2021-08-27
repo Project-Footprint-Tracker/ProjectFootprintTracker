@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Card } from 'semantic-ui-react';
-import Chart from '../Chart';
+import Chart from '../charts/Chart';
 import DashboardMilesCard from './DashboardMilesCard';
 import DashboardFuelCard from './DashboardFuelCard';
 import DashboardCeCard from './DashboardCeCard';
@@ -87,8 +87,8 @@ function DashboardContent(
   const treesPerCeReduced = Math.ceil(ceSavedTotal / poundsOfCePerTree);
 
   const modesOfTransportData = [{
-    values: modesOfTransport.value,
-    labels: modesOfTransport.label,
+    values: Object.values(modesOfTransport),
+    labels: Object.keys(modesOfTransport),
     type: 'pie',
     hole: 0.4,
     hoverinfo: 'label+percent',
@@ -301,7 +301,7 @@ DashboardContent.propTypes = {
   milesSavedPerDay: PropTypes.object,
   milesAddedPerDay: PropTypes.object,
   modesOfTransport: PropTypes.object,
-  milesPerMode: PropTypes.array,
+  milesPerMode: PropTypes.object,
   userProfile: PropTypes.object,
   userReady: PropTypes.bool,
   ceSavedTotal: PropTypes.number,

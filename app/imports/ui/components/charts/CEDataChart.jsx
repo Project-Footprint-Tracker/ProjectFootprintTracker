@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Card } from 'semantic-ui-react';
-import Chart from '../Chart';
+import Chart from './Chart';
 
 const CEDataChart = (props) => {
   const [ceChart, setCEChart] = useState(true);

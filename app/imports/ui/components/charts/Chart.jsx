@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Plot from 'react-plotly.js';
+import Plot from '../../../../node_modules/react-plotly.js/react-plotly';
 
 // A base chart that can be customized to visualize any data in any way.
 // chartData is formatted as an array of objects with each object being a specific chart.

@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { GroupMembers } from '../../api/group/GroupMemberCollection';
 import { Trips } from '../../api/trip/TripCollection';
 import { Users } from '../../api/user/UserCollection';
-import { fuelCost, tripModes } from '../../api/utilities/constants';
+import { fuelCost } from '../../api/utilities/constants';
 
 /**
  * Returns the number of trips per mode of transportation.
@@ -12,29 +12,17 @@ import { fuelCost, tripModes } from '../../api/utilities/constants';
 export const getModeCounts = (trips) => _.countBy(trips, 'mode');
 
 export const getModeChartCounts = (trips) => {
-  const modesOfTransport = [
-    { mode: tripModes.TELEWORK, value: 0 },
-    { mode: tripModes.PUBLIC_TRANSPORTATION, value: 0 },
-    { mode: tripModes.BIKE, value: 0 },
-    { mode: tripModes.WALK, value: 0 },
-    { mode: tripModes.CARPOOL, value: 0 },
-    { mode: tripModes.ELECTRIC_VEHICLE, value: 0 },
-    { mode: tripModes.GAS_CAR, value: 0 },
-  ];
-  trips.forEach((t) => {
-    const mode = _.find(modesOfTransport, ['mode', t.mode]);
-    mode.value += 1;
-  });
-  const modesOfTransportValue = [];
-  const modesOfTransportLabel = [];
-  // create the formatted data value and label for the charts.
-  modesOfTransport.forEach((m) => {
-    if (m.value !== 0) {
-      modesOfTransportValue.push(m.value);
-      modesOfTransportLabel.push(m.mode);
+  const modesOfTransport = trips.reduce((result, trip) => {
+    const allModes = { ...result };
+    if (trip.mode in allModes) {
+      allModes[trip.mode]++;
+    } else {
+      allModes[trip.mode] = 1;
     }
-  });
-  return { value: modesOfTransportValue, label: modesOfTransportLabel };
+    return allModes;
+  }, {});
+
+  return modesOfTransport;
 };
 
 /**

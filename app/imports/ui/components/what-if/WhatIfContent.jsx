@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Card, Statistic } from 'semantic-ui-react';
 import { _ } from 'lodash';
-import Chart from '../Chart';
+import Chart from '../charts/Chart';
 import { cePerGallonFuel, tripModes } from '../../../api/utilities/constants';
 
 // Contains the graphs that visualizes the user's data.

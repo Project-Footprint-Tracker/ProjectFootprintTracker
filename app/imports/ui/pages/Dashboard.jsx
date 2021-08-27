@@ -75,7 +75,7 @@ Dashboard.propTypes = {
   milesSavedPerDay: PropTypes.object,
   milesAddedPerDay: PropTypes.object,
   modesOfTransport: PropTypes.object,
-  milesPerMode: PropTypes.array,
+  milesPerMode: PropTypes.object,
   userProfile: PropTypes.any,
   ceSavedTotal: PropTypes.number,
   ceProducedTotal: PropTypes.string,
