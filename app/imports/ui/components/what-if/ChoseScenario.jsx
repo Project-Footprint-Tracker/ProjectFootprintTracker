@@ -1,4 +1,3 @@
-import { _ } from 'lodash';
 import React, { useState, useRef } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -22,23 +21,22 @@ function ChoseScenario(
   },
 ) {
 
+  const [disableSubmit, setDisableSubmit] = useState(true);
+  const [disableDefault, setDisableDefault] = useState(true);
   const defaultData = useRef(true);
 
   const isEventSelected = useRef(false);
 
   // change to useState()
-  const nMilesSavedPerDay = useRef(_.map(milesSavedPerDay.mode, (mode, i) => ({
+  const nMilesSavedPerDay = useRef(milesSavedPerDay.mode.map((mode, i) => ({
     date: milesSavedPerDay.date[i],
     distance: milesSavedPerDay.distance[i],
     mode: mode,
   })));
 
-  const nModesOfTransport = useRef(_.map(modesOfTransport.label, (mode, i) => ({
-    label: mode,
-    value: modesOfTransport.value[i],
-  })));
+  const nModesOfTransport = { ...modesOfTransport };
 
-  const nDetailedTrips = useRef(_.map(detailedTrips, (trip) => trip));
+  const nDetailedTrips = useRef(detailedTrips.map((trip) => trip));
   const nCeProducedTotal = useRef(ceProducedTotal);
 
   function colorType(type) {
@@ -62,7 +60,7 @@ function ChoseScenario(
   }
 
   // state for events in fullcalendar
-  const [events, setEvents] = useState(() => _.map(allTrips.date, function (date, i) {
+  const getInitialStateEvents = () => allTrips.date.map((date, i) => {
     const year = `${date.getFullYear()}`;
     let month = `${date.getMonth() + 1}`;
     let day = `${date.getDate()}`;
@@ -76,7 +74,8 @@ function ChoseScenario(
     }
 
     return { id: i, title: allTrips.mode[i], date: [year, month, day].join('-'), color: colorType(allTrips.mode[i]) };
-  }));
+  });
+  const [events, setEvents] = useState(getInitialStateEvents());
 
   // state for event user selected in fullcalendar
   const [selectedEvent, setSelectedEvent] = useState(() => ({ id: null, title: null, date: 'no date selected' }));
@@ -118,6 +117,10 @@ function ChoseScenario(
     }));
 
     defaultData.current = false;
+    if (selectedEvent.title !== null) {
+      setDisableSubmit(false);
+      setTransport(selectedEvent.title);
+    }
     isEventSelected.current = true;
   };
 
@@ -125,9 +128,6 @@ function ChoseScenario(
   const handleSubmit = (evt) => {
     evt.preventDefault();
     // let ceReduced = 0;
-    const modesOTV = [];
-    const modesOTL = [];
-    let modesOT = {};
     let ceProduced = 0;
     const milesSPDDate = [];
     const milesSPDDistance = [];
@@ -142,8 +142,11 @@ function ChoseScenario(
     let fuelSPD = {};
     let tripsWI = [];
 
-    // check that event is selected to change
-    if (isEventSelected.current === true) {
+    if (transport === selectedEvent.title) {
+      swal('Error', 'Please select a different mode of transportation', 'error');
+    } else {
+      setDisableSubmit(true);
+      setDisableDefault(false);
       // store event state in array
       const eventArr = [...events];
       // update array with new event info
@@ -152,34 +155,20 @@ function ChoseScenario(
       setEvents(eventArr);
 
       // Changing MODES OF TRANSPORT (PIE GRAPH CHANGES).
-      // get index of original mode
-      const indexOfOldTransport = nModesOfTransport.current.findIndex(({ label }) => label === selectedEvent.title);
-      // decrement value of original mode
-      nModesOfTransport.current[indexOfOldTransport] = { label: nModesOfTransport.current[indexOfOldTransport].label, value: nModesOfTransport.current[indexOfOldTransport].value - 1 };
-      // get index of what if mode
-      const indexOfNewTransport = nModesOfTransport.current.findIndex(({ label }) => label === transport);
-      if (indexOfNewTransport === -1) {
-        nModesOfTransport.current.push({ label: transport, value: 1 });
+      // decrease value/count of the mode
+      nModesOfTransport[selectedEvent.title] -= 1;
+      if (transport in nModesOfTransport) {
+        nModesOfTransport[transport]++;
       } else {
-        // increment index of what if mode
-        nModesOfTransport.current[indexOfNewTransport] = {
-          label: transport,
-          value: nModesOfTransport.current[indexOfNewTransport].value + 1,
-        };
+        nModesOfTransport[transport] = 1;
       }
-      // Code from TripCollection.js, lines 185-194 used to reformat the data for the charts.
-      _.forEach(nModesOfTransport.current, function (objects) {
-        modesOTV.push(objects.value);
-        modesOTL.push(objects.label);
-      });
-      modesOT = { value: modesOTV, label: modesOTL };
       // FINISHED MODES OF TRANSPORT CHANGES.
       // MILES SAVED & CE PRODUCED
       // update nCEProducedTotal
       // ! check for if user doesn't have autoMPG registered
       // Get date of original selected event.
 
-      const indexDetailedTrip = _.findIndex(nDetailedTrips.current, function (trip) {
+      const indexDetailedTrip = nDetailedTrips.current.findIndex((trip) => {
         const selectedEventDate = getDate(selectedEvent.oldDateFormat);
         const nDetailedTripDate = getDate(trip.date);
 
@@ -229,9 +218,9 @@ function ChoseScenario(
         };
       }
 
-      tripsWI = _.map(nDetailedTrips, (trip) => trip);
+      tripsWI = [...nDetailedTrips.current];
 
-      const indexOfOldMiles = _.findIndex(nMilesSavedPerDay.current, function (object) {
+      const indexOfOldMiles = nMilesSavedPerDay.current.findIndex(object => {
         const selectedEventDate = getDate(selectedEvent.oldDateFormat);
         const nMilesSavedDate = getDate(object.date);
 
@@ -244,9 +233,9 @@ function ChoseScenario(
 
       const newTransport = [];
       if (selectedEventModes.indexOf(',') !== -1) {
-        const indexOfMode = _.findIndex(splitModes, (o) => o === selectedEvent.title);
+        const indexOfMode = splitModes.findIndex((o) => o === selectedEvent.title);
 
-        _.forEach(splitModes, function (mode, index) {
+        splitModes.forEach((mode, index) => {
           if (index !== indexOfMode) {
             newTransport.push(mode);
           } else {
@@ -263,12 +252,10 @@ function ChoseScenario(
         const originalModes = milesSavedPerDay.mode[indexOfOldMiles]; // use original modes as reference
         const splitOriginalModes = originalModes.split(', ');
 
-        _.forEach(splitOriginalModes, function (mode, index) {
+        splitOriginalModes.forEach((mode, index) => {
 
           // find the index to access the distance of that particular trip
-          const tripIndex = _.findIndex(allTrips.collection, function (trip) {
-            return mode === trip.mode && getDate(selectedEvent.oldDateFormat) === getDate(trip.date);
-          });
+          const tripIndex = allTrips.collection.findIndex((trip) => mode === trip.mode && getDate(selectedEvent.oldDateFormat) === getDate(trip.date));
 
           // get the distance from the original list of trips.
           let newDistance = allTrips.distance[tripIndex];
@@ -298,7 +285,7 @@ function ChoseScenario(
         mode: newTransport.length > 0 ? newTransport.join(', ') : transport,
       };
 
-      _.forEach(nMilesSavedPerDay.current, function (objects) {
+      nMilesSavedPerDay.current.forEach((objects) => {
         milesSPDDate.push(objects.date);
         milesSPDDistance.push(objects.distance);
         milesSPDM.push(objects.mode);
@@ -306,7 +293,7 @@ function ChoseScenario(
       milesSPD = { date: milesSPDDate, distance: milesSPDDistance, mode: milesSPDM };
 
       // If event produced miles & ce
-      _.forEach(tripsWI[0], function (objects) {
+      tripsWI.forEach((objects) => {
 
         ceProduced += objects.ceProduced;
         ceRPDD.push(objects.date);
@@ -322,10 +309,8 @@ function ChoseScenario(
       nCeProducedTotal.current = ceProduced;
       // sets the selected event to the change in case of additional changes before selecting a new event.
       setSelectedEvent(() => ({ id: selectedEvent.id, title: transport, date: selectedEvent.date, oldDateFormat: selectedEvent.oldDateFormat }));
-    } else {
-      swal('Pick a date');
+      test(tripsWI, milesSPD, nModesOfTransport, ceRPD, fuelSPD);
     }
-    test(tripsWI[0], milesSPD, modesOT, ceRPD, fuelSPD);
   };
 
   // updates selected state transport
@@ -346,8 +331,8 @@ function ChoseScenario(
       </div>
 
       {/* render form to select mode of transportation */}
-      <Form id='calendar-form' onSubmit={handleSubmit}>
-        <Form.Field>
+      <Form id='calendar-form'>
+        <Form.Field required>
                     Selected date: {selectedEvent.date}
         </Form.Field>
         <Form.Group inline>
@@ -397,11 +382,10 @@ function ChoseScenario(
         </Form.Group>
 
         <Form.Field>
-          <Form.Button content='Submit'/>
+          <Form.Button content='Submit' onClick={handleSubmit} disabled={disableSubmit}/>
         </Form.Field>
       </Form>
-
-      <Button id='defaultButton' onClick={defaultEvents}>Default</Button>
+      <Button id='defaultButton' onClick={defaultEvents} disabled={disableDefault}>Reset</Button>
     </div>
   );
 }

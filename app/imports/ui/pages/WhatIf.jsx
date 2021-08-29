@@ -1,13 +1,11 @@
 import { withTracker } from 'meteor/react-meteor-data';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { _ } from 'lodash';
 import { Dimmer, Loader } from 'semantic-ui-react';
 import { Trips } from '../../api/trip/TripCollection';
 import { Users } from '../../api/user/UserCollection';
 import ChoseScenario from '../components/what-if/ChoseScenario';
 import WhatIfContent from '../components/what-if/WhatIfContent';
-import { tripModes } from '../../api/utilities/constants';
 import { UserVehicles } from '../../api/vehicle/UserVehicleCollection';
 
 // This page contains the graphs that will visualize the user's data in a more meaningful way.
@@ -34,26 +32,6 @@ function WhatIf(
   const [modesOfTransportWI, setMOTDWI] = useState();
   const [ceReducedPerDayWI, setGRPDWI] = useState();
   const [fuelSavedPerDayWI, setFSPDWI] = useState();
-
-  const trueMilesTotal = (userTrips) => {
-
-    let milesSavedTotalWI = 0;
-    let milesAddedTotalWI = 0;
-
-    _.forEach(userTrips.distance, function (distance, index) {
-
-      if (userTrips.mode[index] === tripModes.GAS_CAR) {
-        milesAddedTotalWI += -distance;
-      } else if (userTrips.mode[index] === tripModes.CARPOOL) {
-        milesAddedTotalWI += distance;
-        milesSavedTotalWI += distance;
-      } else {
-        milesSavedTotalWI += distance;
-      }
-    });
-
-    return { milesSavedTotalWI, milesAddedTotalWI };
-  };
 
   useEffect(() => {
     setDTWI(detailedTrips);
@@ -98,7 +76,6 @@ function WhatIf(
         modesOfTransportWI={modesOfTransportWI}
         ceReducedPerDayWI={ceReducedPerDayWI}
         fuelSavedPerDayWI={fuelSavedPerDayWI}
-        newMilesTotal={trueMilesTotal}
       />
     </div> :
     <Dimmer active>
@@ -132,7 +109,7 @@ export default withTracker(({ match }) => {
   const milesTraveledTotal = Trips.getVehicleMilesTraveled(username);
 
   const milesSavedPerDay = Trips.getMilesSavedPerDay(username);
-  const allTrips = Trips.getTrips(username);
+  const allTrips = Trips.getTripsDateDistanceMode(username);
   const detailedTrips = Trips.getDetailedTrips(username);
 
   const modesOfTransport = Trips.getModesOfTransport(username);

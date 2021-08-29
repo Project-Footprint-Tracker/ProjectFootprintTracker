@@ -200,12 +200,48 @@ class TripCollection extends BaseCollection {
   }
 
   /**
+   * Gets all the detailed trip a user has.
+   * @param username the username of the user (ex: admin@foo.com)
+   * @returns {Array} of all the trips
+   */
+  getDetailedTrips(username) {
+    return this._collection.find({ owner: username }).fetch();
+  }
+
+  /**
+   * Gets only the dates, distances/miles traveled, and modes of transportation of each trips a user has.
+   * @param username the username of the user (ex: admin@foo.com)
+   * @returns {{date: *[], mode: *[], distance: *[]}}
+   */
+  getTripsDateDistanceMode(username) {
+    const userTrips = this.getDetailedTrips(username);
+
+    const date = [];
+    const distance = [];
+    const mode = [];
+
+    userTrips.forEach(trip => {
+
+      if (trip.mode === tripModes.GAS_CAR) {
+        distance.push(-trip.milesTraveled);
+      } else {
+        distance.push(trip.milesTraveled);
+      }
+
+      date.push(trip.date);
+      mode.push(trip.mode);
+    });
+
+    return { date, distance, mode };
+  }
+
+  /**
    * Gets the number of times a user has used each mode of transportation.
    * @param username the username of the user (ex: admin@foo.com)
    * @returns {Object} an object wherein the keys are the different modes of transportation and the values are the number of times the each mode has been used.
    */
   getModesOfTransport(username) {
-    const userTrips = this._collection.find({ owner: username }).fetch();
+    const userTrips = this.getDetailedTrips(username);
 
     const modesOfTransport = userTrips.reduce((result, trip) => {
       const allModes = { ...result };
@@ -226,7 +262,7 @@ class TripCollection extends BaseCollection {
    * @returns {Object} an object wherein the keys are the different modes of transportation and the values are the miles traveled using each mode.
    */
   getMilesPerMode(username) {
-    const userTrips = this._collection.find({ owner: username }).fetch();
+    const userTrips = this.getDetailedTrips(username);
     const modesMiles = {};
 
     tripModesArray.forEach(tripMode => {
@@ -235,39 +271,6 @@ class TripCollection extends BaseCollection {
     });
 
     return modesMiles;
-  }
-
-  getDetailedTrips(username) {
-    return this._collection.find({ owner: username }).fetch();
-  }
-
-  getTrips(username) {
-    const userTrips = this._collection.find({ owner: username }).fetch();
-
-    const date = [];
-    const distance = [];
-    const mode = [];
-    const collection = [];
-
-    _.forEach(userTrips, function (trip) {
-
-      const tripDate = trip.date;
-      const tripMode = trip.mode;
-      const tripDistance = trip.milesTraveled;
-
-      if (tripMode === tripModes.GAS_CAR) {
-        distance.push(-tripDistance);
-      } else {
-        distance.push(tripDistance);
-      }
-
-      date.push(tripDate);
-      mode.push(tripMode);
-
-      collection.push({ date: tripDate, mode: tripMode, distance: tripDistance });
-    });
-
-    return { date, distance, mode, collection };
   }
 
   getTripsOnMonth(username, monthNum) {

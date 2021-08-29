@@ -22,11 +22,30 @@ function WhatIfContent(
     modesOfTransportWI,
     ceReducedPerDayWI,
     fuelSavedPerDayWI,
-    newMilesTotal,
   },
 ) {
 
-  const milesTotalWI = newMilesTotal(milesSavedPerDayWI);
+  const trueMilesTotal = (userTrips) => {
+
+    let milesSavedTotalWI = 0;
+    let milesAddedTotalWI = 0;
+
+    _.forEach(userTrips.distance, function (distance, index) {
+
+      if (userTrips.mode[index] === tripModes.GAS_CAR) {
+        milesAddedTotalWI += -distance;
+      } else if (userTrips.mode[index] === tripModes.CARPOOL) {
+        milesAddedTotalWI += distance;
+        milesSavedTotalWI += distance;
+      } else {
+        milesSavedTotalWI += distance;
+      }
+    });
+
+    return { milesSavedTotalWI, milesAddedTotalWI };
+  };
+
+  const milesTotalWI = trueMilesTotal(milesSavedPerDayWI);
   const milesSavedTotalWI = milesTotalWI.milesSavedTotalWI;
 
   const calculateFuelAndCeWI = () => {
@@ -121,8 +140,8 @@ function WhatIfContent(
   };
 
   const modesOfTransportData = [{
-    values: modesOfTransport.value,
-    labels: modesOfTransport.label,
+    values: Object.values(modesOfTransport),
+    labels: Object.keys(modesOfTransport),
     textposition: 'inside',
     type: 'pie',
     hole: 0.4,
@@ -130,8 +149,8 @@ function WhatIfContent(
     domain: { column: 0 },
   },
   {
-    values: modesOfTransportWI.value,
-    labels: modesOfTransportWI.label,
+    values: Object.values(modesOfTransportWI),
+    labels: Object.keys(modesOfTransportWI),
     textposition: 'inside',
     type: 'pie',
     hole: 0.4,
@@ -353,7 +372,6 @@ WhatIfContent.propTypes = {
   modesOfTransportWI: PropTypes.object,
   ceReducedPerDayWI: PropTypes.object,
   fuelSavedPerDayWI: PropTypes.object,
-  newMilesTotal: PropTypes.func,
 };
 
 export default WhatIfContent;
