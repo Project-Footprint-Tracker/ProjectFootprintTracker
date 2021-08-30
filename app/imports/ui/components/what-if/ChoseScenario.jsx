@@ -6,7 +6,7 @@ import swal from 'sweetalert';
 import { Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { cePerGallonFuel, tripModes, fuelCost } from '../../../api/utilities/constants';
-import { getDate } from '../../../api/utilities/Utilities';
+import { getFormattedDate } from '../../../api/utilities/Utilities';
 
 /* global window */
 
@@ -169,8 +169,8 @@ function ChoseScenario(
       // Get date of original selected event.
 
       const indexDetailedTrip = nDetailedTrips.current.findIndex((trip) => {
-        const selectedEventDate = getDate(selectedEvent.oldDateFormat);
-        const nDetailedTripDate = getDate(trip.date);
+        const selectedEventDate = getFormattedDate(selectedEvent.oldDateFormat);
+        const nDetailedTripDate = getFormattedDate(trip.date);
 
         return (selectedEventDate === nDetailedTripDate) && (trip.mode === selectedEvent.title);
       });
@@ -221,8 +221,8 @@ function ChoseScenario(
       tripsWI = [...nDetailedTrips.current];
 
       const indexOfOldMiles = nMilesSavedPerDay.current.findIndex(object => {
-        const selectedEventDate = getDate(selectedEvent.oldDateFormat);
-        const nMilesSavedDate = getDate(object.date);
+        const selectedEventDate = getFormattedDate(selectedEvent.oldDateFormat);
+        const nMilesSavedDate = getFormattedDate(object.date);
 
         return selectedEventDate === nMilesSavedDate;
       });
@@ -255,7 +255,7 @@ function ChoseScenario(
         splitOriginalModes.forEach((mode, index) => {
 
           // find the index to access the distance of that particular trip
-          const tripIndex = allTrips.collection.findIndex((trip) => mode === trip.mode && getDate(selectedEvent.oldDateFormat) === getDate(trip.date));
+          const tripIndex = allTrips.collection.findIndex((trip) => mode === trip.mode && getFormattedDate(selectedEvent.oldDateFormat) === getFormattedDate(trip.date));
 
           // get the distance from the original list of trips.
           let newDistance = allTrips.distance[tripIndex];
@@ -398,7 +398,7 @@ ChoseScenario.propTypes = {
   detailedTrips: PropTypes.array,
   modesOfTransport: PropTypes.object,
   userMpg: PropTypes.number,
-  ceProducedTotal: PropTypes.string,
+  ceProducedTotal: PropTypes.number,
   ceReducedPerDay: PropTypes.object,
   fuelSavedPerDay: PropTypes.object,
   test: PropTypes.func,

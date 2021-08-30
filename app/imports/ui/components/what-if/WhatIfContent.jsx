@@ -362,7 +362,7 @@ WhatIfContent.propTypes = {
   milesSavedPerDay: PropTypes.object,
   modesOfTransport: PropTypes.object,
   userMpg: PropTypes.number,
-  ceProducedTotal: PropTypes.string,
+  ceProducedTotal: PropTypes.number,
   ceReducedTotal: PropTypes.number,
   ceReducedPerDay: PropTypes.object,
   fuelSavedPerDay: PropTypes.object,

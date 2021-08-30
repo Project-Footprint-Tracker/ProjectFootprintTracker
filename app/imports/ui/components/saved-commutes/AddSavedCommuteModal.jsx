@@ -11,7 +11,7 @@ import {
   metricUnits,
   tripModesArray,
 } from '../../../api/utilities/constants';
-import { getMilesTraveled } from '../../../api/utilities/CEData';
+import { getMilesTraveled } from '../../../api/utilities/Utilities';
 import { SavedCommutes } from '../../../api/saved-commute/SavedCommuteCollection';
 import { defineMethod } from '../../../api/base/BaseCollection.methods';
 

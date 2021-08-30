@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'semantic-ui-react';
-import { getMetricData } from '../../../api/utilities/CEData';
+import { getMetricData } from '../../../api/utilities/Utilities';
 import EditSavedCommuteModal from './EditSavedCommuteModal';
 import DeleteSavedCommuteModal from './DeleteSavedCommuteModal';
 

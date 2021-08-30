@@ -5,7 +5,7 @@ import { Button, Divider, Form, Modal } from 'semantic-ui-react';
 import { AutoForm, BoolField, DateField, ErrorsField, SubmitField } from 'uniforms-semantic';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
 import swal from 'sweetalert';
-import { getDateToday, getMilesTraveled } from '../../../api/utilities/CEData';
+import { getDateToday, getMilesTraveled } from '../../../api/utilities/Utilities';
 import {
   imperialUnits,
   metricUnits,

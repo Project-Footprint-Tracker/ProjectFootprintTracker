@@ -4,7 +4,7 @@ import { _ } from 'lodash';
 import BaseCollection from '../base/BaseCollection';
 import { fuelCost, avgMpge, cePerGallonFuel, tripModes, tripModesArray } from '../utilities/constants';
 import { ROLE } from '../role/Role';
-import { getDateToday } from '../utilities/CEData';
+import { getDateToday, getTotalArray } from '../utilities/Utilities';
 
 export const tripPublications = {
   trip: 'Trip',
@@ -209,6 +209,21 @@ class TripCollection extends BaseCollection {
   }
 
   /**
+   * Gets all the detailed trip a user has for a given month.
+   * @param username the username of the user (ex: admin@foo.com)
+   * @param monthNum the month specified (0-11, January to December)
+   * @returns {Array} of all the trips of the given month
+   */
+  getTripsOnMonth(username, monthNum) {
+    const trips = username ?
+      this._collection.find({ owner: username }, { sort: [['date', 'asc']] }).fetch() :
+      this._collection.find({}, { sort: [['date', 'asc']] }).fetch();
+    const today = getDateToday();
+    const month = monthNum || today.getMonth();
+    return trips.filter(({ date }) => date.getMonth() === month);
+  }
+
+  /**
    * Gets only the dates, distances/miles traveled, and modes of transportation of each trips a user has.
    * @param username the username of the user (ex: admin@foo.com)
    * @returns {{date: *[], mode: *[], distance: *[]}}
@@ -224,6 +239,8 @@ class TripCollection extends BaseCollection {
 
       if (trip.mode === tripModes.GAS_CAR) {
         distance.push(-trip.milesTraveled);
+      } else if (trip.mode === tripModes.GAS_CAR) {
+        distance.push((trip.milesTraveled * (trip.passengers - 1)));
       } else {
         distance.push(trip.milesTraveled);
       }
@@ -273,30 +290,73 @@ class TripCollection extends BaseCollection {
     return modesMiles;
   }
 
-  getTripsOnMonth(username, monthNum) {
-    const trips = username ?
-      this._collection.find({ owner: username }, { sort: [['date', 'asc']] }).fetch() :
-      this._collection.find({}, { sort: [['date', 'asc']] }).fetch();
-    const today = getDateToday();
-    const month = monthNum || today.getMonth();
-    return trips.filter(({ date }) => date.getMonth() === month);
+  /**
+   * Gets the number of miles traveled using green modes of transport and miles traveled using gas car.
+   * @param username the username of the user.
+   * @returns {{milesAdded: number, milesSaved: number, milesTotal: number}} milesAdded is the miles traveled using gas car, miles saved is the number
+   * of miles using green modes of transport, milesTotal is the total of both.
+   */
+  getVehicleMilesTraveled(username) {
+    const userTrips = this.getDetailedTrips(username);
+
+    let milesSaved = 0;
+    let milesAdded = 0;
+
+    userTrips.forEach((trip) => {
+      if (trip.mode === tripModes.GAS_CAR) {
+        milesAdded += trip.milesTraveled;
+      } else if (trip.mode === tripModes.CARPOOL) {
+        milesAdded += trip.milesTraveled;
+        milesSaved += (trip.milesTraveled * trip.passengers);
+      } else {
+        milesSaved += trip.milesTraveled;
+      }
+    });
+
+    return { milesSaved: milesSaved, milesAdded: milesAdded, milesTotal: milesSaved + milesAdded };
   }
 
   /**
-   * Returns the total miles that the user has traveled.
+   * Returns the total CE produced/saved by the user. CE is produced whenever the user uses the Carpool and Gas Car modes.
    * @param username the username of the user.
-   * @returns {number} the total miles.
+   * @returns {string} the amount of CE that the user produced. It is a string because the function does a .toFixed(2) to round
+   * the number to two decimal places.
    */
-  getMilesTotal(username) {
-    const userTrips = this._collection.find({ owner: username }).fetch();
-
-    let milesSaved = 0;
-    _.forEach(userTrips, function (objects) {
-      milesSaved += objects.milesTraveled;
-    });
-
-    return milesSaved;
+  getCEProducedTotal(username) {
+    const trips = username ?
+      this._collection.find({ owner: username }).fetch() :
+      this._collection.find({}).fetch();
+    return Number(getTotalArray(trips.map(trip => trip.ceProduced)).toFixed(2));
   }
+
+  getCESavedTotal(username) {
+    const trips = username ?
+      this._collection.find({ owner: username }).fetch() :
+      this._collection.find({}).fetch();
+    return Number(getTotalArray(trips.map(trip => trip.ceSaved)).toFixed(2));
+  }
+
+  /**
+   * Returns the total Fuel spent/saved by the user.
+   * @param username the username of the user.
+   * @returns {string} the amount of CE that the user produced. It is a string because the function does a .toFixed(2) to round
+   * the number to two decimal places.
+   */
+  getFuelSpentTotal(username) {
+    const trips = username ?
+      this._collection.find({ owner: username }).fetch() :
+      this._collection.find({}).fetch();
+    return Number(getTotalArray(trips.map(trip => trip.fuelSpent)).toFixed(2));
+  }
+
+  getFuelSavedTotal(username) {
+    const trips = username ?
+      this._collection.find({ owner: username }).fetch() :
+      this._collection.find({}).fetch();
+    return Number(getTotalArray(trips.map(trip => trip.fuelSaved)).toFixed(2));
+  }
+
+  // to-do from here
 
   getMilesAvg(username) {
     const userTrips = this._collection.find({ owner: username }).fetch();
@@ -468,32 +528,6 @@ class TripCollection extends BaseCollection {
     return { date: date, distance: distance, mode: mode };
   }
 
-  /**
-   * Gets the number of miles traveled using green modes of transport and miles traveled using gas car.
-   * @param username the username of the user.
-   * @returns {{milesAdded: number, milesSaved: number}} milesAdded is the miles traveled using gas car and miles saved is the number
-   * of miles using green modes of transport.
-   */
-  getVehicleMilesTraveled(username) {
-    const userTrips = this._collection.find({ owner: username }).fetch();
-
-    let milesSaved = 0;
-    let milesAdded = 0;
-
-    _.forEach(userTrips, function (objects) {
-      if (objects.mode === tripModes.GAS_CAR) {
-        milesAdded += objects.milesTraveled;
-      } else if (objects.mode === tripModes.CARPOOL) {
-        milesAdded += objects.milesTraveled;
-        milesSaved += (objects.milesTraveled * objects.passengers);
-      } else {
-        milesSaved += objects.milesTraveled;
-      }
-    });
-
-    return { milesSaved: milesSaved, milesAdded: milesAdded };
-  }
-
   getMilesTraveledPerDay(username) {
     const userTrips = this._collection.find({ owner: username }).fetch();
 
@@ -638,26 +672,6 @@ class TripCollection extends BaseCollection {
   }
 
   /**
-   * Returns the CE that the specified user produced. CE is produced whenever the user uses the Carpool and Gas Car modes.
-   * @param username the username of the user.
-   * @returns {string} the amount of CE that the user produced. It is a string because the function does a .toFixed(2) to round
-   * the number to two decimal places.
-   */
-  getCEProducedTotal(username) {
-    const trips = username ?
-      this._collection.find({ owner: username }).fetch() :
-      this._collection.find({}).fetch();
-    return trips.map(trip => trip.ceProduced).reduce((a, b) => a + b, 0).toFixed(2);
-  }
-
-  getCESavedTotal(username) {
-    const trips = username ?
-      this._collection.find({ owner: username }).fetch() :
-      this._collection.find({}).fetch();
-    return trips.map(trip => trip.ceSaved).reduce((a, b) => a + b, 0);
-  }
-
-  /**
    * Gets the CE that the user has reduced each day.
    * @param username the username of the user.
    * @returns {{date: [], ce: []}}
@@ -716,20 +730,6 @@ class TripCollection extends BaseCollection {
     });
 
     return { date, ceProduced };
-  }
-
-  getFuelSpentTotal(username) {
-    const trips = username ?
-      this._collection.find({ owner: username }).fetch() :
-      this._collection.find({}).fetch();
-    return trips.map(trip => trip.fuelSpent).reduce((a, b) => a + b, 0);
-  }
-
-  getFuelSavedTotal(username) {
-    const trips = username ?
-      this._collection.find({ owner: username }).fetch() :
-      this._collection.find({}).fetch();
-    return trips.map(trip => trip.fuelSaved).reduce((a, b) => a + b, 0);
   }
 
   /**

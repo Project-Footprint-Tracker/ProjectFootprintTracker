@@ -91,7 +91,7 @@ WhatIf.propTypes = {
   detailedTrips: PropTypes.array,
   modesOfTransport: PropTypes.object,
   userMpg: PropTypes.number,
-  ceProducedTotal: PropTypes.string,
+  ceProducedTotal: PropTypes.number,
   ceReducedTotal: PropTypes.number,
   ceReducedPerDay: PropTypes.object,
   fuelSavedPerDay: PropTypes.object,

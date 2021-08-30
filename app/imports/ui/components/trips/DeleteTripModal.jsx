@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import swal from 'sweetalert';
 import { Trips } from '../../../api/trip/TripCollection';
 import { removeItMethod } from '../../../api/base/BaseCollection.methods';
-import { getMetricData } from '../../../api/utilities/CEData';
+import { getMetricData } from '../../../api/utilities/Utilities';
 import { imperialUnits, metricUnits } from '../../../api/utilities/constants';
 
 const DeleteTripModal = (props) => {

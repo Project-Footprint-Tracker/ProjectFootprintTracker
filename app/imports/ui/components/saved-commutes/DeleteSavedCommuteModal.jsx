@@ -4,7 +4,7 @@ import swal from 'sweetalert';
 import { Button, Icon, Modal } from 'semantic-ui-react';
 import { removeItMethod } from '../../../api/base/BaseCollection.methods';
 import { SavedCommutes } from '../../../api/saved-commute/SavedCommuteCollection';
-import { getMetricData } from '../../../api/utilities/CEData';
+import { getMetricData } from '../../../api/utilities/Utilities';
 import { imperialUnits, metricUnits } from '../../../api/utilities/constants';
 
 const DeleteSavedCommuteModal = (props) => {

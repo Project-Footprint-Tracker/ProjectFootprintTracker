@@ -297,7 +297,6 @@ function DashboardContent(
 DashboardContent.propTypes = {
   vehicleMilesSaved: PropTypes.number,
   vehicleMilesAdded: PropTypes.number,
-  milesTotal: PropTypes.number,
   milesSavedPerDay: PropTypes.object,
   milesAddedPerDay: PropTypes.object,
   modesOfTransport: PropTypes.object,
@@ -305,7 +304,7 @@ DashboardContent.propTypes = {
   userProfile: PropTypes.object,
   userReady: PropTypes.bool,
   ceSavedTotal: PropTypes.number,
-  ceProducedTotal: PropTypes.string,
+  ceProducedTotal: PropTypes.number,
   fuelSpentTotal: PropTypes.number,
   fuelSavedTotal: PropTypes.number,
   ceReducedPerDay: PropTypes.object,

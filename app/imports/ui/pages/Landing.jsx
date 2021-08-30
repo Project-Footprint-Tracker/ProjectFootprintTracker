@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Trips } from '../../api/trip/TripCollection';
 import LandingWhatIf from '../components/landing/LandingWhatIf';
-import { getDateToday } from '../../api/utilities/CEData';
+import { getDateToday } from '../../api/utilities/Utilities';
 
 /* A simple static component to render some text for the landing page. */
 const Landing = ({ monthTrips, ready }) => {

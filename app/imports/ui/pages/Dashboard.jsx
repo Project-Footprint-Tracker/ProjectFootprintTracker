@@ -12,7 +12,6 @@ function Dashboard(
     tripReady,
     userReady,
     vehicleMilesTraveled,
-    milesTotal,
     milesSavedPerDay,
     milesAddedPerDay,
     modesOfTransport,
@@ -40,7 +39,6 @@ function Dashboard(
       <DashboardContent
         vehicleMilesSaved={vehicleMilesTraveled.milesSaved}
         vehicleMilesAdded={vehicleMilesTraveled.milesAdded}
-        milesTotal={milesTotal}
         milesSavedPerDay={milesSavedPerDay}
         milesAddedPerDay={milesAddedPerDay}
         modesOfTransport={modesOfTransport}
@@ -71,14 +69,13 @@ function Dashboard(
 
 Dashboard.propTypes = {
   vehicleMilesTraveled: PropTypes.object,
-  milesTotal: PropTypes.number,
   milesSavedPerDay: PropTypes.object,
   milesAddedPerDay: PropTypes.object,
   modesOfTransport: PropTypes.object,
   milesPerMode: PropTypes.object,
   userProfile: PropTypes.any,
   ceSavedTotal: PropTypes.number,
-  ceProducedTotal: PropTypes.string,
+  ceProducedTotal: PropTypes.number,
   ceReducedPerDay: PropTypes.object,
   evCeProducedAvg: PropTypes.object,
   fuelSpentTotal: PropTypes.number,
@@ -104,7 +101,6 @@ export default withTracker(({ match }) => {
 
   const vehicleMilesTraveled = Trips.getVehicleMilesTraveled(username);
 
-  const milesTotal = Trips.getMilesTotal(username);
   const milesPerDay = Trips.getMilesTraveledPerDay(username);
   const modesOfTransport = Trips.getModesOfTransport(username);
   const milesPerMode = Trips.getMilesPerMode(username);
@@ -134,7 +130,6 @@ export default withTracker(({ match }) => {
     userReady,
     userVehicleReady,
     vehicleMilesTraveled,
-    milesTotal,
     modesOfTransport,
     milesPerMode,
     userProfile,
