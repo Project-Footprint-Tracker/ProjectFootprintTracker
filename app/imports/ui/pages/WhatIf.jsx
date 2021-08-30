@@ -10,7 +10,7 @@ import { UserVehicles } from '../../api/vehicle/UserVehicleCollection';
 
 // This page contains the graphs that will visualize the user's data in a more meaningful way.
 // The page waits for the data to load first and shows a loading page. Then once the collection is ready, we show the dashboard.
-function WhatIf(
+const WhatIf = (
   {
     tripReady,
     userReady,
@@ -21,44 +21,41 @@ function WhatIf(
     modesOfTransport,
     userMpg,
     ceProducedTotal,
-    ceReducedTotal,
-    ceReducedPerDay,
+    ceSavedTotal,
+    ceSavedPerDay,
     fuelSavedPerDay,
     fuelSavedTotal,
   },
-) {
+) => {
   const [milesSavedPerDayWI, setMSPDWI] = useState();
   const [detailedTripsWI, setDTWI] = useState();
   const [modesOfTransportWI, setMOTDWI] = useState();
-  const [ceReducedPerDayWI, setGRPDWI] = useState();
+  const [ceSavedPerDayWI, setGSPDWI] = useState();
   const [fuelSavedPerDayWI, setFSPDWI] = useState();
 
   useEffect(() => {
     setDTWI(detailedTrips);
     setMSPDWI(milesSavedPerDay);
     setMOTDWI(modesOfTransport);
-    setGRPDWI(ceReducedPerDay);
+    setGSPDWI(ceSavedPerDay);
     setFSPDWI(fuelSavedPerDay);
   }, [fuelSavedPerDay]);
   const testFP = (trips, miles, mode, ce, fuel) => {
     setDTWI(trips);
     setMSPDWI(miles);
     setMOTDWI(mode);
-    setGRPDWI(ce);
+    setGSPDWI(ce);
     setFSPDWI(fuel);
   };
 
   return ((tripReady && userReady) ?
     <div style={{ width: '100%' }}>
       <ChoseScenario
-        milesSavedTotal={milesSavedTotal}
         milesSavedPerDay={milesSavedPerDay}
         allTrips={allTrips}
         detailedTrips={detailedTrips}
         modesOfTransport={modesOfTransport}
         ceProducedTotal={ceProducedTotal}
-        ceReducedPerDay={ceReducedPerDay}
-        fuelSavedPerDay={fuelSavedPerDay}
         test={testFP}
       />
       <WhatIfContent
@@ -67,14 +64,14 @@ function WhatIf(
         modesOfTransport={modesOfTransport}
         userMpg={userMpg}
         ceProducedTotal={ceProducedTotal}
-        ceReducedTotal={ceReducedTotal}
-        ceReducedPerDay={ceReducedPerDay}
+        ceSavedTotal={ceSavedTotal}
+        ceSavedPerDay={ceSavedPerDay}
         fuelSavedPerDay={fuelSavedPerDay}
         fuelSavedTotal={fuelSavedTotal}
         detailedTripsWI={detailedTripsWI}
         milesSavedPerDayWI={milesSavedPerDayWI}
         modesOfTransportWI={modesOfTransportWI}
-        ceReducedPerDayWI={ceReducedPerDayWI}
+        ceSavedPerDayWI={ceSavedPerDayWI}
         fuelSavedPerDayWI={fuelSavedPerDayWI}
       />
     </div> :
@@ -82,7 +79,7 @@ function WhatIf(
       <Loader>Loading Data</Loader>
     </Dimmer>
   );
-}
+};
 
 WhatIf.propTypes = {
   milesSavedTotal: PropTypes.number,
@@ -92,8 +89,8 @@ WhatIf.propTypes = {
   modesOfTransport: PropTypes.object,
   userMpg: PropTypes.number,
   ceProducedTotal: PropTypes.number,
-  ceReducedTotal: PropTypes.number,
-  ceReducedPerDay: PropTypes.object,
+  ceSavedTotal: PropTypes.number,
+  ceSavedPerDay: PropTypes.object,
   fuelSavedPerDay: PropTypes.object,
   fuelSavedTotal: PropTypes.number,
   tripReady: PropTypes.bool.isRequired,
@@ -115,9 +112,9 @@ export default withTracker(({ match }) => {
   const modesOfTransport = Trips.getModesOfTransport(username);
 
   const ceProducedTotal = Trips.getCEProducedTotal(username);
-  const ceReducedTotal = Trips.getCESavedTotal(username);
+  const ceSavedTotal = Trips.getCESavedTotal(username);
 
-  const ceReducedPerDay = Trips.getCEReducedPerDay(username);
+  const ceSavedPerDay = Trips.getCESavedPerDay(username);
 
   const fuelSavedTotal = Trips.getFuelSavedTotal(username);
   const fuelSavedPerDay = Trips.getFuelSavedPerDay(username);
@@ -132,8 +129,8 @@ export default withTracker(({ match }) => {
     milesSavedPerDay,
     modesOfTransport,
     ceProducedTotal,
-    ceReducedTotal,
-    ceReducedPerDay,
+    ceSavedTotal,
+    ceSavedPerDay,
     fuelSavedPerDay,
     fuelSavedTotal,
     userMpg,

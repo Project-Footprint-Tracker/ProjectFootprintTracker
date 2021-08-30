@@ -19,7 +19,7 @@ function Dashboard(
     userProfile,
     ceSavedTotal,
     ceProducedTotal,
-    ceReducedPerDay,
+    ceSavedPerDay,
     fuelSpentTotal,
     fuelSavedTotal,
     fuelSavedPerDay,
@@ -27,7 +27,7 @@ function Dashboard(
     milesTraveledAvg,
     fuelSavedAvg,
     fuelSpentAvg,
-    ceReducedAvg,
+    ceSavedAvg,
     ceProducedAvg,
     evCeProducedAvg,
     userMpg,
@@ -47,7 +47,7 @@ function Dashboard(
         userReady={userReady}
         ceSavedTotal={ceSavedTotal}
         ceProducedTotal={ceProducedTotal}
-        ceReducedPerDay={ceReducedPerDay}
+        ceSavedPerDay={ceSavedPerDay}
         fuelSpentTotal={fuelSpentTotal}
         fuelSavedTotal={fuelSavedTotal}
         fuelSavedPerDay={fuelSavedPerDay}
@@ -55,7 +55,7 @@ function Dashboard(
         milesTraveledAvg={milesTraveledAvg}
         fuelSavedAvg={fuelSavedAvg}
         fuelSpentAvg={fuelSpentAvg}
-        ceReducedAvg={ceReducedAvg}
+        ceSavedAvg={ceSavedAvg}
         ceProducedAvg={ceProducedAvg}
         evCeProducedAvg={evCeProducedAvg}
         userMpg={userMpg}
@@ -76,7 +76,7 @@ Dashboard.propTypes = {
   userProfile: PropTypes.any,
   ceSavedTotal: PropTypes.number,
   ceProducedTotal: PropTypes.number,
-  ceReducedPerDay: PropTypes.object,
+  ceSavedPerDay: PropTypes.object,
   evCeProducedAvg: PropTypes.object,
   fuelSpentTotal: PropTypes.number,
   fuelSavedTotal: PropTypes.number,
@@ -85,7 +85,7 @@ Dashboard.propTypes = {
   milesTraveledAvg: PropTypes.object,
   fuelSavedAvg: PropTypes.object,
   fuelSpentAvg: PropTypes.object,
-  ceReducedAvg: PropTypes.object,
+  ceSavedAvg: PropTypes.object,
   ceProducedAvg: PropTypes.object,
   userMpg: PropTypes.number,
   tripReady: PropTypes.bool.isRequired,
@@ -109,7 +109,7 @@ export default withTracker(({ match }) => {
 
   const ceSavedTotal = Trips.getCESavedTotal(username);
   const ceProducedTotal = Trips.getCEProducedTotal(username);
-  const ceReducedPerDay = Trips.getCEReducedPerDay(username);
+  const ceSavedPerDay = Trips.getCESavedPerDay(username);
 
   const fuelSpentTotal = Trips.getFuelSpentTotal(username);
   const fuelSavedTotal = Trips.getFuelSavedTotal(username);
@@ -135,7 +135,7 @@ export default withTracker(({ match }) => {
     userProfile,
     ceSavedTotal,
     ceProducedTotal,
-    ceReducedPerDay,
+    ceSavedPerDay,
     fuelSpentTotal,
     fuelSavedTotal,
     fuelSavedPerDay,
@@ -145,7 +145,7 @@ export default withTracker(({ match }) => {
     milesTraveledAvg: milesAvg.milesTraveledAvg,
     fuelSavedAvg: fuelAvg.fuelSavedAvg,
     fuelSpentAvg: fuelAvg.fuelSpentAvg,
-    ceReducedAvg: ceAvg.ceReducedAvg,
+    ceSavedAvg: ceAvg.ceSavedAvg,
     ceProducedAvg: ceAvg.ceProducedAvg,
     evCeProducedAvg: ceAvg.evCeProducedAvg,
     userMpg,

@@ -209,6 +209,15 @@ class TripCollection extends BaseCollection {
   }
 
   /**
+   * Gets all the detailed trip a user has.
+   * @param username the username of the user (ex: admin@foo.com)
+   * @returns {Array} of all the trips
+   */
+  getTripsSortedByDate(username) {
+    return this._collection.find({ owner: username }, { sort: { date: -1 } }).fetch();
+  }
+
+  /**
    * Gets all the detailed trip a user has for a given month.
    * @param username the username of the user (ex: admin@foo.com)
    * @param monthNum the month specified (0-11, January to December)
@@ -319,8 +328,8 @@ class TripCollection extends BaseCollection {
   /**
    * Returns the total CE produced/saved by the user. CE is produced whenever the user uses the Carpool and Gas Car modes.
    * @param username the username of the user.
-   * @returns {string} the amount of CE that the user produced. It is a string because the function does a .toFixed(2) to round
-   * the number to two decimal places.
+   * @returns {string} the amount of CE that the user produced. It is a string because the function does a .toFixed(2)
+   * to round the number to two decimal places.
    */
   getCEProducedTotal(username) {
     const trips = username ?
@@ -337,10 +346,71 @@ class TripCollection extends BaseCollection {
   }
 
   /**
+   * Gets the CE that the user has saved per day.
+   * @param username the username of the user.
+   * @returns {{date: [], ceSaved: []}}
+   * An object that contains an array of dates for the trips and an array of CE saved for each of the respective date.
+   */
+  getCESavedPerDay(username) {
+    const userTrips = this.getTripsSortedByDate(username);
+
+    const date = [];
+    const ceSaved = [];
+
+    userTrips.forEach((trip) => {
+
+      const tripDate = trip.date;
+
+      // check to see if there is an existing trip for that date.
+      const dateIndex = date.findIndex((o) => o.getTime() === tripDate.getTime());
+
+      if (dateIndex === -1) {
+        date.push(tripDate);
+        ceSaved.push(trip.ceSaved.toFixed(2));
+      } else {
+        const oldCE = Number(ceSaved[dateIndex]);
+        ceSaved[dateIndex] = (oldCE + trip.ceSaved).toFixed(2);
+      }
+    });
+
+    return { date, ceSaved };
+  }
+
+  /**
+   * Gets the CE produced by the user per day.
+   * @param username of the user
+   * @returns {{date: *[], ceProduced: *[]}}
+   */
+  getCEProducedPerDay(username) {
+    const userTrips = this.getTripsSortedByDate(username);
+
+    const date = [];
+    const ceProduced = [];
+
+    userTrips.forEach((trip) => {
+
+      const tripDate = trip.date;
+
+      // check to see if there is an existing trip for that date.
+      const dateIndex = date.findIndex((o) => o.getTime() === tripDate.getTime());
+
+      if (dateIndex === -1) {
+        date.push(tripDate);
+        ceProduced.push(trip.ceProduced.toFixed(2));
+      } else {
+        const oldCE = Number(ceProduced[dateIndex]);
+        ceProduced[dateIndex] = (oldCE + trip.ceProduced).toFixed(2);
+      }
+    });
+
+    return { date, ceProduced };
+  }
+
+  /**
    * Returns the total Fuel spent/saved by the user.
    * @param username the username of the user.
-   * @returns {string} the amount of CE that the user produced. It is a string because the function does a .toFixed(2) to round
-   * the number to two decimal places.
+   * @returns {string} the amount of CE that the user produced. It is a string because the function does a .toFixed(2)
+   * to round the number to two decimal places.
    */
   getFuelSpentTotal(username) {
     const trips = username ?
@@ -354,6 +424,43 @@ class TripCollection extends BaseCollection {
       this._collection.find({ owner: username }).fetch() :
       this._collection.find({}).fetch();
     return Number(getTotalArray(trips.map(trip => trip.fuelSaved)).toFixed(2));
+  }
+
+  /**
+   * Gets the fuel that the user saved per day as well as the dollar saved.
+   * @param username the username of the user.
+   * @returns {{date: [], fuel: [], price: []}}
+   * An object that contains an array of dates and an array of fuel and dollar saved for the respective date.
+   */
+  getFuelSavedPerDay(username) {
+    const userTrips = this.getTripsSortedByDate(username);
+
+    const date = [];
+    const fuel = [];
+    const price = [];
+
+    userTrips.forEach(trip => {
+      const fuelSaved = trip.fuelSaved;
+      const priceSaved = Number(fuelSaved * fuelCost);
+      const tripDate = trip.date;
+
+      // check to see if there is an existing trip for that date.
+      const dateIndex = date.findIndex((o) => o.getTime() === tripDate.getTime());
+
+      if (dateIndex === -1) {
+        date.push(new Date(tripDate));
+        fuel.push(fuelSaved.toFixed(2));
+        price.push(priceSaved.toFixed(2));
+      } else {
+        const oldFuel = Number(fuel[dateIndex]);
+        fuel[dateIndex] = (oldFuel + fuelSaved).toFixed(2);
+
+        const oldPrice = Number(price[dateIndex]);
+        price[dateIndex] = (oldPrice + priceSaved).toFixed(2);
+      }
+    });
+
+    return { date: date, fuel: fuel, price: price };
   }
 
   // to-do from here
@@ -489,7 +596,8 @@ class TripCollection extends BaseCollection {
    * Returns the miles that the user has saved per day.
    * @param username the username of the user.
    * @returns {{date: [], mode: [], distance: []}}
-   * An object that contains an array dates for each trip, an array of modes used for each of those trips and the distance of the trip for respective date.
+   * An object that contains an array dates for each trip, an array of modes used for each of those trips and the
+   * distance of the trip for respective date.
    */
   getMilesSavedPerDay(username) {
     const userTrips = this._collection.find({ owner: username }).fetch();
@@ -643,9 +751,9 @@ class TripCollection extends BaseCollection {
     const fuelAvg = this.getFuelAvg(username);
 
     const fuelSavedAvg = fuelAvg.fuelSavedAvg;
-    const yearCeReducedAvg = (fuelSavedAvg.year * cePerGallonFuel).toFixed(2);
-    const monthCeReducedAvg = (fuelSavedAvg.month * cePerGallonFuel).toFixed(2);
-    const dayCeReducedAvg = (fuelSavedAvg.day * cePerGallonFuel).toFixed(2);
+    const yearceSavedAvg = (fuelSavedAvg.year * cePerGallonFuel).toFixed(2);
+    const monthceSavedAvg = (fuelSavedAvg.month * cePerGallonFuel).toFixed(2);
+    const dayceSavedAvg = (fuelSavedAvg.day * cePerGallonFuel).toFixed(2);
 
     const fuelSpentAvg = fuelAvg.fuelSpentAvg;
     const yearCeProducedAvg = (fuelSpentAvg.year * cePerGallonFuel).toFixed(2);
@@ -653,10 +761,10 @@ class TripCollection extends BaseCollection {
     const dayCeProducedAvg = (fuelSpentAvg.day * cePerGallonFuel).toFixed(2);
 
     return {
-      ceReducedAvg: {
-        ceReducedAvgPerYear: yearCeReducedAvg,
-        ceReducedAvgPerMonth: monthCeReducedAvg,
-        ceReducedAvgPerDay: dayCeReducedAvg,
+      ceSavedAvg: {
+        ceSavedAvgPerYear: yearceSavedAvg,
+        ceSavedAvgPerMonth: monthceSavedAvg,
+        ceSavedAvgPerDay: dayceSavedAvg,
       },
       ceProducedAvg: {
         ceProducedAvgPerYear: yearCeProducedAvg,
@@ -669,104 +777,6 @@ class TripCollection extends BaseCollection {
         evCeProducedAvgPerDay: dayEvCeAvg ? dayEvCeAvg.toFixed(2) : '0.00',
       },
     };
-  }
-
-  /**
-   * Gets the CE that the user has reduced each day.
-   * @param username the username of the user.
-   * @returns {{date: [], ce: []}}
-   * An object that contains an array of dates for the trips and an array of CE that they saved for each of the respective date.
-   */
-  getCEReducedPerDay(username) {
-    const userTrips = this._collection.find({ owner: username }, { sort: { date: -1 } }).fetch();
-
-    const date = [];
-    const ce = [];
-
-    userTrips.forEach((trip) => {
-
-      const tripDate = trip.date;
-
-      // check to see if there is an existing trip for that date.
-      const dateIndex = _.findIndex(date, (o) => o.getTime() === tripDate.getTime());
-
-      if (dateIndex === -1) {
-        date.push(tripDate);
-        ce.push(trip.ceSaved.toFixed(2));
-      } else {
-        const oldCE = Number(ce[dateIndex]);
-        ce[dateIndex] = (oldCE + trip.ceSaved).toFixed(2);
-      }
-    });
-
-    return { date, ce };
-  }
-
-  /**
-   * Gets the CE produced by the user per day.
-   * @param username of the user
-   * @returns {{date: *[], ceProduced: *[]}}
-   */
-  getCEProducedPerDay(username) {
-    const userTrips = this._collection.find({ owner: username }, { sort: { date: -1 } }).fetch();
-
-    const date = [];
-    const ceProduced = [];
-
-    userTrips.forEach((trip) => {
-
-      const tripDate = trip.date;
-
-      // check to see if there is an existing trip for that date.
-      const dateIndex = _.findIndex(date, (o) => o.getTime() === tripDate.getTime());
-
-      if (dateIndex === -1) {
-        date.push(tripDate);
-        ceProduced.push(trip.ceProduced.toFixed(2));
-      } else {
-        const oldCE = Number(ceProduced[dateIndex]);
-        ceProduced[dateIndex] = (oldCE + trip.ceProduced).toFixed(2);
-      }
-    });
-
-    return { date, ceProduced };
-  }
-
-  /**
-   * Gets the fuel that the user saved per day as well as the dollar saved.
-   * @param username the username of the user.
-   * @returns {{date: [], fuel: [], price: []}}
-   * An object that contains an array of dates and an array of fuel and dollar saved for the respective date.
-   */
-  getFuelSavedPerDay(username) {
-    const userTrips = this._collection.find({ owner: username }, { sort: { date: -1 } }).fetch();
-
-    const date = [];
-    const fuel = [];
-    const price = [];
-
-    userTrips.forEach(trip => {
-      const fuelSaved = trip.fuelSaved;
-      const priceSaved = Number(fuelSaved * fuelCost);
-      const tripDate = trip.date;
-
-      // check to see if there is an existing trip for that date.
-      const dateIndex = _.findIndex(date, (o) => o.getTime() === tripDate.getTime());
-
-      if (dateIndex === -1) {
-        date.push(new Date(tripDate));
-        fuel.push(fuelSaved.toFixed(2));
-        price.push(priceSaved.toFixed(2));
-      } else {
-        const oldFuel = Number(fuel[dateIndex]);
-        fuel[dateIndex] = (oldFuel + fuelSaved).toFixed(2);
-
-        const oldPrice = Number(price[dateIndex]);
-        price[dateIndex] = (oldPrice + priceSaved).toFixed(2);
-      }
-    });
-
-    return { date: date, fuel: fuel, price: price };
   }
 
   getFuelAvg(username) {

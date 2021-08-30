@@ -14,7 +14,7 @@ import {
   getCountyTrips,
   getModeChartCounts,
   getGroupTrips,
-  getCEReducedPerDay,
+  getCESavedPerDay,
   getCEProducedPerDay,
   getFuelSavedPerDay,
 } from '../utilities/group-analysis';
@@ -78,13 +78,13 @@ const GroupCompare = ({ groups, ready, countyTrips, groupTrips, userTrips }) => 
   };
   const choice1Modes = getModeChartCounts(choice1Trips);
   const choice1CE = {
-    ceSaved: getCEReducedPerDay(choice1Trips),
+    ceSaved: getCESavedPerDay(choice1Trips),
     ceProduced: getCEProducedPerDay(choice1Trips),
     fuelSaved: getFuelSavedPerDay(choice1Trips),
   };
   const choice2Modes = getModeChartCounts(choice2Trips);
   const choice2CE = {
-    ceSaved: getCEReducedPerDay(choice2Trips),
+    ceSaved: getCESavedPerDay(choice2Trips),
     ceProduced: getCEProducedPerDay(choice2Trips),
     fuelSaved: getFuelSavedPerDay(choice2Trips),
   };

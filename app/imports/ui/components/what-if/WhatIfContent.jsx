@@ -13,14 +13,14 @@ function WhatIfContent(
     modesOfTransport,
     userMpg,
     ceProducedTotal,
-    ceReducedTotal,
-    ceReducedPerDay,
+    ceSavedTotal,
+    ceSavedPerDay,
     fuelSavedPerDay,
     fuelSavedTotal,
     detailedTripsWI,
     milesSavedPerDayWI,
     modesOfTransportWI,
-    ceReducedPerDayWI,
+    ceSavedPerDayWI,
     fuelSavedPerDayWI,
   },
 ) {
@@ -52,7 +52,7 @@ function WhatIfContent(
 
     let fuelSavedTotalWI = 0;
     let ceProducedTotalWI = 0;
-    let ceReducedTotalWI = 0;
+    let ceSavedTotalWI = 0;
 
     _.forEach(detailedTripsWI, function (trip) {
 
@@ -65,19 +65,19 @@ function WhatIfContent(
         break;
       case tripModes.CARPOOL:
         ceProducedTotalWI += ce / (trip.passengers + 1);
-        ceReducedTotalWI += (ce - ceProducedTotalWI);
+        ceSavedTotalWI += (ce - ceProducedTotalWI);
         fuelSavedTotalWI += fuel * trip.passengers;
         break;
       default:
         fuelSavedTotalWI += fuel;
-        ceReducedTotalWI += ce;
+        ceSavedTotalWI += ce;
       }
     });
 
-    return { fuelSavedTotalWI, ceReducedTotalWI, ceProducedTotalWI };
+    return { fuelSavedTotalWI, ceSavedTotalWI, ceProducedTotalWI };
   };
 
-  const { fuelSavedTotalWI, ceReducedTotalWI, ceProducedTotalWI } = calculateFuelAndCeWI();
+  const { fuelSavedTotalWI, ceSavedTotalWI, ceProducedTotalWI } = calculateFuelAndCeWI();
 
   const milesSavedPerDayData = [{
     x: milesSavedPerDay.date,
@@ -116,10 +116,10 @@ function WhatIfContent(
       color: 'rgb(176,216,230)',
       width: 3 },
   };
-  const ceReducedPerDayData = {
-    x: ceReducedPerDay.date,
-    y: ceReducedPerDay.ce,
-    name: 'Original CE Reduced (pounds)',
+  const ceSavedPerDayData = {
+    x: ceSavedPerDay.date,
+    y: ceSavedPerDay.ceSaved,
+    name: 'Original CE Saved (pounds)',
     type: 'scatter',
     mode: 'lines+markers',
     hoverinfo: 'y',
@@ -127,10 +127,10 @@ function WhatIfContent(
       color: 'rgb(44,160,44)',
       width: 4 },
   };
-  const ceReducedPerDayDataWI = {
-    x: ceReducedPerDayWI.date,
-    y: ceReducedPerDayWI.ce,
-    name: 'What If CE Reduced (pounds)',
+  const ceSavedPerDayDataWI = {
+    x: ceSavedPerDayWI.date,
+    y: ceSavedPerDayWI.ceSaved,
+    name: 'What If CE Saved (pounds)',
     type: 'scatter',
     mode: 'lines+markers',
     hoverinfo: 'y',
@@ -207,7 +207,7 @@ function WhatIfContent(
     },
     yaxis: {
       title: 'Fuel and CE saved',
-      range: [0, Math.max(...ceReducedPerDay.ce)],
+      range: [0, Math.max(...ceSavedPerDay.ceSaved)],
       type: 'linear',
       gridcolor: chartGridColor,
     },
@@ -250,7 +250,7 @@ function WhatIfContent(
       <Card.Group centered stackable itemsPerRow={4}>
         <Card className='whatif-card'>
           <Card.Header className='card-header'>
-              Vehicle Miles Traveled (VMT) Reduced
+              Vehicle Miles Traveled (VMT) Saved
           </Card.Header>
           <Card.Content textAlign='center'>
             <Statistic>
@@ -301,17 +301,17 @@ function WhatIfContent(
         </Card>
         <Card className='whatif-card'>
           <Card.Header className='card-header'>
-              Carbon Emissions (CE) Reduced
+              Carbon Emissions (CE) Saved
           </Card.Header>
           <Card.Content textAlign='center'>
             <Statistic>
-              <Statistic.Value className='whatif-statistic'>{ceReducedTotal.toFixed(2)}</Statistic.Value>
+              <Statistic.Value className='whatif-statistic'>{ceSavedTotal.toFixed(2)}</Statistic.Value>
               <Statistic.Label className='whatif-statistic'>pounds</Statistic.Label>
             </Statistic>
           </Card.Content>
           <Card.Content textAlign='center'>
             <Statistic>
-              <Statistic.Value className='whatif-statistic'>{ceReducedTotalWI.toFixed(2)}</Statistic.Value>
+              <Statistic.Value className='whatif-statistic'>{ceSavedTotalWI.toFixed(2)}</Statistic.Value>
               <Statistic.Label className='whatif-statistic'>what if pounds</Statistic.Label>
             </Statistic>
           </Card.Content>
@@ -345,10 +345,10 @@ function WhatIfContent(
         <Grid.Column>
           <Card className='whatif-card' fluid>
             <Card.Header className='card-header'>
-                Fuel Saved and CE Reduced per Day
+                Fuel Saved and CE Saved per Day
             </Card.Header>
             <Card.Content>
-              <Chart chartData={[fuelSavedPerDayData, ceReducedPerDayData, fuelSavedPerDayDataWI, ceReducedPerDayDataWI]} chartLayout={fuelAndCePerDayLayout}/>
+              <Chart chartData={[fuelSavedPerDayData, ceSavedPerDayData, fuelSavedPerDayDataWI, ceSavedPerDayDataWI]} chartLayout={fuelAndCePerDayLayout}/>
             </Card.Content>
           </Card>
         </Grid.Column>
@@ -363,14 +363,14 @@ WhatIfContent.propTypes = {
   modesOfTransport: PropTypes.object,
   userMpg: PropTypes.number,
   ceProducedTotal: PropTypes.number,
-  ceReducedTotal: PropTypes.number,
-  ceReducedPerDay: PropTypes.object,
+  ceSavedTotal: PropTypes.number,
+  ceSavedPerDay: PropTypes.object,
   fuelSavedPerDay: PropTypes.object,
   fuelSavedTotal: PropTypes.number,
   detailedTripsWI: PropTypes.array,
   milesSavedPerDayWI: PropTypes.object,
   modesOfTransportWI: PropTypes.object,
-  ceReducedPerDayWI: PropTypes.object,
+  ceSavedPerDayWI: PropTypes.object,
   fuelSavedPerDayWI: PropTypes.object,
 };
 

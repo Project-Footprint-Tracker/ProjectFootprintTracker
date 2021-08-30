@@ -5,8 +5,8 @@ import DashboardStatisticsCard from './DashboardStatisticsCard';
 
 function DashboardCeCard(
   {
-    ceReducedTotal,
-    ceReducedAvg,
+    ceSavedTotal,
+    ceSavedAvg,
     ceProducedTotal,
     ceProducedAvg,
     evCeProducedAvg,
@@ -15,7 +15,7 @@ function DashboardCeCard(
 ) {
 
   const { ceProducedAvgPerYear, ceProducedAvgPerMonth, ceProducedAvgPerDay } = ceProducedAvg;
-  const { ceReducedAvgPerYear, ceReducedAvgPerMonth, ceReducedAvgPerDay } = ceReducedAvg;
+  const { ceSavedAvgPerYear, ceSavedAvgPerMonth, ceSavedAvgPerDay } = ceSavedAvg;
   const { evCeProducedAvgPerYear, evCeProducedAvgPerMonth, evCeProducedAvgPerDay } = evCeProducedAvg;
 
   return (
@@ -23,11 +23,11 @@ function DashboardCeCard(
       cardHeader='Carbon Emissions (CE)'
       topContent={
         <Statistic>
-          <Statistic.Value className='dashboard-statistic'>{ceReducedTotal}</Statistic.Value>
-          <Statistic.Label className='dashboard-statistic'>pounds reduced</Statistic.Label>
+          <Statistic.Value className='dashboard-statistic'>{ceSavedTotal}</Statistic.Value>
+          <Statistic.Label className='dashboard-statistic'>pounds saved</Statistic.Label>
         </Statistic>
       }
-      popupTop='This number represents how many pounds of CE you reduced by using other modes of transportation.'
+      popupTop='This number represents how many pounds of CE you saved by using other modes of transportation.'
       bottomContent={
         <Statistic>
           <Statistic.Value className='dashboard-statistic'>{ceProducedTotal}</Statistic.Value>
@@ -44,7 +44,7 @@ function DashboardCeCard(
             trigger={<Icon className='question-icon' link name='question circle outline'/>}
           >
             <Popup.Content>
-                  This shows the average amount of CE that you have produced as well as reduced. <br/>
+                  This shows the average amount of CE that you have produced as well as saved. <br/>
                   The Department of Energy states that the average energy consumption per mile of an Electric Vehicle is 320 Wh/mi. <br/>
                   Using this value, we calculate the MPGe and used it to find out how much CE you would have produced if you have driven an Electric Vehicle instead. <br/>
               <a href='https://afdc.energy.gov/vehicles/electric_emissions_sources.html' target='_blank' rel='noreferrer'>Source</a>
@@ -56,26 +56,26 @@ function DashboardCeCard(
         <Grid relaxed columns='equal'>
           <Grid.Row>
             <Grid.Column>
-              <Header className='dashboard-statistic' textAlign='center'>Average CE Reduced per Time</Header>
+              <Header className='dashboard-statistic' textAlign='center'>Average CE Saved per Time</Header>
               <Table className='dashboard-statistic' basic='very'>
                 <Table.Header fullWidth>
                   <Table.Row>
                     <Table.HeaderCell/>
-                    <Table.HeaderCell className='dashboard-statistic' textAlign='right'>CE Reduced</Table.HeaderCell>
+                    <Table.HeaderCell className='dashboard-statistic' textAlign='right'>CE Saved</Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
                   <Table.Row>
                     <Table.Cell>Yearly</Table.Cell>
-                    <Table.Cell textAlign='right'>{ceReducedAvgPerYear} pounds</Table.Cell>
+                    <Table.Cell textAlign='right'>{ceSavedAvgPerYear} pounds</Table.Cell>
                   </Table.Row>
                   <Table.Row>
                     <Table.Cell>Monthly</Table.Cell>
-                    <Table.Cell textAlign='right'>{ceReducedAvgPerMonth} pounds</Table.Cell>
+                    <Table.Cell textAlign='right'>{ceSavedAvgPerMonth} pounds</Table.Cell>
                   </Table.Row>
                   <Table.Row>
                     <Table.Cell>Daily</Table.Cell>
-                    <Table.Cell textAlign='right'>{ceReducedAvgPerDay} pounds</Table.Cell>
+                    <Table.Cell textAlign='right'>{ceSavedAvgPerDay} pounds</Table.Cell>
                   </Table.Row>
                 </Table.Body>
               </Table>
@@ -118,8 +118,8 @@ function DashboardCeCard(
 }
 
 DashboardCeCard.propTypes = {
-  ceReducedTotal: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  ceReducedAvg: PropTypes.object,
+  ceSavedTotal: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  ceSavedAvg: PropTypes.object,
   ceProducedTotal: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   ceProducedAvg: PropTypes.object,
   evCeProducedAvg: PropTypes.object,

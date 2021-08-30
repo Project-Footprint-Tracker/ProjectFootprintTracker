@@ -21,7 +21,7 @@ function DashboardContent(
     userProfile,
     ceProducedTotal,
     ceSavedTotal,
-    ceReducedPerDay,
+    ceSavedPerDay,
     fuelSpentTotal,
     fuelSavedTotal,
     fuelSavedPerDay,
@@ -29,7 +29,7 @@ function DashboardContent(
     milesTraveledAvg,
     fuelSavedAvg,
     fuelSpentAvg,
-    ceReducedAvg,
+    ceSavedAvg,
     ceProducedAvg,
     evCeProducedAvg,
   },
@@ -74,17 +74,17 @@ function DashboardContent(
     mode: 'lines+markers',
   };
 
-  const ceReducedPerDayData = {
-    x: ceReducedPerDay.date,
-    y: ceReducedPerDay.ce,
-    name: 'CE Reduced (pounds)',
+  const ceSavedPerDayData = {
+    x: ceSavedPerDay.date,
+    y: ceSavedPerDay.ceSaved,
+    name: 'CE Saved (pounds)',
     type: 'bar',
   };
 
   // 100,000 trees = 2,400 tons of CO2 or 4,800,000 pounds of CO2
   // 1 tree = 48 pounds of CO2
   const treesPerCeProduced = Math.ceil(ceProducedTotal / poundsOfCePerTree);
-  const treesPerCeReduced = Math.ceil(ceSavedTotal / poundsOfCePerTree);
+  const treesPerceSaved = Math.ceil(ceSavedTotal / poundsOfCePerTree);
 
   const modesOfTransportData = [{
     values: Object.values(modesOfTransport),
@@ -173,7 +173,7 @@ function DashboardContent(
     },
   };
 
-  const ceReducedPerDayLayout = {
+  const ceSavedPerDayLayout = {
     autosize: true,
     height: '400',
     margin: {
@@ -181,14 +181,14 @@ function DashboardContent(
       b: bMargin,
     },
     xaxis: {
-      range: [ceReducedPerDay.date[0], ceReducedPerDay.date[10]],
-      rangeslider: { range: [ceReducedPerDay.date[0], ceReducedPerDay.date[ceReducedPerDay.length - 1]] },
+      range: [ceSavedPerDay.date[0], ceSavedPerDay.date[10]],
+      rangeslider: { range: [ceSavedPerDay.date[0], ceSavedPerDay.date[ceSavedPerDay.length - 1]] },
       type: 'date',
       gridcolor: chartGridColor,
     },
     yaxis: {
-      title: 'CE Reduced (pounds)',
-      range: [0, Math.max(...ceReducedPerDay.ce)],
+      title: 'CE Saved (pounds)',
+      range: [0, Math.max(...ceSavedPerDay.ceSaved)],
       type: 'linear',
       gridcolor: chartGridColor,
     },
@@ -227,19 +227,19 @@ function DashboardContent(
         />
         <DashboardCeCard
           ceProducedTotal={ceProducedTotal}
-          ceReducedTotal={ceSavedTotal.toFixed(2)}
+          ceSavedTotal={ceSavedTotal.toFixed(2)}
           ceProducedAvg={ceProducedAvg}
-          ceReducedAvg={ceReducedAvg}
+          ceSavedAvg={ceSavedAvg}
           evCeProducedAvg={evCeProducedAvg}
           userProfile={userProfile}
         />
         <DashboardTreeCard
           treesPerCeProduced={treesPerCeProduced}
-          treesPerCeReduced={treesPerCeReduced}
+          treesPerceSaved={treesPerceSaved}
           userProfile={userProfile}
         />
         <DashboardLeafCard
-          treesPerCeReduced={treesPerCeReduced}
+          treesPerceSaved={treesPerceSaved}
           ceSavedTotal={ceSavedTotal}
         />
       </Card.Group>
@@ -282,10 +282,10 @@ function DashboardContent(
         <Grid.Column>
           <Card className='general-card' fluid>
             <Card.Header className='card-header'>
-                CE Reduced per Day
+                CE Saved per Day
             </Card.Header>
             <Card.Content>
-              <Chart chartData={[ceReducedPerDayData]} chartLayout={ceReducedPerDayLayout}/>
+              <Chart chartData={[ceSavedPerDayData]} chartLayout={ceSavedPerDayLayout}/>
             </Card.Content>
           </Card>
         </Grid.Column>
@@ -307,13 +307,13 @@ DashboardContent.propTypes = {
   ceProducedTotal: PropTypes.number,
   fuelSpentTotal: PropTypes.number,
   fuelSavedTotal: PropTypes.number,
-  ceReducedPerDay: PropTypes.object,
+  ceSavedPerDay: PropTypes.object,
   fuelSavedPerDay: PropTypes.object,
   milesSavedAvg: PropTypes.object,
   milesTraveledAvg: PropTypes.object,
   fuelSavedAvg: PropTypes.object,
   fuelSpentAvg: PropTypes.object,
-  ceReducedAvg: PropTypes.object,
+  ceSavedAvg: PropTypes.object,
   ceProducedAvg: PropTypes.object,
   evCeProducedAvg: PropTypes.object,
   userMpg: PropTypes.number,

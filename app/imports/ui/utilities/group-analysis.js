@@ -125,40 +125,46 @@ export const getCountyTrips = (county) => {
   });
 };
 
-export const getCEReducedPerDay = (trips) => {
+export const getCESavedPerDay = (trips) => {
+  const tripsSorted = trips.sort((a, b) => new Date(b.date) - new Date(a.date));
   const date = [];
-  const ce = [];
+  const ceSaved = [];
 
-  trips.forEach((trip) => {
-    const tripDate = trip.date.toISOString().split('T')[0];
-    if (trip.ceSaved !== 0) {
-      if (!date.includes(tripDate)) {
-        date.push(tripDate);
-        ce.push(trip.ceSaved.toFixed(2));
-      } else {
-        const oldCE = Number(ce[date.indexOf(tripDate)]);
-        ce[date.indexOf(tripDate)] = (oldCE + trip.ceSaved).toFixed(2);
-      }
+  tripsSorted.forEach((trip) => {
+    const tripDate = trip.date;
+
+    // check to see if there is an existing trip for that date.
+    const dateIndex = date.findIndex((o) => o.getTime() === tripDate.getTime());
+
+    if (dateIndex === -1) {
+      date.push(tripDate);
+      ceSaved.push(trip.ceSaved.toFixed(2));
+    } else {
+      const oldCE = Number(ceSaved[dateIndex]);
+      ceSaved[dateIndex] = (oldCE + trip.ceSaved).toFixed(2);
     }
   });
 
-  return { date, ce };
+  return { date, ceSaved };
 };
 
 export const getCEProducedPerDay = (trips) => {
+  const tripsSorted = trips.sort((a, b) => new Date(b.date) - new Date(a.date));
   const date = [];
   const ceProduced = [];
 
-  trips.forEach((trip) => {
-    const tripDate = trip.date.toISOString().split('T')[0];
-    if (trip.ceProduced !== 0) {
-      if (!date.includes(tripDate)) {
-        date.push(tripDate);
-        ceProduced.push(trip.ceProduced.toFixed(2));
-      } else {
-        const oldCE = Number(ceProduced[date.indexOf(tripDate)]);
-        ceProduced[date.indexOf(tripDate)] = (oldCE + trip.ceProduced).toFixed(2);
-      }
+  tripsSorted.forEach((trip) => {
+    const tripDate = trip.date;
+
+    // check to see if there is an existing trip for that date.
+    const dateIndex = date.findIndex((o) => o.getTime() === tripDate.getTime());
+
+    if (dateIndex === -1) {
+      date.push(tripDate);
+      ceProduced.push(trip.ceProduced.toFixed(2));
+    } else {
+      const oldCE = Number(ceProduced[dateIndex]);
+      ceProduced[dateIndex] = (oldCE + trip.ceProduced).toFixed(2);
     }
   });
 
@@ -166,27 +172,29 @@ export const getCEProducedPerDay = (trips) => {
 };
 
 export const getFuelSavedPerDay = (trips) => {
+  const tripsSorted = trips.sort((a, b) => new Date(b.date) - new Date(a.date));
   const date = [];
   const fuel = [];
   const price = [];
 
-  trips.forEach(trip => {
-    const tripDate = trip.date.toISOString().split('T')[0];
-    const fuelSaved = Number(trip.milesTraveled / trip.mpg);
+  tripsSorted.forEach(trip => {
+    const fuelSaved = trip.fuelSaved;
     const priceSaved = Number(fuelSaved * fuelCost);
+    const tripDate = trip.date;
 
-    if (trip.ceSaved !== 0) {
-      if (!date.includes(tripDate)) {
-        date.push(tripDate);
-        fuel[date.indexOf(tripDate)] = fuelSaved.toFixed(2);
-        price[date.indexOf(tripDate)] = priceSaved.toFixed(2);
-      } else {
-        const oldFuel = Number(fuel[date.indexOf(tripDate)]);
-        fuel[date.indexOf(tripDate)] = (oldFuel + fuelSaved).toFixed(2);
+    // check to see if there is an existing trip for that date.
+    const dateIndex = date.findIndex((o) => o.getTime() === tripDate.getTime());
 
-        const oldPrice = Number(price[date.indexOf(tripDate)]);
-        price[date.indexOf(tripDate)] = (oldPrice + priceSaved).toFixed(2);
-      }
+    if (dateIndex === -1) {
+      date.push(new Date(tripDate));
+      fuel.push(fuelSaved.toFixed(2));
+      price.push(priceSaved.toFixed(2));
+    } else {
+      const oldFuel = Number(fuel[dateIndex]);
+      fuel[dateIndex] = (oldFuel + fuelSaved).toFixed(2);
+
+      const oldPrice = Number(price[dateIndex]);
+      price[dateIndex] = (oldPrice + priceSaved).toFixed(2);
     }
   });
 

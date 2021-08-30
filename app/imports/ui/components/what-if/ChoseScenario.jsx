@@ -127,7 +127,6 @@ function ChoseScenario(
   // on clicking submit button, updates state events with new info
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    // let ceReduced = 0;
     let ceProduced = 0;
     const milesSPDDate = [];
     const milesSPDDistance = [];
@@ -303,7 +302,7 @@ function ChoseScenario(
         fuelSPDP.push((objects.fuelSaved * fuelCost).toFixed(2));
       });
 
-      // If event reduced miles & ce
+      // If event saved miles & ce
       ceRPD = { date: ceRPDD, ce: ceRPDG };
       fuelSPD = { date: fuelSPDD, fuel: fuelSPDF, price: fuelSPDP };
       nCeProducedTotal.current = ceProduced;
@@ -391,16 +390,11 @@ function ChoseScenario(
 }
 
 ChoseScenario.propTypes = {
-  tripDate: PropTypes.instanceOf(Date),
-  milesSavedTotal: PropTypes.number,
   milesSavedPerDay: PropTypes.object,
   allTrips: PropTypes.object,
   detailedTrips: PropTypes.array,
   modesOfTransport: PropTypes.object,
-  userMpg: PropTypes.number,
   ceProducedTotal: PropTypes.number,
-  ceReducedPerDay: PropTypes.object,
-  fuelSavedPerDay: PropTypes.object,
   test: PropTypes.func,
 };
 
