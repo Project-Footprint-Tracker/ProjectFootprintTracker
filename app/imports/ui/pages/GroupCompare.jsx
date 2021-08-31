@@ -10,7 +10,6 @@ import { Trips } from '../../api/trip/TripCollection';
 import { Groups } from '../../api/group/GroupCollection';
 import { GroupMembers } from '../../api/group/GroupMemberCollection';
 import {
-  counties,
   getCountyTrips,
   getModeChartCounts,
   getGroupTrips,
@@ -21,6 +20,7 @@ import {
 import { Users } from '../../api/user/UserCollection';
 import ModesChart from '../components/charts/ModesChart';
 import CEDataChart from '../components/charts/CEDataChart';
+import { counties } from '../../api/utilities/ZipCodes';
 
 const GroupCompare = ({ groups, ready, countyTrips, groupTrips, userTrips }) => {
 
@@ -150,15 +150,17 @@ export default withTracker(() => {
       && username !== undefined;
   const userTrips = Trips.find({ owner: username }, {}).fetch();
   const groupTrips = {};
-  groups.forEach((g) => {
-    const name = g.name;
-    groupTrips[name] = getGroupTrips(name);
-  });
   const countyTrips = {};
-  countyTrips[counties.Hawaii] = getCountyTrips(counties.Hawaii);
-  countyTrips[counties.Honolulu] = getCountyTrips(counties.Honolulu);
-  countyTrips[counties.Kauai] = getCountyTrips(counties.Kauai);
-  countyTrips[counties.Maui] = getCountyTrips(counties.Maui);
+  if (ready) {
+    groups.forEach((g) => {
+      const name = g.name;
+      groupTrips[name] = getGroupTrips(name);
+    });
+    countyTrips[counties.Hawaii] = getCountyTrips(counties.Hawaii);
+    countyTrips[counties.Honolulu] = getCountyTrips(counties.Honolulu);
+    countyTrips[counties.Kauai] = getCountyTrips(counties.Kauai);
+    countyTrips[counties.Maui] = getCountyTrips(counties.Maui);
+  }
   return {
     ready,
     groups,
