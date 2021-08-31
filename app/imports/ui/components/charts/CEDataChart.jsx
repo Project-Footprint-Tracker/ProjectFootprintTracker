@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Card } from 'semantic-ui-react';
-import Chart from '../Chart';
+import Chart from './Chart';
 
 const CEDataChart = (props) => {
   const [ceChart, setCEChart] = useState(true);
@@ -9,7 +9,7 @@ const CEDataChart = (props) => {
 
   const ceChartData = [{
     x: props.ceSaved.date,
-    y: props.ceSaved.ce,
+    y: props.ceSaved.ceSaved,
     name: 'CE Saved',
     type: 'bar',
     marker: {
@@ -27,7 +27,7 @@ const CEDataChart = (props) => {
 
   const fuelSavedData = [{
     x: props.fuelSaved.date,
-    y: props.fuelSaved.fuelSaved,
+    y: props.fuelSaved.fuel,
     name: 'Fuel Saved (gal)',
     type: 'linear',
   }, {

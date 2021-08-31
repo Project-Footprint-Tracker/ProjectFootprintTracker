@@ -1,100 +1,98 @@
 import { withTracker } from 'meteor/react-meteor-data';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { _ } from 'lodash';
 import { Dimmer, Loader } from 'semantic-ui-react';
 import { Trips } from '../../api/trip/TripCollection';
 import { Users } from '../../api/user/UserCollection';
 import ChoseScenario from '../components/what-if/ChoseScenario';
 import WhatIfContent from '../components/what-if/WhatIfContent';
-import { tripModes } from '../../api/utilities/constants';
 import { UserVehicles } from '../../api/vehicle/UserVehicleCollection';
 
 // This page contains the graphs that will visualize the user's data in a more meaningful way.
 // The page waits for the data to load first and shows a loading page. Then once the collection is ready, we show the dashboard.
-function WhatIf(
+const WhatIf = (
   {
     tripReady,
     userReady,
     milesSavedTotal,
     milesSavedPerDay,
     allTrips,
+    detailedTrips,
     modesOfTransport,
     userMpg,
     ceProducedTotal,
-    ceReducedPerDay,
+    ceSavedTotal,
+    ceSavedPerDay,
     fuelSavedPerDay,
+    fuelSavedTotal,
   },
-) {
+) => {
   const [milesSavedPerDayWI, setMSPDWI] = useState();
+  const [detailedTripsWI, setDTWI] = useState();
   const [modesOfTransportWI, setMOTDWI] = useState();
-  const [ceReducedPerDayWI, setGRPDWI] = useState();
+  const [ceSavedPerDayWI, setGSPDWI] = useState();
   const [fuelSavedPerDayWI, setFSPDWI] = useState();
-  const trueMilesTotal = (x) => {
-    let gasMiles = 0;
-    _.forEach(x.mode, function (mode, index) {
-      if (mode === tripModes.GAS_CAR || mode === tripModes.CARPOOL) {
-        gasMiles += x.distance[index];
-      }
-    });
-    return (milesSavedTotal - gasMiles);
-  };
-  const trueMilesSavedTotal = trueMilesTotal(milesSavedPerDay);
+
   useEffect(() => {
+    setDTWI(detailedTrips);
     setMSPDWI(milesSavedPerDay);
     setMOTDWI(modesOfTransport);
-    setGRPDWI(ceReducedPerDay);
+    setGSPDWI(ceSavedPerDay);
     setFSPDWI(fuelSavedPerDay);
   }, [fuelSavedPerDay]);
-  const testFP = (miles, mode, ce, fuel) => {
+  const testFP = (trips, miles, mode, ce, fuel) => {
+    setDTWI(trips);
     setMSPDWI(miles);
     setMOTDWI(mode);
-    setGRPDWI(ce);
+    setGSPDWI(ce);
     setFSPDWI(fuel);
   };
+
   return ((tripReady && userReady) ?
     <div style={{ width: '100%' }}>
       <ChoseScenario
-        milesSavedTotal={milesSavedTotal}
         milesSavedPerDay={milesSavedPerDay}
         allTrips={allTrips}
+        detailedTrips={detailedTrips}
         modesOfTransport={modesOfTransport}
         ceProducedTotal={ceProducedTotal}
-        ceReducedPerDay={ceReducedPerDay}
-        fuelSavedPerDay={fuelSavedPerDay}
         test={testFP}
       />
       <WhatIfContent
         milesSavedTotal={milesSavedTotal}
-        trueMilesSavedTotal={trueMilesSavedTotal}
         milesSavedPerDay={milesSavedPerDay}
         modesOfTransport={modesOfTransport}
         userMpg={userMpg}
         ceProducedTotal={ceProducedTotal}
-        ceReducedPerDay={ceReducedPerDay}
+        ceSavedTotal={ceSavedTotal}
+        ceSavedPerDay={ceSavedPerDay}
         fuelSavedPerDay={fuelSavedPerDay}
+        fuelSavedTotal={fuelSavedTotal}
+        detailedTripsWI={detailedTripsWI}
         milesSavedPerDayWI={milesSavedPerDayWI}
         modesOfTransportWI={modesOfTransportWI}
-        ceReducedPerDayWI={ceReducedPerDayWI}
+        ceSavedPerDayWI={ceSavedPerDayWI}
         fuelSavedPerDayWI={fuelSavedPerDayWI}
-        newMilesTotal={trueMilesTotal}
       />
     </div> :
     <Dimmer active>
       <Loader>Loading Data</Loader>
     </Dimmer>
   );
-}
+};
 
 WhatIf.propTypes = {
   milesSavedTotal: PropTypes.number,
   milesSavedPerDay: PropTypes.object,
   allTrips: PropTypes.object,
+  detailedTrips: PropTypes.array,
   modesOfTransport: PropTypes.object,
   userMpg: PropTypes.number,
-  ceProducedTotal: PropTypes.string,
-  ceReducedPerDay: PropTypes.object,
+  ceProducedTotal: PropTypes.number,
+  ceSavedTotal: PropTypes.number,
+  ceSavedPerDay: PropTypes.object,
   fuelSavedPerDay: PropTypes.object,
+  fuelSavedTotal: PropTypes.number,
   tripReady: PropTypes.bool.isRequired,
   userReady: PropTypes.bool.isRequired,
 };
@@ -105,27 +103,36 @@ export default withTracker(({ match }) => {
   const userVehicleSubscribe = UserVehicles.subscribeUserVehicle();
   const username = match.params._id;
 
-  const milesSavedTotal = Trips.getMilesTotal(username);
+  const milesTraveledTotal = Trips.getVehicleMilesTraveled(username);
 
   const milesSavedPerDay = Trips.getMilesSavedPerDay(username);
-  const allTrips = Trips.getTrips(username);
+  const allTrips = Trips.getTripsDateDistanceMode(username);
+  const detailedTrips = Trips.getDetailedTrips(username);
 
   const modesOfTransport = Trips.getModesOfTransport(username);
+
   const ceProducedTotal = Trips.getCEProducedTotal(username);
-  const ceReducedPerDay = Trips.getCEReducedPerDay(username);
+  const ceSavedTotal = Trips.getCESavedTotal(username);
+
+  const ceSavedPerDay = Trips.getCESavedPerDay(username);
+
+  const fuelSavedTotal = Trips.getFuelSavedTotal(username);
   const fuelSavedPerDay = Trips.getFuelSavedPerDay(username);
   const userMpg = UserVehicles.getUserMpg(username);
   return {
     tripReady: tripSubscribe.ready(),
     userReady: userSubscribe.ready(),
     allVehicleReady: userVehicleSubscribe.ready(),
-    milesSavedTotal,
+    milesSavedTotal: milesTraveledTotal.milesSaved,
     allTrips,
+    detailedTrips,
     milesSavedPerDay,
     modesOfTransport,
     ceProducedTotal,
-    ceReducedPerDay,
+    ceSavedTotal,
+    ceSavedPerDay,
     fuelSavedPerDay,
+    fuelSavedTotal,
     userMpg,
   };
 })(WhatIf);

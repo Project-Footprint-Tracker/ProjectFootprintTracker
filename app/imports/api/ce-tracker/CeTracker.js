@@ -5,6 +5,7 @@ import { Trips } from '../trip/TripCollection';
 import { SavedCommutes } from '../saved-commute/SavedCommuteCollection';
 import { Users } from '../user/UserCollection';
 import { UserVehicles } from '../vehicle/UserVehicleCollection';
+import { EvVehicles } from '../vehicle/EvVehicleCollection';
 
 class CeTrackerClass {
   collections;
@@ -21,6 +22,7 @@ class CeTrackerClass {
       SavedCommutes,
       Trips,
       Users,
+      EvVehicles,
       UserVehicles,
     ];
     /**

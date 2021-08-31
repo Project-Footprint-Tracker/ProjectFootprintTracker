@@ -6,7 +6,7 @@ import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
 import { AutoForm, BoolField, DateField, ErrorsField, SubmitField } from 'uniforms-semantic';
 import swal from 'sweetalert';
 import { Trips } from '../../../api/trip/TripCollection';
-import { getDateToday, getMilesTraveled } from '../../../api/utilities/CEData';
+import { getDateToday, getMilesTraveled } from '../../../api/utilities/Utilities';
 import { imperialUnits, tripModes, tripModesArray } from '../../../api/utilities/constants';
 import { updateMethod } from '../../../api/base/BaseCollection.methods';
 
@@ -108,6 +108,7 @@ const EditTripModal = (props) => {
     if (data.roundTrip) {
       updateData.milesTraveled *= 2;
     }
+    updateData.mpg = data.mpg;
     updateData.mode = mode;
     updateData.passengers = Number(passengers);
     const collectionName = Trips.getCollectionName();

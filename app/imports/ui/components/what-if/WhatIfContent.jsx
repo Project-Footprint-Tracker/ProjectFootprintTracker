@@ -1,34 +1,84 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Card, Statistic } from 'semantic-ui-react';
-import Chart from '../Chart';
-import { cePerGallonFuel } from '../../../api/utilities/constants';
+import { _ } from 'lodash';
+import Chart from '../charts/Chart';
+import { cePerGallonFuel, tripModes, tripModesColors } from '../../../api/utilities/constants';
 
 // Contains the graphs that visualizes the user's data.
 function WhatIfContent(
   {
     milesSavedTotal,
-    trueMilesSavedTotal,
     milesSavedPerDay,
     modesOfTransport,
     userMpg,
     ceProducedTotal,
-    ceReducedPerDay,
+    ceSavedTotal,
+    ceSavedPerDay,
     fuelSavedPerDay,
+    fuelSavedTotal,
+    detailedTripsWI,
     milesSavedPerDayWI,
     modesOfTransportWI,
-    ceReducedPerDayWI,
+    ceSavedPerDayWI,
     fuelSavedPerDayWI,
-    newMilesTotal,
   },
 ) {
 
-  const milesSavedTotalWI = newMilesTotal(milesSavedPerDayWI);
-  const fuelSavedTotalWI = (milesSavedTotalWI / userMpg).toFixed(2);
-  const ceProducedTotalWI = (((milesSavedTotal - milesSavedTotalWI) / userMpg) * cePerGallonFuel).toFixed(2);
-  const ceReducedTotalWI = (fuelSavedTotalWI * cePerGallonFuel).toFixed(2);
-  const fuelSavedTotal = (trueMilesSavedTotal / userMpg).toFixed(2);
-  const ceReducedTotal = (fuelSavedTotal * cePerGallonFuel).toFixed(2);
+  const trueMilesTotal = (userTrips) => {
+
+    let milesSavedTotalWI = 0;
+    let milesAddedTotalWI = 0;
+
+    _.forEach(userTrips.distance, function (distance, index) {
+
+      if (userTrips.mode[index] === tripModes.GAS_CAR) {
+        milesAddedTotalWI += -distance;
+      } else if (userTrips.mode[index] === tripModes.CARPOOL) {
+        milesAddedTotalWI += distance;
+        milesSavedTotalWI += distance;
+      } else {
+        milesSavedTotalWI += distance;
+      }
+    });
+
+    return { milesSavedTotalWI, milesAddedTotalWI };
+  };
+
+  const milesTotalWI = trueMilesTotal(milesSavedPerDayWI);
+  const milesSavedTotalWI = milesTotalWI.milesSavedTotalWI;
+
+  const calculateFuelAndCeWI = () => {
+
+    let fuelSavedTotalWI = 0;
+    let ceProducedTotalWI = 0;
+    let ceSavedTotalWI = 0;
+
+    _.forEach(detailedTripsWI, function (trip) {
+
+      const fuel = trip.milesTraveled / userMpg;
+      const ce = fuel * cePerGallonFuel;
+
+      switch (trip.mode) {
+      case tripModes.GAS_CAR:
+        ceProducedTotalWI += ce;
+        break;
+      case tripModes.CARPOOL:
+        ceProducedTotalWI += ce / (trip.passengers + 1);
+        ceSavedTotalWI += (ce - ceProducedTotalWI);
+        fuelSavedTotalWI += fuel * trip.passengers;
+        break;
+      default:
+        fuelSavedTotalWI += fuel;
+        ceSavedTotalWI += ce;
+      }
+    });
+
+    return { fuelSavedTotalWI, ceSavedTotalWI, ceProducedTotalWI };
+  };
+
+  const { fuelSavedTotalWI, ceSavedTotalWI, ceProducedTotalWI } = calculateFuelAndCeWI();
+
   const milesSavedPerDayData = [{
     x: milesSavedPerDay.date,
     y: milesSavedPerDay.distance,
@@ -66,10 +116,10 @@ function WhatIfContent(
       color: 'rgb(176,216,230)',
       width: 3 },
   };
-  const ceReducedPerDayData = {
-    x: ceReducedPerDay.date,
-    y: ceReducedPerDay.ce,
-    name: 'Original CE Reduced (pounds)',
+  const ceSavedPerDayData = {
+    x: ceSavedPerDay.date,
+    y: ceSavedPerDay.ceSaved,
+    name: 'Original CE Saved (pounds)',
     type: 'scatter',
     mode: 'lines+markers',
     hoverinfo: 'y',
@@ -77,10 +127,10 @@ function WhatIfContent(
       color: 'rgb(44,160,44)',
       width: 4 },
   };
-  const ceReducedPerDayDataWI = {
-    x: ceReducedPerDayWI.date,
-    y: ceReducedPerDayWI.ce,
-    name: 'What If CE Reduced (pounds)',
+  const ceSavedPerDayDataWI = {
+    x: ceSavedPerDayWI.date,
+    y: ceSavedPerDayWI.ceSaved,
+    name: 'What If CE Saved (pounds)',
     type: 'scatter',
     mode: 'lines+markers',
     hoverinfo: 'y',
@@ -89,18 +139,28 @@ function WhatIfContent(
       width: 3 },
   };
 
+  const colors = [];
+
+  Object.keys(modesOfTransport).forEach(mode => {
+    const modeKey = Object.keys(tripModes).find(key => tripModes[key] === mode);
+    colors.push(tripModesColors[modeKey]);
+  });
+
   const modesOfTransportData = [{
-    values: modesOfTransport.value,
-    labels: modesOfTransport.label,
+    values: Object.values(modesOfTransport),
+    labels: Object.keys(modesOfTransport),
     textposition: 'inside',
+    marker: {
+      colors: colors,
+    },
     type: 'pie',
     hole: 0.4,
     hoverinfo: 'label+percent',
     domain: { column: 0 },
   },
   {
-    values: modesOfTransportWI.value,
-    labels: modesOfTransportWI.label,
+    values: Object.values(modesOfTransportWI),
+    labels: Object.keys(modesOfTransportWI),
     textposition: 'inside',
     type: 'pie',
     hole: 0.4,
@@ -157,7 +217,7 @@ function WhatIfContent(
     },
     yaxis: {
       title: 'Fuel and CE saved',
-      range: [0, Math.max(...ceReducedPerDay.ce)],
+      range: [0, Math.max(...ceSavedPerDay.ceSaved)],
       type: 'linear',
       gridcolor: chartGridColor,
     },
@@ -200,11 +260,11 @@ function WhatIfContent(
       <Card.Group centered stackable itemsPerRow={4}>
         <Card className='whatif-card'>
           <Card.Header className='card-header'>
-              Vehicle Miles Traveled (VMT) Reduced
+              Vehicle Miles Traveled (VMT) Saved
           </Card.Header>
           <Card.Content textAlign='center'>
             <Statistic>
-              <Statistic.Value className='whatif-statistic'>{trueMilesSavedTotal}</Statistic.Value>
+              <Statistic.Value className='whatif-statistic'>{milesSavedTotal}</Statistic.Value>
               <Statistic.Label className='whatif-statistic'>miles</Statistic.Label>
             </Statistic>
           </Card.Content>
@@ -221,13 +281,13 @@ function WhatIfContent(
           </Card.Header>
           <Card.Content textAlign='center'>
             <Statistic>
-              <Statistic.Value className='whatif-statistic'>{fuelSavedTotal}</Statistic.Value>
+              <Statistic.Value className='whatif-statistic'>{fuelSavedTotal.toFixed(2)}</Statistic.Value>
               <Statistic.Label className='whatif-statistic'>gallons</Statistic.Label>
             </Statistic>
           </Card.Content>
           <Card.Content textAlign='center'>
             <Statistic>
-              <Statistic.Value className='whatif-statistic'>{fuelSavedTotalWI}</Statistic.Value>
+              <Statistic.Value className='whatif-statistic'>{fuelSavedTotalWI.toFixed(2)}</Statistic.Value>
               <Statistic.Label className='whatif-statistic'>what if gallons</Statistic.Label>
             </Statistic>
           </Card.Content>
@@ -244,24 +304,24 @@ function WhatIfContent(
           </Card.Content>
           <Card.Content textAlign='center'>
             <Statistic>
-              <Statistic.Value className='whatif-statistic'>{ceProducedTotalWI}</Statistic.Value>
+              <Statistic.Value className='whatif-statistic'>{ceProducedTotalWI.toFixed(2)}</Statistic.Value>
               <Statistic.Label className='whatif-statistic'>what if pounds</Statistic.Label>
             </Statistic>
           </Card.Content>
         </Card>
         <Card className='whatif-card'>
           <Card.Header className='card-header'>
-              Carbon Emissions (CE) Reduced
+              Carbon Emissions (CE) Saved
           </Card.Header>
           <Card.Content textAlign='center'>
             <Statistic>
-              <Statistic.Value className='whatif-statistic'>{ceReducedTotal}</Statistic.Value>
+              <Statistic.Value className='whatif-statistic'>{ceSavedTotal.toFixed(2)}</Statistic.Value>
               <Statistic.Label className='whatif-statistic'>pounds</Statistic.Label>
             </Statistic>
           </Card.Content>
           <Card.Content textAlign='center'>
             <Statistic>
-              <Statistic.Value className='whatif-statistic'>{ceReducedTotalWI}</Statistic.Value>
+              <Statistic.Value className='whatif-statistic'>{ceSavedTotalWI.toFixed(2)}</Statistic.Value>
               <Statistic.Label className='whatif-statistic'>what if pounds</Statistic.Label>
             </Statistic>
           </Card.Content>
@@ -295,10 +355,10 @@ function WhatIfContent(
         <Grid.Column>
           <Card className='whatif-card' fluid>
             <Card.Header className='card-header'>
-                Fuel Saved and CE Reduced per Day
+                Fuel Saved and CE Saved per Day
             </Card.Header>
             <Card.Content>
-              <Chart chartData={[fuelSavedPerDayData, ceReducedPerDayData, fuelSavedPerDayDataWI, ceReducedPerDayDataWI]} chartLayout={fuelAndCePerDayLayout}/>
+              <Chart chartData={[fuelSavedPerDayData, ceSavedPerDayData, fuelSavedPerDayDataWI, ceSavedPerDayDataWI]} chartLayout={fuelAndCePerDayLayout}/>
             </Card.Content>
           </Card>
         </Grid.Column>
@@ -309,18 +369,19 @@ function WhatIfContent(
 
 WhatIfContent.propTypes = {
   milesSavedTotal: PropTypes.number,
-  trueMilesSavedTotal: PropTypes.number,
   milesSavedPerDay: PropTypes.object,
   modesOfTransport: PropTypes.object,
   userMpg: PropTypes.number,
-  ceProducedTotal: PropTypes.string,
-  ceReducedPerDay: PropTypes.object,
+  ceProducedTotal: PropTypes.number,
+  ceSavedTotal: PropTypes.number,
+  ceSavedPerDay: PropTypes.object,
   fuelSavedPerDay: PropTypes.object,
+  fuelSavedTotal: PropTypes.number,
+  detailedTripsWI: PropTypes.array,
   milesSavedPerDayWI: PropTypes.object,
   modesOfTransportWI: PropTypes.object,
-  ceReducedPerDayWI: PropTypes.object,
+  ceSavedPerDayWI: PropTypes.object,
   fuelSavedPerDayWI: PropTypes.object,
-  newMilesTotal: PropTypes.func,
 };
 
 export default WhatIfContent;

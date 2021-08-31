@@ -12,7 +12,6 @@ function Dashboard(
     tripReady,
     userReady,
     vehicleMilesTraveled,
-    milesTotal,
     milesSavedPerDay,
     milesAddedPerDay,
     modesOfTransport,
@@ -20,13 +19,15 @@ function Dashboard(
     userProfile,
     ceSavedTotal,
     ceProducedTotal,
-    ceReducedPerDay,
+    ceSavedPerDay,
+    fuelSpentTotal,
+    fuelSavedTotal,
     fuelSavedPerDay,
     milesSavedAvg,
     milesTraveledAvg,
     fuelSavedAvg,
     fuelSpentAvg,
-    ceReducedAvg,
+    ceSavedAvg,
     ceProducedAvg,
     evCeProducedAvg,
     userMpg,
@@ -38,7 +39,6 @@ function Dashboard(
       <DashboardContent
         vehicleMilesSaved={vehicleMilesTraveled.milesSaved}
         vehicleMilesAdded={vehicleMilesTraveled.milesAdded}
-        milesTotal={milesTotal}
         milesSavedPerDay={milesSavedPerDay}
         milesAddedPerDay={milesAddedPerDay}
         modesOfTransport={modesOfTransport}
@@ -47,13 +47,15 @@ function Dashboard(
         userReady={userReady}
         ceSavedTotal={ceSavedTotal}
         ceProducedTotal={ceProducedTotal}
-        ceReducedPerDay={ceReducedPerDay}
+        ceSavedPerDay={ceSavedPerDay}
+        fuelSpentTotal={fuelSpentTotal}
+        fuelSavedTotal={fuelSavedTotal}
         fuelSavedPerDay={fuelSavedPerDay}
         milesSavedAvg={milesSavedAvg}
         milesTraveledAvg={milesTraveledAvg}
         fuelSavedAvg={fuelSavedAvg}
         fuelSpentAvg={fuelSpentAvg}
-        ceReducedAvg={ceReducedAvg}
+        ceSavedAvg={ceSavedAvg}
         ceProducedAvg={ceProducedAvg}
         evCeProducedAvg={evCeProducedAvg}
         userMpg={userMpg}
@@ -67,22 +69,23 @@ function Dashboard(
 
 Dashboard.propTypes = {
   vehicleMilesTraveled: PropTypes.object,
-  milesTotal: PropTypes.number,
   milesSavedPerDay: PropTypes.object,
   milesAddedPerDay: PropTypes.object,
   modesOfTransport: PropTypes.object,
-  milesPerMode: PropTypes.array,
+  milesPerMode: PropTypes.object,
   userProfile: PropTypes.any,
   ceSavedTotal: PropTypes.number,
-  ceProducedTotal: PropTypes.string,
-  ceReducedPerDay: PropTypes.object,
+  ceProducedTotal: PropTypes.number,
+  ceSavedPerDay: PropTypes.object,
   evCeProducedAvg: PropTypes.object,
+  fuelSpentTotal: PropTypes.number,
+  fuelSavedTotal: PropTypes.number,
   fuelSavedPerDay: PropTypes.object,
   milesSavedAvg: PropTypes.object,
   milesTraveledAvg: PropTypes.object,
   fuelSavedAvg: PropTypes.object,
   fuelSpentAvg: PropTypes.object,
-  ceReducedAvg: PropTypes.object,
+  ceSavedAvg: PropTypes.object,
   ceProducedAvg: PropTypes.object,
   userMpg: PropTypes.number,
   tripReady: PropTypes.bool.isRequired,
@@ -97,7 +100,7 @@ export default withTracker(({ match }) => {
   const username = match.params._id;
 
   const vehicleMilesTraveled = Trips.getVehicleMilesTraveled(username);
-  const milesTotal = Trips.getMilesTotal(username);
+
   const milesPerDay = Trips.getMilesTraveledPerDay(username);
   const modesOfTransport = Trips.getModesOfTransport(username);
   const milesPerMode = Trips.getMilesPerMode(username);
@@ -106,7 +109,10 @@ export default withTracker(({ match }) => {
 
   const ceSavedTotal = Trips.getCESavedTotal(username);
   const ceProducedTotal = Trips.getCEProducedTotal(username);
-  const ceReducedPerDay = Trips.getCEReducedPerDay(username);
+  const ceSavedPerDay = Trips.getCESavedPerDay(username);
+
+  const fuelSpentTotal = Trips.getFuelSpentTotal(username);
+  const fuelSavedTotal = Trips.getFuelSavedTotal(username);
 
   const fuelSavedPerDay = Trips.getFuelSavedPerDay(username);
 
@@ -124,21 +130,22 @@ export default withTracker(({ match }) => {
     userReady,
     userVehicleReady,
     vehicleMilesTraveled,
-    milesTotal,
-    milesSavedPerDay: milesPerDay.milesSaved,
-    milesAddedPerDay: milesPerDay.milesAdded,
     modesOfTransport,
     milesPerMode,
     userProfile,
     ceSavedTotal,
     ceProducedTotal,
-    ceReducedPerDay,
+    ceSavedPerDay,
+    fuelSpentTotal,
+    fuelSavedTotal,
     fuelSavedPerDay,
+    milesSavedPerDay: milesPerDay.milesSaved,
+    milesAddedPerDay: milesPerDay.milesAdded,
     milesSavedAvg: milesAvg.milesSavedAvg,
     milesTraveledAvg: milesAvg.milesTraveledAvg,
     fuelSavedAvg: fuelAvg.fuelSavedAvg,
     fuelSpentAvg: fuelAvg.fuelSpentAvg,
-    ceReducedAvg: ceAvg.ceReducedAvg,
+    ceSavedAvg: ceAvg.ceSavedAvg,
     ceProducedAvg: ceAvg.ceProducedAvg,
     evCeProducedAvg: ceAvg.evCeProducedAvg,
     userMpg,

@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Card } from 'semantic-ui-react';
-import Chart from '../Chart';
+import Chart from '../charts/Chart';
 import DashboardMilesCard from './DashboardMilesCard';
 import DashboardFuelCard from './DashboardFuelCard';
 import DashboardCeCard from './DashboardCeCard';
 import DashboardTreeCard from './DashboardTreeCard';
-import { cePerGallonFuel, poundsOfCePerTree } from '../../../api/utilities/constants';
+import { poundsOfCePerTree, tripModes, tripModesColors } from '../../../api/utilities/constants';
 import DashboardLeafCard from './DashboardLeafCard';
 
 // Contains the graphs that visualizes the user's data.
@@ -19,17 +19,19 @@ function DashboardContent(
     modesOfTransport,
     milesPerMode,
     userProfile,
+    ceProducedTotal,
     ceSavedTotal,
-    ceReducedPerDay,
+    ceSavedPerDay,
+    fuelSpentTotal,
+    fuelSavedTotal,
     fuelSavedPerDay,
     milesSavedAvg,
     milesTraveledAvg,
     fuelSavedAvg,
     fuelSpentAvg,
-    ceReducedAvg,
+    ceSavedAvg,
     ceProducedAvg,
     evCeProducedAvg,
-    userMpg,
   },
 ) {
 
@@ -56,9 +58,6 @@ function DashboardContent(
     },
   ];
 
-  const fuelSavedTotal = (vehicleMilesSaved / userMpg).toFixed(2);
-  const fuelCostTotal = (vehicleMilesAdded / userMpg).toFixed(2);
-
   const fuelSavedPerDayData = {
     x: fuelSavedPerDay.date,
     y: fuelSavedPerDay.fuel,
@@ -75,46 +74,42 @@ function DashboardContent(
     mode: 'lines+markers',
   };
 
-  const ceProducedTotal = (fuelCostTotal * cePerGallonFuel).toFixed(2);
-
-  const ceReducedTotal = (fuelSavedTotal * cePerGallonFuel).toFixed(2);
-
-  const ceReducedPerDayData = {
-    x: ceReducedPerDay.date,
-    y: ceReducedPerDay.ce,
-    name: 'CE Reduced (pounds)',
+  const ceSavedPerDayData = {
+    x: ceSavedPerDay.date,
+    y: ceSavedPerDay.ceSaved,
+    name: 'CE Saved (pounds)',
     type: 'bar',
   };
 
   // 100,000 trees = 2,400 tons of CO2 or 4,800,000 pounds of CO2
   // 1 tree = 48 pounds of CO2
   const treesPerCeProduced = Math.ceil(ceProducedTotal / poundsOfCePerTree);
-  const treesPerCeReduced = Math.ceil(ceReducedTotal / poundsOfCePerTree);
+  const treesPerceSaved = Math.ceil(ceSavedTotal / poundsOfCePerTree);
+
+  const colors = [];
+
+  Object.keys(modesOfTransport).forEach(mode => {
+    const modeKey = Object.keys(tripModes).find(key => tripModes[key] === mode);
+    colors.push(tripModesColors[modeKey]);
+  });
 
   const modesOfTransportData = [{
-    values: modesOfTransport.value,
-    labels: modesOfTransport.label,
+    values: Object.values(modesOfTransport),
+    labels: Object.keys(modesOfTransport),
+    marker: {
+      colors: colors,
+    },
     type: 'pie',
     hole: 0.4,
     hoverinfo: 'label+percent',
   }];
 
   /* Graph Layouts */
-  let chartBgColor = '';
-  let chartGridColor = '';
-  let chartFontColor = '';
+  const chartBgColor = '';
+  const chartGridColor = '';
+  const chartFontColor = '';
   const tMargin = '40';
   const bMargin = '10';
-
-  if (userProfile.theme === 'dark') {
-    chartBgColor = '#213c5c';
-    chartGridColor = '#5c5c5c';
-    chartFontColor = '#FFFFFF';
-  } else {
-    chartBgColor = '';
-    chartGridColor = '';
-    chartFontColor = '';
-  }
 
   const milesPerDayLayout = {
     autosize: true,
@@ -188,7 +183,7 @@ function DashboardContent(
     },
   };
 
-  const ceReducedPerDayLayout = {
+  const ceSavedPerDayLayout = {
     autosize: true,
     height: '400',
     margin: {
@@ -196,14 +191,14 @@ function DashboardContent(
       b: bMargin,
     },
     xaxis: {
-      range: [ceReducedPerDay.date[0], ceReducedPerDay.date[10]],
-      rangeslider: { range: [ceReducedPerDay.date[0], ceReducedPerDay.date[ceReducedPerDay.length - 1]] },
+      range: [ceSavedPerDay.date[0], ceSavedPerDay.date[10]],
+      rangeslider: { range: [ceSavedPerDay.date[0], ceSavedPerDay.date[ceSavedPerDay.length - 1]] },
       type: 'date',
       gridcolor: chartGridColor,
     },
     yaxis: {
-      title: 'CE Reduced (pounds)',
-      range: [0, Math.max(...ceReducedPerDay.ce)],
+      title: 'CE Saved (pounds)',
+      range: [0, Math.max(...ceSavedPerDay.ceSaved)],
       type: 'linear',
       gridcolor: chartGridColor,
     },
@@ -230,8 +225,8 @@ function DashboardContent(
           userProfile={userProfile}
         />
         <DashboardFuelCard
-          fuelCostTotal={fuelCostTotal}
-          fuelSavedTotal={fuelSavedTotal}
+          fuelCostTotal={fuelSpentTotal.toFixed(2)}
+          fuelSavedTotal={fuelSavedTotal.toFixed(2)}
           fuelSavedAvgPerYear={fuelSavedAvg.year}
           fuelSavedAvgPerMonth={fuelSavedAvg.month}
           fuelSavedAvgPerDay={fuelSavedAvg.day}
@@ -242,19 +237,19 @@ function DashboardContent(
         />
         <DashboardCeCard
           ceProducedTotal={ceProducedTotal}
-          ceReducedTotal={ceReducedTotal}
+          ceSavedTotal={ceSavedTotal.toFixed(2)}
           ceProducedAvg={ceProducedAvg}
-          ceReducedAvg={ceReducedAvg}
+          ceSavedAvg={ceSavedAvg}
           evCeProducedAvg={evCeProducedAvg}
           userProfile={userProfile}
         />
         <DashboardTreeCard
           treesPerCeProduced={treesPerCeProduced}
-          treesPerCeReduced={treesPerCeReduced}
+          treesPerceSaved={treesPerceSaved}
           userProfile={userProfile}
         />
         <DashboardLeafCard
-          treesPerCeReduced={treesPerCeReduced}
+          treesPerceSaved={treesPerceSaved}
           ceSavedTotal={ceSavedTotal}
         />
       </Card.Group>
@@ -297,10 +292,10 @@ function DashboardContent(
         <Grid.Column>
           <Card className='general-card' fluid>
             <Card.Header className='card-header'>
-                CE Reduced per Day
+                CE Saved per Day
             </Card.Header>
             <Card.Content>
-              <Chart chartData={[ceReducedPerDayData]} chartLayout={ceReducedPerDayLayout}/>
+              <Chart chartData={[ceSavedPerDayData]} chartLayout={ceSavedPerDayLayout}/>
             </Card.Content>
           </Card>
         </Grid.Column>
@@ -312,22 +307,23 @@ function DashboardContent(
 DashboardContent.propTypes = {
   vehicleMilesSaved: PropTypes.number,
   vehicleMilesAdded: PropTypes.number,
-  milesTotal: PropTypes.number,
   milesSavedPerDay: PropTypes.object,
   milesAddedPerDay: PropTypes.object,
   modesOfTransport: PropTypes.object,
-  milesPerMode: PropTypes.array,
+  milesPerMode: PropTypes.object,
   userProfile: PropTypes.object,
   userReady: PropTypes.bool,
   ceSavedTotal: PropTypes.number,
-  ceProducedTotal: PropTypes.string,
-  ceReducedPerDay: PropTypes.object,
+  ceProducedTotal: PropTypes.number,
+  fuelSpentTotal: PropTypes.number,
+  fuelSavedTotal: PropTypes.number,
+  ceSavedPerDay: PropTypes.object,
   fuelSavedPerDay: PropTypes.object,
   milesSavedAvg: PropTypes.object,
   milesTraveledAvg: PropTypes.object,
   fuelSavedAvg: PropTypes.object,
   fuelSpentAvg: PropTypes.object,
-  ceReducedAvg: PropTypes.object,
+  ceSavedAvg: PropTypes.object,
   ceProducedAvg: PropTypes.object,
   evCeProducedAvg: PropTypes.object,
   userMpg: PropTypes.number,

@@ -14,7 +14,7 @@ import {
 } from 'uniforms-semantic';
 import swal from 'sweetalert';
 import { imperialUnits, metricUnits, tripModesArray } from '../../../api/utilities/constants';
-import { getMilesTraveled } from '../../../api/utilities/CEData';
+import { getMilesTraveled } from '../../../api/utilities/Utilities';
 import { SavedCommutes } from '../../../api/saved-commute/SavedCommuteCollection';
 import { updateMethod } from '../../../api/base/BaseCollection.methods';
 

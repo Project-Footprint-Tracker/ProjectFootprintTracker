@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Statistic, Grid, Table, Header } from 'semantic-ui-react';
-import _ from 'lodash';
 import DashboardStatisticsCard from './DashboardStatisticsCard';
 import { tripModes } from '../../../api/utilities/constants';
 
@@ -20,13 +19,13 @@ function DashboardMilesCard(
   },
 ) {
 
-  const teleworkMiles = (_.find(milesPerMode, { mode: tripModes.TELEWORK })).miles;
-  const publicMiles = (_.find(milesPerMode, { mode: tripModes.PUBLIC_TRANSPORTATION })).miles;
-  const bikeMiles = (_.find(milesPerMode, { mode: tripModes.BIKE })).miles;
-  const walkMiles = (_.find(milesPerMode, { mode: tripModes.WALK })).miles;
-  const carpoolMiles = (_.find(milesPerMode, { mode: tripModes.CARPOOL })).miles;
-  const electricMiles = (_.find(milesPerMode, { mode: tripModes.ELECTRIC_VEHICLE })).miles;
-  const gasMiles = (_.find(milesPerMode, { mode: tripModes.GAS_CAR })).miles;
+  const teleworkMiles = milesPerMode[tripModes.TELEWORK];
+  const publicMiles = milesPerMode[tripModes.PUBLIC_TRANSPORTATION];
+  const bikeMiles = milesPerMode[tripModes.BIKE];
+  const walkMiles = milesPerMode[tripModes.WALK];
+  const carpoolMiles = milesPerMode[tripModes.CARPOOL];
+  const electricMiles = milesPerMode[tripModes.ELECTRIC_VEHICLE];
+  const gasMiles = milesPerMode[tripModes.GAS_CAR];
 
   return (
     <DashboardStatisticsCard
@@ -140,7 +139,7 @@ DashboardMilesCard.propTypes = {
   milesTraveledAvgPerYear: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   milesTraveledAvgPerMonth: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   milesTraveledAvgPerDay: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  milesPerMode: PropTypes.array,
+  milesPerMode: PropTypes.object,
   userProfile: PropTypes.object,
 };
 

@@ -10,17 +10,17 @@ import { Trips } from '../../api/trip/TripCollection';
 import { Groups } from '../../api/group/GroupCollection';
 import { GroupMembers } from '../../api/group/GroupMemberCollection';
 import {
-  counties,
   getCountyTrips,
   getModeChartCounts,
   getGroupTrips,
-  getCEReducedPerDay,
+  getCESavedPerDay,
   getCEProducedPerDay,
   getFuelSavedPerDay,
 } from '../utilities/group-analysis';
 import { Users } from '../../api/user/UserCollection';
 import ModesChart from '../components/charts/ModesChart';
 import CEDataChart from '../components/charts/CEDataChart';
+import { counties } from '../../api/utilities/ZipCodes';
 
 const GroupCompare = ({ groups, ready, countyTrips, groupTrips, userTrips }) => {
 
@@ -78,13 +78,13 @@ const GroupCompare = ({ groups, ready, countyTrips, groupTrips, userTrips }) => 
   };
   const choice1Modes = getModeChartCounts(choice1Trips);
   const choice1CE = {
-    ceSaved: getCEReducedPerDay(choice1Trips),
+    ceSaved: getCESavedPerDay(choice1Trips),
     ceProduced: getCEProducedPerDay(choice1Trips),
     fuelSaved: getFuelSavedPerDay(choice1Trips),
   };
   const choice2Modes = getModeChartCounts(choice2Trips);
   const choice2CE = {
-    ceSaved: getCEReducedPerDay(choice2Trips),
+    ceSaved: getCESavedPerDay(choice2Trips),
     ceProduced: getCEProducedPerDay(choice2Trips),
     fuelSaved: getFuelSavedPerDay(choice2Trips),
   };
@@ -150,15 +150,17 @@ export default withTracker(() => {
       && username !== undefined;
   const userTrips = Trips.find({ owner: username }, {}).fetch();
   const groupTrips = {};
-  groups.forEach((g) => {
-    const name = g.name;
-    groupTrips[name] = getGroupTrips(name);
-  });
   const countyTrips = {};
-  countyTrips[counties.Hawaii] = getCountyTrips(counties.Hawaii);
-  countyTrips[counties.Honolulu] = getCountyTrips(counties.Honolulu);
-  countyTrips[counties.Kauai] = getCountyTrips(counties.Kauai);
-  countyTrips[counties.Maui] = getCountyTrips(counties.Maui);
+  if (ready) {
+    groups.forEach((g) => {
+      const name = g.name;
+      groupTrips[name] = getGroupTrips(name);
+    });
+    countyTrips[counties.Hawaii] = getCountyTrips(counties.Hawaii);
+    countyTrips[counties.Honolulu] = getCountyTrips(counties.Honolulu);
+    countyTrips[counties.Kauai] = getCountyTrips(counties.Kauai);
+    countyTrips[counties.Maui] = getCountyTrips(counties.Maui);
+  }
   return {
     ready,
     groups,

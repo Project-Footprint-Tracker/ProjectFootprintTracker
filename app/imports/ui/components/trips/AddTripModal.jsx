@@ -5,7 +5,7 @@ import { Button, Divider, Form, Modal } from 'semantic-ui-react';
 import { AutoForm, BoolField, DateField, ErrorsField, SubmitField } from 'uniforms-semantic';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
 import swal from 'sweetalert';
-import { getDateToday, getMilesTraveled } from '../../../api/utilities/CEData';
+import { getDateToday, getMilesTraveled } from '../../../api/utilities/Utilities';
 import {
   imperialUnits,
   metricUnits,
@@ -164,7 +164,6 @@ const AddTripModal = (props) => {
     definitionData.passengers = Number(passengers);
     definitionData.mpg = props.userMPG; // change when vehicles are done
     definitionData.owner = props.owner;
-    // CAM we're going to add the ce produced and ce saved to the Trips collection.
     const collectionName = Trips.getCollectionName();
     defineMethod.callPromise({ collectionName, definitionData })
       .then(() => {
