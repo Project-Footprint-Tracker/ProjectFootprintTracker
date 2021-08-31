@@ -6,7 +6,7 @@ import DashboardMilesCard from './DashboardMilesCard';
 import DashboardFuelCard from './DashboardFuelCard';
 import DashboardCeCard from './DashboardCeCard';
 import DashboardTreeCard from './DashboardTreeCard';
-import { poundsOfCePerTree } from '../../../api/utilities/constants';
+import { poundsOfCePerTree, tripModes, tripModesColors } from '../../../api/utilities/constants';
 import DashboardLeafCard from './DashboardLeafCard';
 
 // Contains the graphs that visualizes the user's data.
@@ -86,9 +86,19 @@ function DashboardContent(
   const treesPerCeProduced = Math.ceil(ceProducedTotal / poundsOfCePerTree);
   const treesPerceSaved = Math.ceil(ceSavedTotal / poundsOfCePerTree);
 
+  const colors = [];
+
+  Object.keys(modesOfTransport).forEach(mode => {
+    const modeKey = Object.keys(tripModes).find(key => tripModes[key] === mode);
+    colors.push(tripModesColors[modeKey]);
+  });
+
   const modesOfTransportData = [{
     values: Object.values(modesOfTransport),
     labels: Object.keys(modesOfTransport),
+    marker: {
+      colors: colors,
+    },
     type: 'pie',
     hole: 0.4,
     hoverinfo: 'label+percent',

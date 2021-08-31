@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Grid, Card, Statistic } from 'semantic-ui-react';
 import { _ } from 'lodash';
 import Chart from '../charts/Chart';
-import { cePerGallonFuel, tripModes } from '../../../api/utilities/constants';
+import { cePerGallonFuel, tripModes, tripModesColors } from '../../../api/utilities/constants';
 
 // Contains the graphs that visualizes the user's data.
 function WhatIfContent(
@@ -139,10 +139,20 @@ function WhatIfContent(
       width: 3 },
   };
 
+  const colors = [];
+
+  Object.keys(modesOfTransport).forEach(mode => {
+    const modeKey = Object.keys(tripModes).find(key => tripModes[key] === mode);
+    colors.push(tripModesColors[modeKey]);
+  });
+
   const modesOfTransportData = [{
     values: Object.values(modesOfTransport),
     labels: Object.keys(modesOfTransport),
     textposition: 'inside',
+    marker: {
+      colors: colors,
+    },
     type: 'pie',
     hole: 0.4,
     hoverinfo: 'label+percent',

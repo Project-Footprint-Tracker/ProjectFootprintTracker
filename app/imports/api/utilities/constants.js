@@ -12,6 +12,16 @@ export const tripModes = {
 
 export const tripModesArray = _.values(tripModes);
 
+export const tripModesColors = {
+  TELEWORK: '#1f77b4',
+  PUBLIC_TRANSPORTATION: '#8c564b',
+  BIKE: '#2ca02c',
+  WALK: '#e377c2',
+  CARPOOL: '#ff7f0e',
+  ELECTRIC_VEHICLE: '#9467bd',
+  GAS_CAR: '#d62728',
+};
+
 export const cePerGallonFuel = 19.6;
 export const poundsOfCePerTree = 48;
 

@@ -5,7 +5,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import swal from 'sweetalert';
 import { Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { cePerGallonFuel, tripModes, fuelCost } from '../../../api/utilities/constants';
+import { cePerGallonFuel, tripModes, fuelCost, tripModesColors } from '../../../api/utilities/constants';
 import { getFormattedDate } from '../../../api/utilities/Utilities';
 
 /* global window */
@@ -40,23 +40,8 @@ function ChoseScenario(
   const nCeProducedTotal = useRef(ceProducedTotal);
 
   function colorType(type) {
-    let color;
-    if (type === tripModes.TELEWORK) {
-      color = '#1f77b4';
-    } else if (type === tripModes.CARPOOL) {
-      color = '#ff7f0e';
-    } else if (type === tripModes.BIKE) {
-      color = '#2ca02c';
-    } else if (type === tripModes.WALK) {
-      color = '#e377c2';
-    } else if (type === tripModes.ELECTRIC_VEHICLE) {
-      color = '#d62728';
-    } else if (type === tripModes.GAS_CAR) {
-      color = '#9467bd';
-    } else {
-      color = '#8c564b';
-    }
-    return (color);
+    const modeKey = Object.keys(tripModes).find(key => tripModes[key] === type);
+    return tripModesColors[modeKey];
   }
 
   // state for events in fullcalendar
