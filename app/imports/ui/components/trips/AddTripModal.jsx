@@ -164,7 +164,6 @@ const AddTripModal = (props) => {
     definitionData.passengers = Number(passengers);
     definitionData.mpg = props.userMPG; // change when vehicles are done
     definitionData.owner = props.owner;
-    // CAM we're going to add the ce produced and ce saved to the Trips collection.
     const collectionName = Trips.getCollectionName();
     defineMethod.callPromise({ collectionName, definitionData })
       .then(() => {

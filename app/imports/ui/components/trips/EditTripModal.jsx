@@ -108,6 +108,7 @@ const EditTripModal = (props) => {
     if (data.roundTrip) {
       updateData.milesTraveled *= 2;
     }
+    updateData.mpg = data.mpg;
     updateData.mode = mode;
     updateData.passengers = Number(passengers);
     const collectionName = Trips.getCollectionName();
