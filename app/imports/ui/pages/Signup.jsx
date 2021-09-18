@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link, Redirect } from 'react-router-dom';
-import swal from 'sweetalert';
 import { Container, Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
-import { Accounts } from 'meteor/accounts-base';
-import { UserDefineMethod } from '../../api/user/UserCollection.methods';
+import { Meteor } from 'meteor/meteor';
+import { CreateAccountMethod, UserDefineMethod } from '../../api/user/UserCollection.methods';
 
 /*
  * Signup component is similar to signin component, but we create a new user instead.
@@ -45,35 +44,41 @@ const Signup = ({ location }) => {
       setImage(value);
       break;
     default:
-        // do nothing
+      // do nothing
     }
   };
 
   /* Handle Signup submission. Create user account and a profile entry, then redirect to the home page. */
   const submit = () => {
 
-    UserDefineMethod.call({
+    UserDefineMethod.callPromise({
       email,
       firstName,
       lastName,
       zipCode,
       goal,
       image,
-    },
-    (userError) => {
-      if (userError) {
-        swal('Invalid ZIP Code. Please type a valid ZIP Code');
-      } else {
-        Accounts.createUser({ username: email, email, password }, (accountError) => {
-          if (accountError) {
+      password,
+    })
+      .catch((userError) => {
+        console.error(userError);
+        setError(userError.reason);
+      })
+      .then(() => {
+        CreateAccountMethod.callPromise({ email, password })
+          .catch((accountError) => {
             setError(accountError.reason);
-          } else {
-            setError('');
-            setRedirectToReferer(true);
-          }
-        });
-      }
-    });
+          })
+          .then(() => Meteor.loginWithPassword(email, password, (err) => {
+            if (err) {
+              setError(err.reason);
+            } else {
+              setError('');
+              setRedirectToReferer(true);
+            }
+          }));
+      });
+
   };
 
   /* Display the signup form. Redirect to add page after successful registration and login. */
